@@ -24,7 +24,7 @@ class MainModel {
     fetchDefinitions(word) {
         return new Promise((resolutionFunc) => {
             var stmt = this._db.prepare("SELECT part_of_speech, definition FROM dictionary where word=? ORDER BY part_of_speech")
-            stmt.bind([word])
+            stmt.bind([word.toLowerCase()])
             var definitions = []
 
             while (stmt.step()) {
