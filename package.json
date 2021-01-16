@@ -13,5 +13,9 @@
   "devDependencies": {
     "electron": "^11.2.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-caarmen:caarmen/poet-assistant-web.git"
+  }
 }
