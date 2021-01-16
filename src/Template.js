@@ -29,8 +29,8 @@ class Template {
                 this.loadTemplate("list").then(text =>
                     this._listTemplate = text
                 ),
-                this.loadTemplate("list-item").then(text =>
-                    this._listItemTemplate = text
+                this.loadTemplate("dictionary-list-item").then(text =>
+                    this._dictionaryListItemTemplate = text
                 )
             ]
         )
@@ -48,15 +48,15 @@ class Template {
     createInputTextHtml(id, label) {
         return this._inputTextTemplate.replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
     }
-    createListHtml(id, listItems) {
+    createDictionaryListHtml(id, dictionaryListItems) {
         return this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
-            listItems.map(item =>
-                this.createListItemHtml(item)
+            dictionaryListItems.map(item =>
+                this.createDictionaryListItemHtml(item)
             ).join("")
         )
     }
-    createListItemHtml(text) {
-        return this._listItemTemplate.replace("__TEXT__", text)
+    createDictionaryListItemHtml(dictionaryListItem) {
+        return this._dictionaryListItemTemplate.replace("__WORD_TYPE__", dictionaryListItem.wordType).replace("__DEFINITION__", dictionaryListItem.definition)
     }
     createAppBarActionItemHtml(id, label, icon) {
         return this._appBarActionItemTemplate.replace("__ID__", id).replace("__LABEL__", label).replace("__ICON__", icon)

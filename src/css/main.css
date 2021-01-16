@@ -7,3 +7,10 @@
 #placeholder-btn-fetch-definitions {
 	display: inline-block;
 }
+.dictionary-list-item-word-type {
+	font-weight: bold;
+	padding-inline-end: 16px;
+}
+.dictionary-list-item-definition {
+
+}

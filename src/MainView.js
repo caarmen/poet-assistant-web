@@ -47,7 +47,7 @@ class MainView {
         this.viewModel.fetchDefinitions(this.inputTextSearch.value)
     }
     showDefinitions(definitions) {
-        this.placeholderListDefinitions.innerHTML = this._template.createListHtml("list-definitions", definitions)
+        this.placeholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions)
     }
     showLoading(isLoading) {
         if (isLoading) {
