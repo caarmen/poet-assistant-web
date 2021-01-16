@@ -11,9 +11,11 @@ class MainViewModel {
     }
 
     fetchDefinitions(word) {
-        this._model.fetchDefinitions(word).then(definitions => {
-            this.definitions.value = definitions
-        })
+        if (!this.isLoading.value) {
+            this._model.fetchDefinitions(word).then(definitions => {
+                this.definitions.value = definitions
+            })
+        }
     }
     onAboutClicked() {
         this.dialog.value = new DialogInfo("dialog_about_title", "dialog_about_content")
