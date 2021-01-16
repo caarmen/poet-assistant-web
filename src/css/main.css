@@ -10,7 +10,14 @@
 .dictionary-list-item-word-type {
 	font-weight: bold;
 	padding-inline-end: 16px;
+	display: table-cell;
 }
 .dictionary-list-item-definition {
-
+	display: table-cell;
+}
+#placeholder-list-definitions .mdc-list-item {
+	height: auto;
+}
+.mdc-list-item__text{
+	white-space: normal;
 }
