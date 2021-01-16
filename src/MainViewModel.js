@@ -7,11 +7,15 @@ class MainViewModel {
         this._model.loadDb().then(() => {
             this.isLoading.value = false
         })
+        this.dialog = new ObservableField()
     }
 
     fetchDefinitions(word) {
         this._model.fetchDefinitions(word).then(definitions => {
             this.definitions.value = definitions
         })
+    }
+    onAboutClicked() {
+        this.dialog.value = new DialogInfo("dialog_about_title", "dialog_about_content")
     }
 };

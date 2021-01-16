@@ -14,7 +14,7 @@ class MainView {
         const MDCTopAppBar = mdc.topAppBar.MDCTopAppBar;
         this.topAppBar = new MDCTopAppBar(document.querySelector("#app-bar"))
 
-        document.querySelector("#action_item_about").onclick = () => { alert("About demo app") }
+        document.querySelector("#action_item_about").onclick = () => { this.viewModel.onAboutClicked() }
 
         document.querySelector("#placeholder-progress-indicator").innerHTML = this._template.createProgressIndicatorHtml()
         const MDCCircularProgress = mdc.circularProgress.MDCCircularProgress;
@@ -38,6 +38,7 @@ class MainView {
         // viewmodel -> view bindings
         this.viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this.template.isLoaded) }
         this.viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
+        this.viewModel.dialog.observer = (newDialog) => { this.showDialog(newDialog) }
 
         // view -> viewmodel bindings
         this.btnLoad.onclick = () => { this.searchDefinitions() }
@@ -56,6 +57,13 @@ class MainView {
             this.circularProgress.close()
             this.btnLoad.disabled = false
         }
+    }
+    showDialog(newDialog) {
+        document.querySelector("#placeholder-dialog").innerHTML =
+            this._template.createDialogHtml(newDialog.title, newDialog.content)
+        const MDCDialog = mdc.dialog.MDCDialog;
+        const dialog = new MDCDialog(document.querySelector('.mdc-dialog'))
+        dialog.open()
     }
 }
 function main_view_init() {
