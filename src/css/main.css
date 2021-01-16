@@ -1,11 +1,19 @@
 #progress-indicator {
 	margin: auto;
 }
+#search-bar {
+	width: 100%;
+	display: table;
+}
 #placeholder-input-text-search {
-	display: inline-block;
+	display: table-cell;
+	width: 100%;
+}
+#placeholder-input-text-search #input-text-search {
+	width: 100%;
 }
 #placeholder-btn-fetch-definitions {
-	display: inline-block;
+	display: table-cell;
 }
 .dictionary-list-item-word-type {
 	font-weight: bold;
