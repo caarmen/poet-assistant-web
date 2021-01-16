@@ -20,6 +20,9 @@ class Template {
                 this.loadTemplate("button").then(text =>
                     this._buttonTemplate = text
                 ),
+                this.loadTemplate("button-icon").then(text =>
+                    this._buttonIconTemplate = text
+                ),
                 this.loadTemplate("dialog").then(text =>
                     this._dialogTemplate = text
                 ),
@@ -40,6 +43,9 @@ class Template {
     }
     createButtonHtml(id, label) {
         return this._buttonTemplate.replace("__ID__", id).replace("__LABEL__", this._i18n.translate(label))
+    }
+    createButtonIconHtml(id, icon, label) {
+        return this._buttonIconTemplate.replace("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
     }
     createDialogHtml(title, content) {
         return this._dialogTemplate.replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content))

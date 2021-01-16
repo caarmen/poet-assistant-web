@@ -22,7 +22,7 @@ class MainView {
         this.circularProgress.determinate = false
         this.circularProgress.open()
 
-        document.querySelector("#placeholder-btn-fetch-definitions").innerHTML = this._template.createButtonHtml("btn-fetch-definitions", "btn_search_title")
+        document.querySelector("#placeholder-btn-fetch-definitions").innerHTML = this._template.createButtonIconHtml("btn-fetch-definitions", "search", "btn_search_title")
         this.btnLoad = document.getElementById("btn-fetch-definitions")
         this.btnLoad.disabled = true
 
