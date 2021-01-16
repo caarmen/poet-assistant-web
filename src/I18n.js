@@ -7,7 +7,7 @@ class I18n {
     load() {
         new Promise((resolutionFunc) => {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'i18n/en.json', true);
+            xhr.open('GET', 'src/i18n/en.json', true);
             xhr.responseType = 'text';
             xhr.onload = function (e) {
                 resolutionFunc(this.responseText)
