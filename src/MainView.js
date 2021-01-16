@@ -29,6 +29,9 @@ class MainView {
         const MDCTextField = mdc.textField.MDCTextField;
         document.querySelector("#placeholder-input-text-search").innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this.inputTextSearch = new MDCTextField(document.querySelector("#input-text-search"))
+        document.querySelector("#input-text-search input").onkeydown = (evt) => {
+            if (evt.keyCode == 13) this.searchDefinitions()
+        }
     }
 
     bindViewModel() {
@@ -37,9 +40,10 @@ class MainView {
         this.viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
 
         // view -> viewmodel bindings
-        this.btnLoad.onclick = () => {
-            this.viewModel.fetchDefinitions(this.inputTextSearch.value)
-        }
+        this.btnLoad.onclick = () => { this.searchDefinitions() }
+    }
+    searchDefinitions() {
+        this.viewModel.fetchDefinitions(this.inputTextSearch.value)
     }
     showDefinitions(definitions) {
         this.placeholderListDefinitions.innerHTML = this._template.createListHtml("list-definitions", definitions)
