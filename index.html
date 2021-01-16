@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Poet Assistant</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; object-src 'self'; script-src-elem 'self'" />
+
+    <!-- Third party dependencies -->
+    <link rel="stylesheet" href="libs/material-components-web-9.0.0.min.css">
+    <link rel="stylesheet" href="libs/material-icons.css">
+    <script src="libs/material-components-web-9.0.0.min.js"></script>
+    <script src='libs/sql-wasm-1.4.0.js'></script>
+
+    <!-- Our own resources-->
+    <link rel="stylesheet" href="src/css/main.css">
+    <script src="src/I18n.js"></script>
+    <script src="src/ObservableField.js"></script>
+    <script src="src/MainModel.js"></script>
+    <script src="src/MainView.js"></script>
+    <script src="src/MainViewModel.js"></script>
+    <script src="src/Template.js"></script>
+</head>
+
+<body style="background: white;" onload="main_view_init()">
+    <div id="placeholder-app-bar"></div>
+    <div class="mdc-top-app-bar--fixed-adjust">
+        <div id="placeholder-progress-indicator"></div>
+        <div id="placeholder-input-text-search"></div>
+        <div id="placeholder-btn-fetch-definitions"></div>
+        <div id="placeholder-list-definitions"></div>
+    </div>
+</body>
+
+</html>
