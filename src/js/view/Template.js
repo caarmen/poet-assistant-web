@@ -4,40 +4,19 @@ class Template {
         this._buttonTemplate = undefined
         this._i18n = new I18n()
     }
-    loadTemplates() {
-        return Promise.all(
-            [
-                this._i18n.load(),
-                this.loadTemplate("app-bar").then(text =>
-                    this._appBarTemplate = text
-                ),
-                this.loadTemplate("app-bar-action-item").then(text =>
-                    this._appBarActionItemTemplate = text
-                ),
-                this.loadTemplate("progress-indicator").then(text =>
-                    this._progressIndicatorTemplate = text
-                ),
-                this.loadTemplate("button").then(text =>
-                    this._buttonTemplate = text
-                ),
-                this.loadTemplate("button-icon").then(text =>
-                    this._buttonIconTemplate = text
-                ),
-                this.loadTemplate("dialog").then(text =>
-                    this._dialogTemplate = text
-                ),
-                this.loadTemplate("input-text").then(text =>
-                    this._inputTextTemplate = text
-                ),
-                this.loadTemplate("list").then(text =>
-                    this._listTemplate = text
-                ),
-                this.loadTemplate("dictionary-list-item").then(text =>
-                    this._dictionaryListItemTemplate = text
-                )
-            ]
-        )
+    async loadTemplates() {
+        await this._i18n.load()
+        this._appBarTemplate = await this.loadTemplate("app-bar")
+        this._appBarActionItemTemplate = await this.loadTemplate("app-bar-action-item")
+        this._progressIndicatorTemplate = await this.loadTemplate("progress-indicator")
+        this._buttonTemplate = await this.loadTemplate("button")
+        this._buttonIconTemplate = await this.loadTemplate("button-icon")
+        this._dialogTemplate = await this.loadTemplate("dialog")
+        this._inputTextTemplate = await this.loadTemplate("input-text")
+        this._listTemplate = await this.loadTemplate("list")
+        this._dictionaryListItemTemplate = await this.loadTemplate("dictionary-list-item")
     }
+
     createProgressIndicatorHtml() {
         return this._progressIndicatorTemplate
     }
@@ -71,7 +50,7 @@ class Template {
         return this._appBarTemplate.replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title)).replace("__ACTION_ITEMS__",
             actionItems.map(item => this.createAppBarActionItemHtml(item["id"], this._i18n.translate(item["label"]), item["icon"])))
     }
-    loadTemplate(templateName) {
+    async loadTemplate(templateName) {
         return new Promise((resolutionFunc) => {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', 'src/templates/' + templateName + '.template.html', true);
