@@ -15,6 +15,7 @@ class Template {
         this._inputTextTemplate = await this.loadTemplate("input-text")
         this._listTemplate = await this.loadTemplate("list")
         this._dictionaryListItemTemplate = await this.loadTemplate("dictionary-list-item")
+        this._rhymesListItemTemplate = await this.loadTemplate("rhymes-list-item")
     }
 
     createProgressIndicatorHtml() {
@@ -42,6 +43,16 @@ class Template {
     }
     createDictionaryListItemHtml(dictionaryListItem) {
         return this._dictionaryListItemTemplate.replace("__WORD_TYPE__", dictionaryListItem.wordType).replace("__DEFINITION__", dictionaryListItem.definition)
+    }
+    createRhymesListHtml(id, rhymes) {
+        return this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
+            rhymes.map(item =>
+                this.createRhymesListItemHtml(item)
+            ).join("")
+        )
+    }
+    createRhymesListItemHtml(rhyme) {
+        return this._rhymesListItemTemplate.replace("__WORD__", rhyme)
     }
     createAppBarActionItemHtml(id, label, icon) {
         return this._appBarActionItemTemplate.replace("__ID__", id).replace("__LABEL__", label).replace("__ICON__", icon)

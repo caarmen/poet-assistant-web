@@ -1,5 +1,6 @@
 class MainView {
     constructor() {
+        this.placeholderListRhymes = document.getElementById("placeholder-list-rhymes")
         this.placeholderListDefinitions = document.getElementById("placeholder-list-definitions")
         this._template = new Template()
         this._template.loadTemplates().then(() => {
@@ -30,21 +31,28 @@ class MainView {
         document.querySelector("#placeholder-input-text-search").innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this.inputTextSearch = new MDCTextField(document.querySelector("#input-text-search"))
         document.querySelector("#input-text-search input").onkeydown = (evt) => {
-            if (evt.keyCode == 13) this.searchDefinitions()
+            if (evt.keyCode == 13) this.searchRhymes()
         }
     }
 
     bindViewModel() {
         // viewmodel -> view bindings
         this.viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this.template.isLoaded) }
+        this.viewModel.rhymes.observer = (newRhymes) => { this.showRhymes(newRhymes) }
         this.viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
         this.viewModel.dialog.observer = (newDialog) => { this.showDialog(newDialog) }
 
         // view -> viewmodel bindings
-        this.btnLoad.onclick = () => { this.searchDefinitions() }
+        this.btnLoad.onclick = () => { this.searchRhymes() }
+    }
+    searchRhymes() {
+        this.viewModel.fetchRhymes(this.inputTextSearch.value)
     }
     searchDefinitions() {
         this.viewModel.fetchDefinitions(this.inputTextSearch.value)
+    }
+    showRhymes(rhymes) {
+        this.placeholderListRhymes.innerHTML = this._template.createRhymesListHtml("list-rhymes", rhymes)
     }
     showDefinitions(definitions) {
         this.placeholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions)

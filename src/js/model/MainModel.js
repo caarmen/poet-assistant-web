@@ -11,8 +11,12 @@ class MainModel {
         var arrayBuffer = await response.arrayBuffer()
         this._db = new SQL.Database(new Uint8Array(arrayBuffer))
         this._dictionaryRepository = new DictionaryRepository(this._db)
+        this._rhymerRepository = new RhymerRepository(this._db)
     }
 
+    async fetchRhymes(word) {
+        return this._rhymerRepository.fetchRhymes(word)
+    }
     async fetchDefinitions(word) {
         return this._dictionaryRepository.fetchDefinitions(word)
     }
