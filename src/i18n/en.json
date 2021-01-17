@@ -3,5 +3,7 @@
     "dialog_about_content": "Copyright (c) 2021 Carmen Alvarez",
     "action_item_label_about": "About",
     "app_name": "Poet Assistant",
-    "btn_search_title": "Search"
+    "btn_search_title": "Search",
+    "tab_dictionary_title": "Dictionary",
+    "tab_rhymer_title": "Rhymer"
 }

@@ -8,6 +8,8 @@ class Template {
         await this._i18n.load()
         this._appBarTemplate = await this.loadTemplate("app-bar")
         this._appBarActionItemTemplate = await this.loadTemplate("app-bar-action-item")
+        this._tabBarTemplate = await this.loadTemplate("tab-bar")
+        this._tabTemplate = await this.loadTemplate("tab")
         this._progressIndicatorTemplate = await this.loadTemplate("progress-indicator")
         this._buttonTemplate = await this.loadTemplate("button")
         this._buttonIconTemplate = await this.loadTemplate("button-icon")
@@ -59,7 +61,21 @@ class Template {
     }
     createAppBarHtml(id, title, actionItems) {
         return this._appBarTemplate.replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title)).replace("__ACTION_ITEMS__",
-            actionItems.map(item => this.createAppBarActionItemHtml(item["id"], this._i18n.translate(item["label"]), item["icon"])))
+            actionItems.map(item => this.createAppBarActionItemHtml(item["id"], this._i18n.translate(item["label"]), item["icon"]))
+                .join(""))
+    }
+    createTabBarHtml(id, tabs) {
+        return this._tabBarTemplate.replace("__ID__", id)
+            .replace("__TABS__",
+                tabs.map(tab =>
+                    this.createTabHtml(
+                        tab["id"],
+                        this._i18n.translate(tab["label"])))
+                    .join(""))
+    }
+    createTabHtml(id, label) {
+        return this._tabTemplate.replace("__ID__", id)
+            .replace("__LABEL__", label)
     }
     async loadTemplate(templateName) {
         return (await fetch('src/templates/' + templateName + '.template.html')).text()

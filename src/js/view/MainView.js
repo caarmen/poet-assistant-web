@@ -17,6 +17,17 @@ class MainView {
 
         document.querySelector("#action_item_about").onclick = () => { this.viewModel.onAboutClicked() }
 
+        document.querySelector("#placeholder-tab-bar").innerHTML = this._template.createTabBarHtml("tab-bar",
+            [
+                { "id": "tab_rhymer", "label": "tab_rhymer_title" },
+                { "id": "tab_dictionary", "label": "tab_dictionary_title" }
+            ])
+        const MDCTabBar = mdc.tabBar.MDCTabBar;
+        this.tabBar = new MDCTabBar(document.querySelector(".mdc-tab-bar"))
+        this.tabBar.listen("MDCTabBar:activated", (eventData) => {
+            this.onTabActivated(eventData["detail"]["index"])
+        })
+
         document.querySelector("#placeholder-progress-indicator").innerHTML = this._template.createProgressIndicatorHtml()
         const MDCCircularProgress = mdc.circularProgress.MDCCircularProgress;
         this.circularProgress = new MDCCircularProgress(document.querySelector('.mdc-circular-progress'));
@@ -31,7 +42,7 @@ class MainView {
         document.querySelector("#placeholder-input-text-search").innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this.inputTextSearch = new MDCTextField(document.querySelector("#input-text-search"))
         document.querySelector("#input-text-search input").onkeydown = (evt) => {
-            if (evt.keyCode == 13) this.searchRhymes()
+            if (evt.keyCode == 13) this.searchAll()
         }
     }
 
@@ -41,9 +52,30 @@ class MainView {
         this.viewModel.rhymes.observer = (newRhymes) => { this.showRhymes(newRhymes) }
         this.viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
         this.viewModel.dialog.observer = (newDialog) => { this.showDialog(newDialog) }
+        this.viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
 
         // view -> viewmodel bindings
-        this.btnLoad.onclick = () => { this.searchRhymes() }
+        this.btnLoad.onclick = () => { this.searchAll() }
+    }
+    switchToTab(tabIndex) {
+        if (tabIndex == this.viewModel.TAB_RHYMER) {
+            document.querySelector("#tab_rhymer").click()
+        } else if (tabIndex == this.viewModel.TAB_DICTIONARY) {
+            document.querySelector("#tab_dictionary").click()
+        }
+    }
+    onTabActivated(tabIndex) {
+        if (tabIndex == this.viewModel.TAB_RHYMER) {
+            this.placeholderListRhymes.style.display = "block"
+            this.placeholderListDefinitions.style.display = "none"
+        } else if (tabIndex == this.viewModel.TAB_DICTIONARY) {
+            this.placeholderListRhymes.style.display = "none"
+            this.placeholderListDefinitions.style.display = "block"
+        }
+    }
+    searchAll() {
+        this.searchRhymes()
+        this.searchDefinitions()
     }
     searchRhymes() {
         this.viewModel.fetchRhymes(this.inputTextSearch.value)
