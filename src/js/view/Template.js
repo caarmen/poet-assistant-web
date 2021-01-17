@@ -51,14 +51,6 @@ class Template {
             actionItems.map(item => this.createAppBarActionItemHtml(item["id"], this._i18n.translate(item["label"]), item["icon"])))
     }
     async loadTemplate(templateName) {
-        return new Promise((resolutionFunc) => {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'src/templates/' + templateName + '.template.html', true);
-            xhr.responseType = 'text';
-            xhr.onload = function (e) {
-                resolutionFunc(this.response)
-            }
-            xhr.send();
-        });
+        return (await fetch('src/templates/' + templateName + '.template.html')).text()
     }
 }

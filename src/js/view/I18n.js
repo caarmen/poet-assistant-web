@@ -4,17 +4,8 @@ class I18n {
     translate(text) {
         return this._strings[text]
     }
-    load() {
-        return new Promise((resolutionFunc) => {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'src/i18n/en.json', true);
-            xhr.responseType = 'text';
-            xhr.onload = function (e) {
-                resolutionFunc(this.responseText)
-            }
-            xhr.send();
-        }).then((stringsText) => {
-            this._strings = JSON.parse(stringsText)
-        });
+    async load() {
+        var response = await fetch("src/i18n/en.json")
+        this._strings = JSON.parse(await response.text())
     }
 }
