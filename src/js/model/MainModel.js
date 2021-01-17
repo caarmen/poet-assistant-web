@@ -15,24 +15,15 @@ class MainModel {
                 xhr.onload = function (e) {
                     var uInt8Array = new Uint8Array(this.response);
                     model._db = new SQL.Database(uInt8Array);
+                    model._dictionaryRepository = new DictionaryRepository(model._db)
                     resolutionFunc()
                 }
                 xhr.send();
             })
         })
     }
-    fetchDefinitions(word) {
-        return new Promise((resolutionFunc) => {
-            var stmt = this._db.prepare("SELECT part_of_speech, definition FROM dictionary where word=? ORDER BY part_of_speech")
-            stmt.bind([word.toLowerCase()])
-            var definitions = []
 
-            while (stmt.step()) {
-                var row = stmt.getAsObject();
-                var definition = new DictionaryListItem(row["part_of_speech"], row["definition"])
-                definitions.push(definition)
-            }
-            resolutionFunc(definitions)
-        })
+    async fetchDefinitions(word) {
+        return this._dictionaryRepository.fetchDefinitions(word)
     }
 }
