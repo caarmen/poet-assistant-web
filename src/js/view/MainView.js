@@ -19,8 +19,8 @@ class MainView {
 
         document.querySelector("#placeholder-tab-bar").innerHTML = this._template.createTabBarHtml("tab-bar",
             [
-                { "id": "tab_rhymer", "label": "tab_rhymer_title" },
-                { "id": "tab_dictionary", "label": "tab_dictionary_title" }
+                new Tab("tab_rhymer", "tab_rhymer_title"),
+                new Tab("tab_dictionary", "tab_dictionary_title")
             ])
         const MDCTabBar = mdc.tabBar.MDCTabBar;
         this.tabBar = new MDCTabBar(document.querySelector(".mdc-tab-bar"))

@@ -69,8 +69,8 @@ class Template {
             .replace("__TABS__",
                 tabs.map(tab =>
                     this.createTabHtml(
-                        tab["id"],
-                        this._i18n.translate(tab["label"])))
+                        tab.id,
+                        this._i18n.translate(tab.label)))
                     .join(""))
     }
     createTabHtml(id, label) {
