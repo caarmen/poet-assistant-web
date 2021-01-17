@@ -61,8 +61,9 @@ class Template {
     }
     createAppBarHtml(id, title, actionItems) {
         return this._appBarTemplate.replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title)).replace("__ACTION_ITEMS__",
-            actionItems.map(item => this.createAppBarActionItemHtml(item["id"], this._i18n.translate(item["label"]), item["icon"]))
-                .join(""))
+            actionItems.map(item =>
+                this.createAppBarActionItemHtml(item.id, this._i18n.translate(item.label), item.icon)
+            ).join(""))
     }
     createTabBarHtml(id, tabs) {
         return this._tabBarTemplate.replace("__ID__", id)

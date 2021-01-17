@@ -11,7 +11,7 @@ class MainView {
     }
     applyTemplates() {
         document.querySelector("#placeholder-app-bar").innerHTML = this._template.createAppBarHtml("app-bar", "app_name",
-            [{ "id": "action_item_about", "label": "action_item_label_about", "icon": "info" }])
+            [new AppBarActionItem("action_item_about", "action_item_label_about", "info")])
         const MDCTopAppBar = mdc.topAppBar.MDCTopAppBar;
         this.topAppBar = new MDCTopAppBar(document.querySelector("#app-bar"))
 
