@@ -16,16 +16,16 @@ class RhymerRepository {
     }
 
     async getStressSyllablesRhymes(word, variantNumber) {
-        return this.getRhymes("stress_syllables", [], word, variantNumber)
+        return this.getRhymes(RhymerRepository.COL_STRESS_SYLLABLES, [], word, variantNumber)
     }
     async getLastThreeSyllablesRhymes(word, variantNumber) {
-        return this.getRhymes("last_three_syllables", ["stress_syllables"], word, variantNumber)
+        return this.getRhymes(RhymerRepository.COL_LAST_THREE_SYLLABLES, [RhymerRepository.COL_STRESS_SYLLABLES], word, variantNumber)
     }
     async getLastTwoSyllablesRhymes(word, variantNumber) {
-        return this.getRhymes("last_two_syllables", ["stress_syllables", "last_three_syllables"], word, variantNumber)
+        return this.getRhymes(RhymerRepository.COL_LAST_TWO_SYLLABLES, [RhymerRepository.COL_STRESS_SYLLABLES, RhymerRepository.COL_LAST_THREE_SYLLABLES], word, variantNumber)
     }
     async getLastSyllableRhymes(word, variantNumber) {
-        return this.getRhymes("last_syllable", ["stress_syllables", "last_three_syllables", "last_two_syllables"], word, variantNumber)
+        return this.getRhymes(RhymerRepository.COL_LAST_SYLLABLE, [RhymerRepository.COL_STRESS_SYLLABLES, RhymerRepository.COL_LAST_THREE_SYLLABLES, RhymerRepository.COL_LAST_TWO_SYLLABLES], word, variantNumber)
     }
 
     async getRhymes(syllableColumn, excludeSyllableColumns, word, variantNumber) {
@@ -40,7 +40,13 @@ class RhymerRepository {
             .join(" AND ")
         if (excludeClause.length > 0) excludeClause = ` AND ${excludeClause}`
 
-        var stmt = this._db.prepare(`SELECT DISTINCT word FROM word_variants WHERE ${syllableColumn}=? AND word != ? AND has_definition=1 ${excludeClause} ORDER BY word`)
+        var stmt = this._db.prepare(`
+            SELECT DISTINCT ${RhymerRepository.COL_WORD} 
+            FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
+            WHERE ${syllableColumn}=? 
+                AND ${RhymerRepository.COL_WORD} != ? 
+                AND ${RhymerRepository.COL_HAS_DEFINITION}=1 ${excludeClause} 
+            ORDER BY ${RhymerRepository.COL_WORD}`)
         stmt.bind([syllables, word])
         var rhymes = []
         while (stmt.step()) {
@@ -52,7 +58,11 @@ class RhymerRepository {
     }
 
     getSyllables(syllablesColumn, word, variantNumber) {
-        var stmt = this._db.prepare(`SELECT ${syllablesColumn} FROM word_variants WHERE word=? AND variant_number=?`)
+        var stmt = this._db.prepare(`
+            SELECT ${syllablesColumn} 
+            FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
+            WHERE ${RhymerRepository.COL_WORD} =? 
+                AND ${RhymerRepository.COL_VARIANT_NUMBER}=?`)
         stmt.bind([word, variantNumber])
         if (stmt.step()) {
             var row = stmt.getAsObject()
@@ -61,13 +71,25 @@ class RhymerRepository {
         return undefined
     }
     getVariantNumbers(word) {
-        var stmt = this._db.prepare("SELECT variant_number FROM word_variants WHERE word=? ORDER BY variant_number")
+        var stmt = this._db.prepare(`
+            SELECT ${RhymerRepository.COL_VARIANT_NUMBER} 
+            FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
+            WHERE ${RhymerRepository.COL_WORD} =? 
+            ORDER BY ${RhymerRepository.COL_VARIANT_NUMBER}`)
         stmt.bind([word])
         var variantNumbers = []
         while (stmt.step()) {
             var row = stmt.getAsObject()
-            variantNumbers.push(row["variant_number"])
+            variantNumbers.push(row[RhymerRepository.COL_VARIANT_NUMBER])
         }
         return variantNumbers
     }
 }
+RhymerRepository.TABLE_WORD_VARIANTS = "word_variants"
+RhymerRepository.COL_HAS_DEFINITION = "has_definition"
+RhymerRepository.COL_STRESS_SYLLABLES = "stress_syllables"
+RhymerRepository.COL_LAST_THREE_SYLLABLES = "last_three_syllables"
+RhymerRepository.COL_LAST_TWO_SYLLABLES = "last_two_syllables"
+RhymerRepository.COL_LAST_SYLLABLE = "last_two_syllables"
+RhymerRepository.COL_WORD = "word"
+RhymerRepository.COL_VARIANT_NUMBER = "variant_number"
