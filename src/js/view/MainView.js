@@ -9,6 +9,7 @@ class MainView {
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
         this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-fetch-definitions")
         this._elemPlaceholderListRhymes = document.querySelector("#placeholder-list-rhymes")
+        this._elemPlaceholderListThesaurus = document.querySelector("#placeholder-list-thesaurus")
         this._elemPlaceholderListDefinitions = document.querySelector("#placeholder-list-definitions")
 
         this._mdcCircularProgress
@@ -33,6 +34,7 @@ class MainView {
         this._elemPlaceholderTabBar.innerHTML = this._template.createTabBarHtml("tab-bar",
             [
                 new TabData("tab_rhymer", "tab_rhymer_title"),
+                new TabData("tab_thesaurus", "tab_thesaurus_title"),
                 new TabData("tab_dictionary", "tab_dictionary_title")
             ])
         this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml()
@@ -48,6 +50,7 @@ class MainView {
 
         this._elemActionItemAbout = document.querySelector("#action_item_about")
         this._elemTabRhymer = document.querySelector("#tab_rhymer")
+        this._elemTabThesaurus = document.querySelector("#tab_thesaurus")
         this._elemTabDictionary = document.querySelector("#tab_dictionary")
 
         this._mdcCircularProgress = new MainView.MDCCircularProgress(document.querySelector('.mdc-circular-progress'))
@@ -78,6 +81,8 @@ class MainView {
     switchToTab(tabIndex) {
         if (tabIndex == MainViewModel.TabIndex.RHYMER) {
             this._elemTabRhymer.click()
+        } else if (tabIndex == MainViewModel.TabIndex.THESAURUS) {
+            this._elemTabThesaurus.click()
         } else if (tabIndex == MainViewModel.TabIndex.DICTIONARY) {
             this._elemTabDictionary.click()
         }
@@ -85,9 +90,15 @@ class MainView {
     onTabActivated(tabIndex) {
         if (tabIndex == MainViewModel.TabIndex.RHYMER) {
             this._elemPlaceholderListRhymes.style.display = "block"
+            this._elemPlaceholderListThesaurus.style.display = "none"
+            this._elemPlaceholderListDefinitions.style.display = "none"
+        } else if (tabIndex == MainViewModel.TabIndex.THESAURUS) {
+            this._elemPlaceholderListRhymes.style.display = "none"
+            this._elemPlaceholderListThesaurus.style.display = "block"
             this._elemPlaceholderListDefinitions.style.display = "none"
         } else if (tabIndex == MainViewModel.TabIndex.DICTIONARY) {
             this._elemPlaceholderListRhymes.style.display = "none"
+            this._elemPlaceholderListThesaurus.style.display = "none"
             this._elemPlaceholderListDefinitions.style.display = "block"
         }
     }

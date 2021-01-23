@@ -52,4 +52,4 @@ class MainViewModel {
         this.dialog.value = new DialogInfo("dialog_about_title", "dialog_about_content")
     }
 };
-MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, DICTIONARY: 1 })
+MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2 })
