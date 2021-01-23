@@ -87,6 +87,6 @@ class Template {
             .replace("__LABEL__", label)
     }
     async loadTemplate(templateName) {
-        return (await fetch('src/templates/' + templateName + '.template.html')).text()
+        return (await fetch(`src/templates/${templateName}.template.html`)).text()
     }
 }

@@ -34,13 +34,13 @@ class RhymerRepository {
         var excludeClause = excludeSyllableColumns.map(excludeColumn => {
             var excludeSyllables = this.getSyllables(excludeColumn, word, variantNumber)
             if (excludeSyllables != undefined) {
-                return excludeColumn + " <> '" + excludeSyllables + "'"
+                return `${excludeColumn} <> '${excludeSyllables}'`
             }
         }).filter(clause => clause != undefined)
             .join(" AND ")
-        if (excludeClause.length > 0) excludeClause = " AND " + excludeClause
+        if (excludeClause.length > 0) excludeClause = ` AND ${excludeClause}`
 
-        var stmt = this._db.prepare("SELECT DISTINCT word FROM word_variants WHERE " + syllableColumn + "=? AND word != ? AND has_definition=1 " + excludeClause + "ORDER BY word")
+        var stmt = this._db.prepare(`SELECT DISTINCT word FROM word_variants WHERE ${syllableColumn}=? AND word != ? AND has_definition=1 ${excludeClause} ORDER BY word`)
         stmt.bind([syllables, word])
         var rhymes = []
         while (stmt.step()) {
@@ -52,7 +52,7 @@ class RhymerRepository {
     }
 
     getSyllables(syllablesColumn, word, variantNumber) {
-        var stmt = this._db.prepare("SELECT " + syllablesColumn + " FROM word_variants WHERE word=? AND variant_number=?")
+        var stmt = this._db.prepare(`SELECT ${syllablesColumn} FROM word_variants WHERE word=? AND variant_number=?`)
         stmt.bind([word, variantNumber])
         if (stmt.step()) {
             var row = stmt.getAsObject()
