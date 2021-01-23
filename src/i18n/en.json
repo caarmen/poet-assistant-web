@@ -4,6 +4,10 @@
     "action_item_label_about": "About",
     "app_name": "Poet Assistant",
     "btn_search_title": "Search",
+    "last_three_syllables": "Last 3 syllables",
+    "last_two_syllables": "Last 2 syllables",
+    "last_syllable": "Last syllable",
+    "stress_syllables": "Strict matches",
     "tab_dictionary_title": "Dictionary",
     "tab_rhymer_title": "Rhymer"
 }

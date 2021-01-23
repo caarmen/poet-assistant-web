@@ -17,7 +17,26 @@ class MainViewModel {
     fetchRhymes(word) {
         if (!this.isLoading.value) {
             this._model.fetchRhymes(word).then(rhymes => {
-                this.rhymes.value = rhymes.flatMap(wordVariant => wordVariant.stressRhymes)
+                var result = []
+                rhymes.forEach(wordVariant =>{
+                    if (wordVariant.stressRhymes.length > 0) {
+                        result.push(new ListItem("stress_syllables", ListItem.ListItemStyles.SUB_HEADER_1))
+                        result = result.concat(wordVariant.stressRhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
+                    }
+                    if (wordVariant.lastThreeSyllablesRhymes.length > 0) {
+                        result.push(new ListItem("last_three_syllables", ListItem.ListItemStyles.SUB_HEADER_1))
+                        result = result.concat(wordVariant.lastThreeSyllablesRhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
+                    }
+                    if (wordVariant.lastTwoSyllablesRhymes.length > 0) {
+                        result.push(new ListItem("last_two_syllables", ListItem.ListItemStyles.SUB_HEADER_1))
+                        result = result.concat(wordVariant.lastTwoSyllablesRhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
+                    }
+                    if (wordVariant.lastSyllableRhymes.length > 0) {
+                        result.push(new ListItem("last_syllable", ListItem.ListItemStyles.SUB_HEADER_1))
+                        result = result.concat(wordVariant.lastSyllableRhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
+                    }
+                })
+                this.rhymes.value = result
             })
         }
     }

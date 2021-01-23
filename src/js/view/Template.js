@@ -51,16 +51,16 @@ class Template {
     createRhymesListHtml(id, rhymes) {
         return this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
             rhymes.map(item =>
-                this.createListItemHtml(item, ListItemStyles.WORD)
+                this.createListItemHtml(item.text, item.style)
             ).join("")
         )
     }
     createListItemHtml(text, style) {
-        if (style == ListItemStyles.SUB_HEADER_1) {
-            return this._listItemSubHeader1Template.replace("__TEXT__", text)
-        } else if (style == ListItemStyles.SUB_HEADER_2) {
+        if (style == ListItem.ListItemStyles.SUB_HEADER_1) {
+            return this._listItemSubHeader1Template.replace("__TEXT__", this._i18n.translate(text))
+        } else if (style == ListItem.ListItemStyles.SUB_HEADER_2) {
             return this._listItemSubHeader2Template.replace("__TEXT__", text)
-        } else if (style == ListItemStyles.WORD) {
+        } else if (style == ListItem.ListItemStyles.WORD) {
             return this._listItemWordTemplate.replace("__WORD__", text)
         }
     }
