@@ -3,7 +3,11 @@
 	--mdc-theme-secondary: #455A64; 
 	--mdc-theme-text-primary-on-light: #212121;
 	--mdc-theme-text-secondary-on-light: #727272;
-	--sub-header-1: #DDDDDD;
+	--sub-header-1: #EEEEEE;
+}
+/* https://github.com/material-components/material-components-web/issues/2718 */
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+	color: var(--mdc-theme-primary);
 }
 #placeholder-progress-indicator {
 	margin: auto;
