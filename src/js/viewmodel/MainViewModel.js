@@ -21,7 +21,7 @@ class MainViewModel {
                     result = result.concat(this.createListItems(wordVariant.stressRhymes, "stress_syllables"))
                     result = result.concat(this.createListItems(wordVariant.lastThreeSyllableRhymes, "last_three_syllables"))
                     result = result.concat(this.createListItems(wordVariant.lastTwoSyllablesRhymes, "last_two_syllables"))
-                    result = result.concat(this.createListItems(wordVariant.lastyllableRhymes, "last_syllable"))
+                    result = result.concat(this.createListItems(wordVariant.lastSyllableRhymes, "last_syllable"))
                 })
                 this.rhymes.value = result
             })

@@ -9,8 +9,8 @@ class RhymerRepository {
             var stressSyllableRhymes = await this.getStressSyllablesRhymes(word.toLowerCase(), variantNumber)
             var lastThreeSyllableRhymes = await this.getLastThreeSyllablesRhymes(word.toLowerCase(), variantNumber)
             var lastTwoSyllableRhymes = await this.getLastTwoSyllablesRhymes(word.toLowerCase(), variantNumber)
-            var lastSyllablRhymee = await this.getLastSyllableRhymes(word.toLowerCase(), variantNumber)
-            rhymes = rhymes.concat(new WordVariant(variantNumber, stressSyllableRhymes, lastThreeSyllableRhymes, lastTwoSyllableRhymes, lastSyllablRhymee))
+            var lastSyllableRhymes = await this.getLastSyllableRhymes(word.toLowerCase(), variantNumber)
+            rhymes = rhymes.concat(new WordVariant(variantNumber, stressSyllableRhymes, lastThreeSyllableRhymes, lastTwoSyllableRhymes, lastSyllableRhymes))
         }
         return rhymes
     }
