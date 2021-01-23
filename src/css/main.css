@@ -1,7 +1,11 @@
-#progress-indicator {
+#placeholder-progress-indicator {
 	margin: auto;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
-#search-bar {
+#search_bar {
 	width: 100%;
 	display: table;
 }
