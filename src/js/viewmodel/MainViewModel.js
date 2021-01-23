@@ -1,5 +1,4 @@
 class MainViewModel {
-    static TabIndex = Object.freeze({ RHYMER: 0, DICTIONARY: 1 })
     constructor() {
         this.definitions = new ObservableField()
         this.rhymes = new ObservableField()
@@ -50,3 +49,4 @@ class MainViewModel {
         this.dialog.value = new DialogInfo("dialog_about_title", "dialog_about_content")
     }
 };
+MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, DICTIONARY: 1 })

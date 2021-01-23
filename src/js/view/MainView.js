@@ -1,8 +1,5 @@
+'use strict';
 class MainView {
-    static MDCTabBar = mdc.tabBar.MDCTabBar
-    static MDCCircularProgress = mdc.circularProgress.MDCCircularProgress
-    static MDCDialog = mdc.dialog.MDCDialog
-    static MDCTextField = mdc.textField.MDCTextField
 
     constructor() {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
@@ -126,6 +123,10 @@ class MainView {
         dialog.open()
     }
 }
+MainView.MDCTabBar = mdc.tabBar.MDCTabBar
+MainView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress
+MainView.MDCDialog = mdc.dialog.MDCDialog
+MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
     var mainView = new MainView()
 }
