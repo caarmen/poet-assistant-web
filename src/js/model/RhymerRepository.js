@@ -3,19 +3,37 @@ class RhymerRepository {
         this._db = db
     }
     async fetchRhymes(word) {
-        return this.getStressSyllablesRhymes(word.toLowerCase())
+        var rhymes = []
+        var variantNumbers = this.getVariantNumbers(word)
+        for (const [index, variantNumber] of variantNumbers.entries()) {
+            var stressSyllableRhymes = await this.getStressSyllablesRhymes(word.toLowerCase(), variantNumber)
+            var lastThreeSyllableRhymes = await this.getLastThreeSyllablesRhymes(word.toLowerCase(), variantNumber)
+            var lastTwoSyllableRhymes = await this.getLastTwoSyllablesRhymes(word.toLowerCase(), variantNumber)
+            var lastSyllablRhymee = await this.getLastSyllableRhymes(word.toLowerCase(), variantNumber)
+            rhymes = rhymes.concat(new WordVariant(variantNumber, stressSyllableRhymes, lastThreeSyllableRhymes, lastTwoSyllableRhymes, lastSyllablRhymee))
+        }
+        return rhymes
     }
 
-    async getStressSyllablesRhymes(word) {
-        return this.getRhymes("stress_syllables", word)
+    async getStressSyllablesRhymes(word, variantNumber) {
+        return this.getRhymes("stress_syllables", word, variantNumber)
+    }
+    async getLastThreeSyllablesRhymes(word, variantNumber) {
+        return this.getRhymes("last_three_syllables", word, variantNumber)
+    }
+    async getLastTwoSyllablesRhymes(word, variantNumber) {
+        return this.getRhymes("last_two_syllables", word, variantNumber)
+    }
+    async getLastSyllableRhymes(word, variantNumber) {
+        return this.getRhymes("last_syllable", word, variantNumber)
     }
 
-    async getRhymes(syllableColumn, word) {
-        var syllables = this.getSyllables(syllableColumn, word)
+    async getRhymes(syllableColumn, word, variantNumber) {
+        var syllables = this.getSyllables(syllableColumn, word, variantNumber)
         var rhymes = []
         if (syllables == undefined) return rhymes
 
-        var stmt = this._db.prepare("SELECT distinct word FROM word_variants where " + syllableColumn + "=? AND word != ? AND has_definition=1 ORDER BY word")
+        var stmt = this._db.prepare("SELECT DISTINCT word FROM word_variants WHERE " + syllableColumn + "=? AND word != ? AND has_definition=1 ORDER BY word")
         stmt.bind([syllables, word])
         while (stmt.step()) {
             var row = stmt.getAsObject();
@@ -24,13 +42,23 @@ class RhymerRepository {
         return rhymes
     }
 
-    getSyllables(syllablesColumn, word) {
-        var stmt = this._db.prepare("SELECT " + syllablesColumn + " FROM word_variants where word=?")
-        stmt.bind([word])
+    getSyllables(syllablesColumn, word, variantNumber) {
+        var stmt = this._db.prepare("SELECT " + syllablesColumn + " FROM word_variants WHERE word=? AND variant_number=?")
+        stmt.bind([word, variantNumber])
         if (stmt.step()) {
             var row = stmt.getAsObject()
-            return row["stress_syllables"]
+            return row[syllablesColumn]
         }
         return undefined
+    }
+    getVariantNumbers(word) {
+        var stmt = this._db.prepare("SELECT variant_number FROM word_variants WHERE word=? ORDER BY variant_number")
+        stmt.bind([word])
+        var variantNumbers = []
+        while (stmt.step()) {
+            var row = stmt.getAsObject()
+            variantNumbers.push(row["variant_number"])
+        }
+        return variantNumbers
     }
 }

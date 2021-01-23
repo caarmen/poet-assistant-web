@@ -17,7 +17,7 @@ class MainViewModel {
     fetchRhymes(word) {
         if (!this.isLoading.value) {
             this._model.fetchRhymes(word).then(rhymes => {
-                this.rhymes.value = rhymes
+                this.rhymes.value = rhymes.flatMap(wordVariant => wordVariant.stressRhymes)
             })
         }
     }
