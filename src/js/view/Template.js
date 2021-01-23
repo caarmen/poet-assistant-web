@@ -17,7 +17,9 @@ class Template {
         this._inputTextTemplate = await this.loadTemplate("input-text")
         this._listTemplate = await this.loadTemplate("list")
         this._dictionaryListItemTemplate = await this.loadTemplate("dictionary-list-item")
-        this._rhymesListItemTemplate = await this.loadTemplate("rhymes-list-item")
+        this._listItemWordTemplate = await this.loadTemplate("list-item-word")
+        this._listItemSubHeader1Template = await this.loadTemplate("list-item-sub-header-1")
+        this._listItemSubHeader2Template = await this.loadTemplate("list-item-sub-header-2")
     }
 
     createProgressIndicatorHtml() {
@@ -49,12 +51,18 @@ class Template {
     createRhymesListHtml(id, rhymes) {
         return this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
             rhymes.map(item =>
-                this.createRhymesListItemHtml(item)
+                this.createListItemHtml(item, ListItemStyles.WORD)
             ).join("")
         )
     }
-    createRhymesListItemHtml(rhyme) {
-        return this._rhymesListItemTemplate.replace("__WORD__", rhyme)
+    createListItemHtml(text, style) {
+        if (style == ListItemStyles.SUB_HEADER_1) {
+            return this._listItemSubHeader1Template.replace("__TEXT__", text)
+        } else if (style == ListItemStyles.SUB_HEADER_2) {
+            return this._listItemSubHeader2Template.replace("__TEXT__", text)
+        } else if (style == ListItemStyles.WORD) {
+            return this._listItemWordTemplate.replace("__WORD__", text)
+        }
     }
     createAppBarActionItemHtml(id, label, icon) {
         return this._appBarActionItemTemplate.replace("__ID__", id).replace("__LABEL__", label).replace("__ICON__", icon)
