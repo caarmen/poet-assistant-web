@@ -4,7 +4,7 @@ class DictionaryRepository {
     }
     async fetchDefinitions(word) {
         var stmt = this._db.prepare("SELECT part_of_speech, definition FROM dictionary where word=? ORDER BY part_of_speech")
-        stmt.bind([word.toLowerCase()])
+        stmt.bind([word])
         var definitions = []
 
         while (stmt.step()) {

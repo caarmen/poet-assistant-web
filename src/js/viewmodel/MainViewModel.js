@@ -15,7 +15,7 @@ class MainViewModel {
 
     fetchRhymes(word) {
         if (!this.isLoading.value) {
-            this._model.fetchRhymes(word).then(rhymes => {
+            this._model.fetchRhymes(this.cleanSearchTerm(word)).then(rhymes => {
                 var result = []
                 rhymes.forEach(wordVariant => {
                     result = result.concat(this.createListItems(wordVariant.stressRhymes, "stress_syllables"))
@@ -40,10 +40,13 @@ class MainViewModel {
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
-            this._model.fetchDefinitions(word).then(definitions => {
+            this._model.fetchDefinitions(this.cleanSearchTerm(word)).then(definitions => {
                 this.definitions.value = definitions
             })
         }
+    }
+    cleanSearchTerm(text) {
+        return text.toLowerCase().trim()
     }
     onAboutClicked() {
         this.dialog.value = new DialogInfo("dialog_about_title", "dialog_about_content")

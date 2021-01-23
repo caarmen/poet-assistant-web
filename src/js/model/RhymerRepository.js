@@ -4,12 +4,12 @@ class RhymerRepository {
     }
     async fetchRhymes(word) {
         var rhymes = []
-        var variantNumbers = this.getVariantNumbers(word.toLowerCase())
+        var variantNumbers = this.getVariantNumbers(word)
         for (const [index, variantNumber] of variantNumbers.entries()) {
-            var stressSyllableRhymes = await this.getStressSyllablesRhymes(word.toLowerCase(), variantNumber)
-            var lastThreeSyllableRhymes = await this.getLastThreeSyllablesRhymes(word.toLowerCase(), variantNumber)
-            var lastTwoSyllableRhymes = await this.getLastTwoSyllablesRhymes(word.toLowerCase(), variantNumber)
-            var lastSyllableRhymes = await this.getLastSyllableRhymes(word.toLowerCase(), variantNumber)
+            var stressSyllableRhymes = await this.getStressSyllablesRhymes(word, variantNumber)
+            var lastThreeSyllableRhymes = await this.getLastThreeSyllablesRhymes(word, variantNumber)
+            var lastTwoSyllableRhymes = await this.getLastTwoSyllablesRhymes(word, variantNumber)
+            var lastSyllableRhymes = await this.getLastSyllableRhymes(word, variantNumber)
             rhymes = rhymes.concat(new WordVariant(variantNumber, stressSyllableRhymes, lastThreeSyllableRhymes, lastTwoSyllableRhymes, lastSyllableRhymes))
         }
         return rhymes
