@@ -35,8 +35,8 @@ class MainView {
             [new AppBarActionItem("action_item_about", "action_item_label_about", "info")])
         this._elemPlaceholderTabBar.innerHTML = this._template.createTabBarHtml("tab-bar",
             [
-                new Tab("tab_rhymer", "tab_rhymer_title"),
-                new Tab("tab_dictionary", "tab_dictionary_title")
+                new TabData("tab_rhymer", "tab_rhymer_title"),
+                new TabData("tab_dictionary", "tab_dictionary_title")
             ])
         this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml()
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
@@ -79,17 +79,17 @@ class MainView {
         this._elemActionItemAbout.onclick = () => { this._viewModel.onAboutClicked() }
     }
     switchToTab(tabIndex) {
-        if (tabIndex == MainViewModel.TabEnum.RHYMER) {
+        if (tabIndex == MainViewModel.TabIndex.RHYMER) {
             this._elemTabRhymer.click()
-        } else if (tabIndex == MainViewModel.TabEnum.DICTIONARY) {
+        } else if (tabIndex == MainViewModel.TabIndex.DICTIONARY) {
             this._elemTabDictionary.click()
         }
     }
     onTabActivated(tabIndex) {
-        if (tabIndex == MainViewModel.TabEnum.RHYMER) {
+        if (tabIndex == MainViewModel.TabIndex.RHYMER) {
             this._elemPlaceholderListRhymes.style.display = "block"
             this._elemPlaceholderListDefinitions.style.display = "none"
-        } else if (tabIndex == MainViewModel.TabEnum.DICTIONARY) {
+        } else if (tabIndex == MainViewModel.TabIndex.DICTIONARY) {
             this._elemPlaceholderListRhymes.style.display = "none"
             this._elemPlaceholderListDefinitions.style.display = "block"
         }

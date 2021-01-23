@@ -1,16 +1,16 @@
 class MainViewModel {
-    static TabEnum = Object.freeze({RHYMER: 0, DICTIONARY: 1})
+    static TabIndex = Object.freeze({RHYMER: 0, DICTIONARY: 1})
     constructor() {
         this.definitions = new ObservableField()
         this.rhymes = new ObservableField()
         this.isLoading = new ObservableField()
         this.dialog = new ObservableField()
-        this.activeTab = new ObservableField(MainViewModel.TabEnum.RHYMER)
+        this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.isLoading.value = true
         this._model = new MainModel()
         this._model.loadDb().then(() => {
             this.isLoading.value = false
-            this.activeTab.value = MainViewModel.TabEnum.RHYMER
+            this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
     }
 
