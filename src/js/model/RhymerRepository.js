@@ -4,7 +4,7 @@ class RhymerRepository {
     }
     async fetchRhymes(word) {
         var rhymes = []
-        var variantNumbers = this.getVariantNumbers(word)
+        var variantNumbers = this.getVariantNumbers(word.toLowerCase())
         for (const [index, variantNumber] of variantNumbers.entries()) {
             var stressSyllableRhymes = await this.getStressSyllablesRhymes(word.toLowerCase(), variantNumber)
             var lastThreeSyllableRhymes = await this.getLastThreeSyllablesRhymes(word.toLowerCase(), variantNumber)
