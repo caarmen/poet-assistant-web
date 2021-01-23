@@ -16,24 +16,32 @@ class RhymerRepository {
     }
 
     async getStressSyllablesRhymes(word, variantNumber) {
-        return this.getRhymes("stress_syllables", word, variantNumber)
+        return this.getRhymes("stress_syllables", [], word, variantNumber)
     }
     async getLastThreeSyllablesRhymes(word, variantNumber) {
-        return this.getRhymes("last_three_syllables", word, variantNumber)
+        return this.getRhymes("last_three_syllables", ["stress_syllables"], word, variantNumber)
     }
     async getLastTwoSyllablesRhymes(word, variantNumber) {
-        return this.getRhymes("last_two_syllables", word, variantNumber)
+        return this.getRhymes("last_two_syllables", ["stress_syllables", "last_three_syllables"], word, variantNumber)
     }
     async getLastSyllableRhymes(word, variantNumber) {
-        return this.getRhymes("last_syllable", word, variantNumber)
+        return this.getRhymes("last_syllable", ["stress_syllables", "last_three_syllables", "last_two_syllables"], word, variantNumber)
     }
 
-    async getRhymes(syllableColumn, word, variantNumber) {
+    async getRhymes(syllableColumn, excludeSyllableColumns, word, variantNumber) {
         var syllables = this.getSyllables(syllableColumn, word, variantNumber)
         var rhymes = []
         if (syllables == undefined) return rhymes
+        var excludeClause = excludeSyllableColumns.map(excludeColumn => {
+            var excludeSyllables = this.getSyllables(excludeColumn, word, variantNumber)
+            if (excludeSyllables != undefined) {
+                return excludeColumn + " <> '" + excludeSyllables + "'"
+            }
+        }).filter(clause => clause != undefined)
+            .join(" AND ")
+        if (excludeClause.length > 0) excludeClause = " AND " + excludeClause
 
-        var stmt = this._db.prepare("SELECT DISTINCT word FROM word_variants WHERE " + syllableColumn + "=? AND word != ? AND has_definition=1 ORDER BY word")
+        var stmt = this._db.prepare("SELECT DISTINCT word FROM word_variants WHERE " + syllableColumn + "=? AND word != ? AND has_definition=1 " + excludeClause + "ORDER BY word")
         stmt.bind([syllables, word])
         while (stmt.step()) {
             var row = stmt.getAsObject();
