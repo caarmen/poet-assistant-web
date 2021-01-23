@@ -79,17 +79,17 @@ class MainView {
         this._elemActionItemAbout.onclick = () => { this._viewModel.onAboutClicked() }
     }
     switchToTab(tabIndex) {
-        if (tabIndex == this._viewModel.TAB_RHYMER) {
+        if (tabIndex == MainViewModel.TAB_RHYMER) {
             this._elemTabRhymer.click()
-        } else if (tabIndex == this._viewModel.TAB_DICTIONARY) {
+        } else if (tabIndex == MainViewModel.TAB_DICTIONARY) {
             this._elemTabDictionary.click()
         }
     }
     onTabActivated(tabIndex) {
-        if (tabIndex == this._viewModel.TAB_RHYMER) {
+        if (tabIndex == MainViewModel.TAB_RHYMER) {
             this._elemPlaceholderListRhymes.style.display = "block"
             this._elemPlaceholderListDefinitions.style.display = "none"
-        } else if (tabIndex == this._viewModel.TAB_DICTIONARY) {
+        } else if (tabIndex == MainViewModel.TAB_DICTIONARY) {
             this._elemPlaceholderListRhymes.style.display = "none"
             this._elemPlaceholderListDefinitions.style.display = "block"
         }

@@ -1,17 +1,17 @@
 class MainViewModel {
+    static TAB_RHYMER = 0
+    static TAB_DICTIONARY = 1
     constructor() {
-        this.TAB_RHYMER = 0
-        this.TAB_DICTIONARY = 1
         this.definitions = new ObservableField()
         this.rhymes = new ObservableField()
         this.isLoading = new ObservableField()
         this.dialog = new ObservableField()
-        this.activeTab = new ObservableField(this.TAB_RHYMER)
+        this.activeTab = new ObservableField(MainViewModel.TAB_RHYMER)
         this.isLoading.value = true
         this._model = new MainModel()
         this._model.loadDb().then(() => {
             this.isLoading.value = false
-            this.activeTab.value = this.TAB_RHYMER
+            this.activeTab.value = MainViewModel.TAB_RHYMER
         })
     }
 
