@@ -1,5 +1,5 @@
 class MainViewModel {
-    static TabIndex = Object.freeze({RHYMER: 0, DICTIONARY: 1})
+    static TabIndex = Object.freeze({ RHYMER: 0, DICTIONARY: 1 })
     constructor() {
         this.definitions = new ObservableField()
         this.rhymes = new ObservableField()
@@ -18,28 +18,27 @@ class MainViewModel {
         if (!this.isLoading.value) {
             this._model.fetchRhymes(word).then(rhymes => {
                 var result = []
-                rhymes.forEach(wordVariant =>{
-                    if (wordVariant.stressRhymes.length > 0) {
-                        result.push(new ListItem("stress_syllables", ListItem.ListItemStyles.SUB_HEADER_1))
-                        result = result.concat(wordVariant.stressRhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
-                    }
-                    if (wordVariant.lastThreeSyllablesRhymes.length > 0) {
-                        result.push(new ListItem("last_three_syllables", ListItem.ListItemStyles.SUB_HEADER_1))
-                        result = result.concat(wordVariant.lastThreeSyllablesRhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
-                    }
-                    if (wordVariant.lastTwoSyllablesRhymes.length > 0) {
-                        result.push(new ListItem("last_two_syllables", ListItem.ListItemStyles.SUB_HEADER_1))
-                        result = result.concat(wordVariant.lastTwoSyllablesRhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
-                    }
-                    if (wordVariant.lastSyllableRhymes.length > 0) {
-                        result.push(new ListItem("last_syllable", ListItem.ListItemStyles.SUB_HEADER_1))
-                        result = result.concat(wordVariant.lastSyllableRhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
-                    }
+                rhymes.forEach(wordVariant => {
+                    result = result.concat(this.createListItems(wordVariant.stressRhymes, "stress_syllables"))
+                    result = result.concat(this.createListItems(wordVariant.lastThreeSyllableRhymes, "last_three_syllables"))
+                    result = result.concat(this.createListItems(wordVariant.lastTwoSyllablesRhymes, "last_two_syllables"))
+                    result = result.concat(this.createListItems(wordVariant.lastyllableRhymes, "last_syllable"))
                 })
                 this.rhymes.value = result
             })
         }
     }
+
+    createListItems(rhymes, syllableType) {
+        var result = []
+        if (rhymes != undefined) {
+            result.push(new ListItem(syllableType, ListItem.ListItemStyles.SUB_HEADER_1))
+            result = result.concat(new ListItem(rhymes.syllables, ListItem.ListItemStyles.SUB_HEADER_2))
+            result = result.concat(rhymes.rhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
+        }
+        return result
+    }
+
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
             this._model.fetchDefinitions(word).then(definitions => {

@@ -30,8 +30,7 @@ class RhymerRepository {
 
     async getRhymes(syllableColumn, excludeSyllableColumns, word, variantNumber) {
         var syllables = this.getSyllables(syllableColumn, word, variantNumber)
-        var rhymes = []
-        if (syllables == undefined) return rhymes
+        if (syllables == undefined) return undefined
         var excludeClause = excludeSyllableColumns.map(excludeColumn => {
             var excludeSyllables = this.getSyllables(excludeColumn, word, variantNumber)
             if (excludeSyllables != undefined) {
@@ -43,11 +42,13 @@ class RhymerRepository {
 
         var stmt = this._db.prepare("SELECT DISTINCT word FROM word_variants WHERE " + syllableColumn + "=? AND word != ? AND has_definition=1 " + excludeClause + "ORDER BY word")
         stmt.bind([syllables, word])
+        var rhymes = []
         while (stmt.step()) {
             var row = stmt.getAsObject();
             rhymes.push(row["word"])
         }
-        return rhymes
+        if (rhymes.length > 0) return new Rhymes(syllables, rhymes)
+        else return undefined
     }
 
     getSyllables(syllablesColumn, word, variantNumber) {

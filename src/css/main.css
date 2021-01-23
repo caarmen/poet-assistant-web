@@ -1,3 +1,10 @@
+:root {
+	--mdc-theme-primary: #607D8B;
+	--mdc-theme-secondary: #455A64; 
+	--mdc-theme-text-primary-on-light: #212121;
+	--mdc-theme-text-secondary-on-light: #727272;
+	--sub-header-1: #DDDDDD;
+}
 #placeholder-progress-indicator {
 	margin: auto;
 	position: fixed;
@@ -35,4 +42,10 @@
 }
 .list-item-sub-header-1{
 	font-weight: bold;
+	background-color: var(--sub-header-1, #dddddd);
+}
+.list-item-sub-header-2{
+	font-style: italic;
+	padding-right: 1em;
+	color: var(--mdc-theme-text-secondary-on-light, #727272);
 }
