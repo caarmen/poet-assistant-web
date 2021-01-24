@@ -108,24 +108,21 @@ class MainView {
         this.searchThesaurus()
         this.searchDefinitions()
     }
-    searchRhymes() {
-        this._viewModel.fetchRhymes(this._mdcInputTextSearch.value)
-    }
-    searchThesaurus() {
-        this._viewModel.fetchThesaurus(this._mdcInputTextSearch.value)
-    }
-    searchDefinitions() {
-        this._viewModel.fetchDefinitions(this._mdcInputTextSearch.value)
-    }
-    showRhymes(rhymes) {
+    searchRhymes = () => this._viewModel.fetchRhymes(this._mdcInputTextSearch.value)
+
+    searchThesaurus = () => this._viewModel.fetchThesaurus(this._mdcInputTextSearch.value)
+
+    searchDefinitions = () => this._viewModel.fetchDefinitions(this._mdcInputTextSearch.value)
+
+    showRhymes = (rhymes) =>
         this._elemPlaceholderListRhymes.innerHTML = this._template.createListHtml("list-rhymes", rhymes)
-    }
-    showThesaurus(thesaurusEntries) {
+
+    showThesaurus = (thesaurusEntries) =>
         this._elemPlaceholderListThesaurus.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries)
-    }
-    showDefinitions(definitions) {
+
+    showDefinitions = (definitions) =>
         this._elemPlaceholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions)
-    }
+
     showLoading(isLoading) {
         if (isLoading) {
             this._mdcCircularProgress.open()

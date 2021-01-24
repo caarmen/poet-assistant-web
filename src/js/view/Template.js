@@ -22,39 +22,37 @@ class Template {
         this._listItemSubHeader2Template = await this.loadTemplate("list-item-sub-header-2")
     }
 
-    createProgressIndicatorHtml() {
-        return this._progressIndicatorTemplate
-    }
-    createButtonHtml(id, label) {
-        return this._buttonTemplate.replace("__ID__", id).replace("__LABEL__", this._i18n.translate(label))
-    }
-    createButtonIconHtml(id, icon, label) {
-        return this._buttonIconTemplate.replace("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
-    }
-    createDialogHtml(title, content) {
-        return this._dialogTemplate.replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content))
-            .replace("__CONTENT__", this._i18n.translate(content))
-    }
-    createInputTextHtml(id, label) {
-        return this._inputTextTemplate.replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
-    }
-    createDictionaryListHtml(id, dictionaryListItems) {
-        return this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
+    createProgressIndicatorHtml = () => this._progressIndicatorTemplate
+
+    createButtonHtml = (id, label) =>
+        this._buttonTemplate.replace("__ID__", id).replace("__LABEL__", this._i18n.translate(label))
+
+    createButtonIconHtml = (id, icon, label) =>
+        this._buttonIconTemplate.replace("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
+
+    createDialogHtml = (title, content) =>
+        this._dialogTemplate.replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content)).replace("__CONTENT__", this._i18n.translate(content))
+
+    createInputTextHtml = (id, label) =>
+        this._inputTextTemplate.replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
+
+    createDictionaryListHtml = (id, dictionaryListItems) =>
+        this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
             dictionaryListItems.map(item =>
                 this.createDictionaryListItemHtml(item)
             ).join("")
         )
-    }
-    createDictionaryListItemHtml(dictionaryListItem) {
-        return this._dictionaryListItemTemplate.replace("__WORD_TYPE__", dictionaryListItem.wordType).replace("__DEFINITION__", dictionaryListItem.definition)
-    }
-    createListHtml(id, items) {
-        return this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
+
+    createDictionaryListItemHtml = (dictionaryListItem) =>
+        this._dictionaryListItemTemplate.replace("__WORD_TYPE__", dictionaryListItem.wordType).replace("__DEFINITION__", dictionaryListItem.definition)
+
+    createListHtml = (id, items) =>
+        this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
             items.map(item =>
                 this.createListItemHtml(item.text, item.style)
             ).join("")
         )
-    }
+
     createListItemHtml(text, style) {
         if (style == ListItem.ListItemStyles.SUB_HEADER_1) {
             return this._listItemSubHeader1Template.replace("__TEXT__", this._i18n.translate(text))
@@ -64,28 +62,28 @@ class Template {
             return this._listItemWordTemplate.replace("__WORD__", text)
         }
     }
-    createAppBarActionItemHtml(id, label, icon) {
-        return this._appBarActionItemTemplate.replace("__ID__", id).replace("__LABEL__", label).replace("__ICON__", icon)
-    }
-    createAppBarHtml(id, title, actionItems) {
-        return this._appBarTemplate.replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title)).replace("__ACTION_ITEMS__",
+    createAppBarActionItemHtml = (id, label, icon) =>
+        this._appBarActionItemTemplate.replace("__ID__", id).replace("__LABEL__", label).replace("__ICON__", icon)
+
+    createAppBarHtml = (id, title, actionItems) =>
+        this._appBarTemplate.replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title)).replace("__ACTION_ITEMS__",
             actionItems.map(item =>
                 this.createAppBarActionItemHtml(item.id, this._i18n.translate(item.label), item.icon)
             ).join(""))
-    }
-    createTabBarHtml(id, tabs) {
-        return this._tabBarTemplate.replace("__ID__", id)
+
+    createTabBarHtml = (id, tabs) =>
+        this._tabBarTemplate.replace("__ID__", id)
             .replace("__TABS__",
                 tabs.map(tab =>
                     this.createTabHtml(
                         tab.id,
                         this._i18n.translate(tab.label)))
                     .join(""))
-    }
-    createTabHtml(id, label) {
-        return this._tabTemplate.replace("__ID__", id)
+
+    createTabHtml = (id, label) =>
+        this._tabTemplate.replace("__ID__", id)
             .replace("__LABEL__", label)
-    }
+
     async loadTemplate(templateName) {
         return (await fetch(`src/templates/${templateName}.template.html`)).text()
     }
