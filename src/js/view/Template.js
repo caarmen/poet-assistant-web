@@ -22,7 +22,7 @@ class Template {
         this._listItemSubHeader2Template = await this.loadTemplate("list-item-sub-header-2")
     }
 
-    createProgressIndicatorHtml = () => this._progressIndicatorTemplate
+    createProgressIndicatorHtml = (text) => this._progressIndicatorTemplate.replace("__TEXT__", this._i18n.translate(text))
 
     createButtonHtml = (id, label) =>
         this._buttonTemplate.replace("__ID__", id).replace("__LABEL__", this._i18n.translate(label))

@@ -12,7 +12,7 @@ class MainView {
         this._elemPlaceholderListThesaurus = document.querySelector("#placeholder-list-thesaurus")
         this._elemPlaceholderListDefinitions = document.querySelector("#placeholder-list-definitions")
 
-        this._mdcCircularProgress
+        this._mdcLinearProgress
         this._mdcInputTextSearch
 
         this._elemActionItemAbout
@@ -37,7 +37,7 @@ class MainView {
                 new TabData("tab_thesaurus", "tab_thesaurus_title"),
                 new TabData("tab_dictionary", "tab_dictionary_title")
             ])
-        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml()
+        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml("progressbar_label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-fetch-definitions", "search", "btn_search_title")
     }
@@ -53,9 +53,10 @@ class MainView {
         this._elemTabThesaurus = document.querySelector("#tab_thesaurus")
         this._elemTabDictionary = document.querySelector("#tab_dictionary")
 
-        this._mdcCircularProgress = new MainView.MDCCircularProgress(document.querySelector('.mdc-circular-progress'))
-        this._mdcCircularProgress.determinate = false
-        this._mdcCircularProgress.open()
+        this._mdcLinearProgress = new MainView.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
+        this._mdcLinearProgress.determinate = true
+        this._mdcLinearProgress.progress = 0
+        this._mdcLinearProgress.open()
 
         this._mdcInputTextSearch = new MainView.MDCTextField(document.querySelector("#input-text-search"))
         document.querySelector("#input-text-search input").onkeydown = (evt) => {
@@ -74,6 +75,7 @@ class MainView {
         this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
         this._viewModel.dialog.observer = (newDialog) => { this.showDialog(newDialog) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
+        this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
 
         // view -> viewmodel bindings
         this._elemBtnSearch.onclick = () => { this.searchAll() }
@@ -125,12 +127,17 @@ class MainView {
 
     showLoading(isLoading) {
         if (isLoading) {
-            this._mdcCircularProgress.open()
+            this._elemPlaceholderProgressIndicator.style.display = "block"
+            this._mdcLinearProgress.open()
             this._elemBtnSearch.disabled = true
         } else {
-            this._mdcCircularProgress.close()
+            this._mdcLinearProgress.close()
             this._elemBtnSearch.disabled = false
+            this._elemPlaceholderProgressIndicator.style.display = "none"
         }
+    }
+    updateLoadingProgress(loadingProgress) {
+        this._mdcLinearProgress.progress = loadingProgress
     }
     showDialog(newDialog) {
         this._elemPlaceholderDialog.innerHTML =
@@ -140,7 +147,7 @@ class MainView {
     }
 }
 MainView.MDCTabBar = mdc.tabBar.MDCTabBar
-MainView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress
+MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {

@@ -2,17 +2,31 @@ class MainModel {
     constructor() {
         this._db = undefined
     }
-    async loadDb() {
+    async loadDb(progressCallback) {
         var config = {
             locateFile: filename => `libs/${filename}`
         }
         var SQL = await initSqlJs(config)
-        var response = await fetch('src/resources/poet_assistant.db')
-        var arrayBuffer = await response.arrayBuffer()
+        var response = await this.loadUrl('src/resources/poet_assistant.db', progressCallback)
+        var arrayBuffer = new Uint8Array(response)
         this._db = new SQL.Database(new Uint8Array(arrayBuffer))
         this._rhymerRepository = new RhymerRepository(this._db)
         this._thesaurusRepository = new ThesaurusRepository(this._db)
         this._dictionaryRepository = new DictionaryRepository(this._db)
+    }
+
+    loadUrl(url, progressCallback) {
+        return new Promise((completionFunc) => {
+            let xhr = new XMLHttpRequest()
+            xhr.open("GET", url)
+            xhr.onprogress = event => {
+                progressCallback(event.loaded, event.total)
+            }
+            xhr.onload = () => {
+                completionFunc(xhr.response)
+            }
+            xhr.send()
+        })
     }
 
     async fetchRhymes(word) {

@@ -6,9 +6,12 @@ class MainViewModel {
         this.isLoading = new ObservableField()
         this.dialog = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
+        this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
         this._model = new MainModel()
-        this._model.loadDb().then(() => {
+        this._model.loadDb((loaded, total) => {
+            this.loadingProgress.value = loaded / total
+        }).then(() => {
             this.isLoading.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })

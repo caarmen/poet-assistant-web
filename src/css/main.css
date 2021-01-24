@@ -12,9 +12,9 @@
 #placeholder-progress-indicator {
 	margin: auto;
 	position: fixed;
+	width: 80%;
 	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(10%, -50%);
 }
 #search_bar {
 	width: 100%;
