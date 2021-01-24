@@ -33,9 +33,7 @@ class RhymerRepository {
         if (syllables == undefined) return undefined
         var excludeClause = excludeSyllableColumns.map(excludeColumn => {
             var excludeSyllables = this.getSyllables(excludeColumn, word, variantNumber)
-            if (excludeSyllables != undefined) {
-                return `${excludeColumn} <> '${excludeSyllables}'`
-            }
+            return excludeSyllables && `${excludeColumn} <> '${excludeSyllables}'`
         }).filter(clause => clause != undefined)
             .join(" AND ")
         if (excludeClause.length > 0) excludeClause = ` AND ${excludeClause}`
