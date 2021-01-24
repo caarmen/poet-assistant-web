@@ -70,6 +70,7 @@ class MainView {
         // viewmodel -> view bindings
         this._viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this.template.isLoaded) }
         this._viewModel.rhymes.observer = (newRhymes) => { this.showRhymes(newRhymes) }
+        this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
         this._viewModel.dialog.observer = (newDialog) => { this.showDialog(newDialog) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
@@ -104,16 +105,23 @@ class MainView {
     }
     searchAll() {
         this.searchRhymes()
+        this.searchThesaurus()
         this.searchDefinitions()
     }
     searchRhymes() {
         this._viewModel.fetchRhymes(this._mdcInputTextSearch.value)
     }
+    searchThesaurus() {
+        this._viewModel.fetchThesaurus(this._mdcInputTextSearch.value)
+    }
     searchDefinitions() {
         this._viewModel.fetchDefinitions(this._mdcInputTextSearch.value)
     }
     showRhymes(rhymes) {
-        this._elemPlaceholderListRhymes.innerHTML = this._template.createRhymesListHtml("list-rhymes", rhymes)
+        this._elemPlaceholderListRhymes.innerHTML = this._template.createListHtml("list-rhymes", rhymes)
+    }
+    showThesaurus(thesaurusEntries) {
+        this._elemPlaceholderListThesaurus.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries)
     }
     showDefinitions(definitions) {
         this._elemPlaceholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions)
