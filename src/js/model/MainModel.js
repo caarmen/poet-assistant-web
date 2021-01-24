@@ -18,7 +18,8 @@ class MainModel {
     loadUrl(url, progressCallback) {
         return new Promise((completionFunc) => {
             let xhr = new XMLHttpRequest()
-            xhr.open("GET", url)
+            xhr.open("GET", url, true)
+            xhr.responseType = 'arraybuffer'
             xhr.onprogress = event => {
                 progressCallback(event.loaded, event.total)
             }
