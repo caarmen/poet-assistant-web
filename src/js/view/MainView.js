@@ -3,14 +3,15 @@ class MainView {
 
     constructor() {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
-        this._elemPlaceholderTabBar = document.querySelector("#placeholder-tab-bar")
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
-        this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
-        this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-fetch-definitions")
         this._elemPlaceholderListRhymes = document.querySelector("#placeholder-list-rhymes")
         this._elemPlaceholderListThesaurus = document.querySelector("#placeholder-list-thesaurus")
         this._elemPlaceholderListDefinitions = document.querySelector("#placeholder-list-definitions")
+
+        this._elemPlaceholderTabBar
+        this._elemPlacholderInputTextSearch
+        this._elemPlaceholderBtnSearch
 
         this._mdcLinearProgress
         this._mdcInputTextSearch
@@ -31,12 +32,17 @@ class MainView {
     applyTemplates() {
         this._elemPlaceholderAppBar.innerHTML = this._template.createAppBarHtml("app-bar", "app_name",
             [new AppBarActionItem("action_item_about", "action_item_label_about", "info")])
+        this._elemPlaceholderTabBar = document.querySelector("#placeholder-tab-bar")
+
         this._elemPlaceholderTabBar.innerHTML = this._template.createTabBarHtml("tab-bar",
             [
                 new TabData("tab_rhymer", "tab_rhymer_title"),
                 new TabData("tab_thesaurus", "tab_thesaurus_title"),
                 new TabData("tab_dictionary", "tab_dictionary_title")
             ])
+        this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
+        this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-fetch-definitions")
+
         this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml("progressbar_label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-fetch-definitions", "search", "btn_search_title")

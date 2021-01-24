@@ -9,6 +9,12 @@
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
 	color: var(--mdc-theme-primary);
 }
+#content {
+	padding-top: 192px;
+}
+#placeholder-tab-bar {
+	width: 100%;
+}
 #placeholder-progress-indicator {
 	margin: auto;
 	position: fixed;
