@@ -1,4 +1,5 @@
 {
+    "antonyms": "Antonyms",
     "dialog_about_title": "About Poet Assistant",
     "dialog_about_content": "Copyright (c) 2021 Carmen Alvarez",
     "action_item_label_about": "About",
@@ -7,7 +8,13 @@
     "last_three_syllables": "Last 3 syllables",
     "last_two_syllables": "Last 2 syllables",
     "last_syllable": "Last syllable",
+    "part_of_speech_adjective": "Adjective",
+    "part_of_speech_adverb": "Adverb",
+    "part_of_speech_noun": "Noun",
+    "part_of_speech_verb": "Verb",
     "stress_syllables": "Strict matches",
+    "synonyms": "Synonyms",
     "tab_dictionary_title": "Dictionary",
-    "tab_rhymer_title": "Rhymer"
+    "tab_rhymer_title": "Rhymer",
+    "tab_thesaurus_title": "Thesaurus"
 }

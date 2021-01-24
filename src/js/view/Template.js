@@ -48,9 +48,9 @@ class Template {
     createDictionaryListItemHtml(dictionaryListItem) {
         return this._dictionaryListItemTemplate.replace("__WORD_TYPE__", dictionaryListItem.wordType).replace("__DEFINITION__", dictionaryListItem.definition)
     }
-    createRhymesListHtml(id, rhymes) {
+    createListHtml(id, items) {
         return this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
-            rhymes.map(item =>
+            items.map(item =>
                 this.createListItemHtml(item.text, item.style)
             ).join("")
         )
@@ -59,7 +59,7 @@ class Template {
         if (style == ListItem.ListItemStyles.SUB_HEADER_1) {
             return this._listItemSubHeader1Template.replace("__TEXT__", this._i18n.translate(text))
         } else if (style == ListItem.ListItemStyles.SUB_HEADER_2) {
-            return this._listItemSubHeader2Template.replace("__TEXT__", text)
+            return this._listItemSubHeader2Template.replace("__TEXT__", this._i18n.translate(text))
         } else if (style == ListItem.ListItemStyles.WORD) {
             return this._listItemWordTemplate.replace("__WORD__", text)
         }
