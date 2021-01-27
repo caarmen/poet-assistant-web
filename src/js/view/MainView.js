@@ -123,10 +123,10 @@ class MainView {
     searchDefinitions = () => this._viewModel.fetchDefinitions(this._mdcInputTextSearch.value)
 
     showRhymes = (rhymes) =>
-        this._elemPlaceholderListRhymes.innerHTML = this._template.createListHtml("list-rhymes", rhymes)
+        this._elemPlaceholderListRhymes.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
 
     showThesaurus = (thesaurusEntries) =>
-        this._elemPlaceholderListThesaurus.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries)
+        this._elemPlaceholderListThesaurus.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
 
     showDefinitions = (definitions) =>
         this._elemPlaceholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions)

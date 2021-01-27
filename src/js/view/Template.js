@@ -17,6 +17,7 @@ class Template {
         this._inputTextTemplate = await this.loadTemplate("input-text")
         this._listTemplate = await this.loadTemplate("list")
         this._dictionaryListItemTemplate = await this.loadTemplate("dictionary-list-item")
+        this._listHeaderTemplate = await this.loadTemplate("list-header")
         this._listItemWordTemplate = await this.loadTemplate("list-item-word")
         this._listItemSubHeader1Template = await this.loadTemplate("list-item-sub-header-1")
         this._listItemSubHeader2Template = await this.loadTemplate("list-item-sub-header-2")
@@ -46,7 +47,8 @@ class Template {
     createDictionaryListItemHtml = (dictionaryListItem) =>
         this._dictionaryListItemTemplate.replace("__WORD_TYPE__", dictionaryListItem.wordType).replace("__DEFINITION__", dictionaryListItem.definition)
 
-    createListHtml = (id, items) =>
+    createListHtml = (id, word, items) =>
+        this._listHeaderTemplate.replace("__TEXT__", word) +
         this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
             items.map(item =>
                 this.createListItemHtml(item.text, item.style)

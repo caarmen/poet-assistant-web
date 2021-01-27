@@ -20,14 +20,14 @@ class MainViewModel {
     fetchRhymes(word) {
         if (!this.isLoading.value) {
             this._model.fetchRhymes(this.cleanSearchTerm(word)).then(rhymes => {
-                var result = []
+                var resultListItems = []
                 rhymes.forEach(wordVariant => {
-                    result = result.concat(this.createRhymeListItems(wordVariant.stressRhymes, "stress_syllables"))
-                    result = result.concat(this.createRhymeListItems(wordVariant.lastThreeSyllableRhymes, "last_three_syllables"))
-                    result = result.concat(this.createRhymeListItems(wordVariant.lastTwoSyllablesRhymes, "last_two_syllables"))
-                    result = result.concat(this.createRhymeListItems(wordVariant.lastSyllableRhymes, "last_syllable"))
+                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.stressRhymes, "stress_syllables"))
+                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastThreeSyllableRhymes, "last_three_syllables"))
+                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastTwoSyllablesRhymes, "last_two_syllables"))
+                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastSyllableRhymes, "last_syllable"))
                 })
-                this.rhymes.value = result
+                this.rhymes.value = new ResultList(word, resultListItems)
             })
         }
     }
@@ -45,24 +45,24 @@ class MainViewModel {
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
             this._model.fetchThesaurus(this.cleanSearchTerm(word)).then(thesaurusEntries => {
-                var result = []
+                var resultListItems = []
                 thesaurusEntries.forEach(thesaurusEntry => {
                     var wordTypeLabel
                     if (thesaurusEntry.wordType == ThesaurusEntry.WordType.ADJECTIVE) wordTypeLabel = "adjective"
                     else if (thesaurusEntry.wordType == ThesaurusEntry.WordType.ADVERB) wordTypeLabel = "adverb"
                     else if (thesaurusEntry.wordType == ThesaurusEntry.WordType.NOUN) wordTypeLabel = "noun"
                     else if (thesaurusEntry.wordType == ThesaurusEntry.WordType.VERB) wordTypeLabel = "verb"
-                    result.push(new ListItem(`part_of_speech_${wordTypeLabel}`, ListItem.ListItemStyles.SUB_HEADER_1))
+                    resultListItems.push(new ListItem(`part_of_speech_${wordTypeLabel}`, ListItem.ListItemStyles.SUB_HEADER_1))
                     if (thesaurusEntry.synonyms.length > 0) {
-                        result.push(new ListItem("synonyms", ListItem.ListItemStyles.SUB_HEADER_2))
-                        result = result.concat(thesaurusEntry.synonyms.map(synonym => new ListItem(synonym, ListItem.ListItemStyles.WORD)))
+                        resultListItems.push(new ListItem("synonyms", ListItem.ListItemStyles.SUB_HEADER_2))
+                        resultListItems = resultListItems.concat(thesaurusEntry.synonyms.map(synonym => new ListItem(synonym, ListItem.ListItemStyles.WORD)))
                     }
                     if (thesaurusEntry.antonyms.length > 0) {
-                        result.push(new ListItem("antonyms", ListItem.ListItemStyles.SUB_HEADER_2))
-                        result = result.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(antonym, ListItem.ListItemStyles.WORD)))
+                        resultListItems.push(new ListItem("antonyms", ListItem.ListItemStyles.SUB_HEADER_2))
+                        resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(antonym, ListItem.ListItemStyles.WORD)))
                     }
                 })
-                this.thesaurusEntries.value = result
+                this.thesaurusEntries.value = new ResultList(word, resultListItems)
             })
         }
     }

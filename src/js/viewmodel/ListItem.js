@@ -4,4 +4,4 @@ class ListItem {
         this.style = style
     }
 }
-ListItem.ListItemStyles = Object.freeze({SUB_HEADER_1: 0, SUB_HEADER_2: 1, WORD: 2})
+ListItem.ListItemStyles = Object.freeze({ SUB_HEADER_1: 1, SUB_HEADER_2: 2, WORD: 3 })
