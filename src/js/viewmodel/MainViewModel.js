@@ -19,57 +19,63 @@ class MainViewModel {
 
     fetchRhymes(word) {
         if (!this.isLoading.value) {
-            this._model.fetchRhymes(this.cleanSearchTerm(word)).then(rhymes => {
-                var result = []
+            var searchTerm = this.cleanSearchTerm(word)
+            this._model.fetchRhymes(searchTerm).then(rhymes => {
+                var resultListItems = []
                 rhymes.forEach(wordVariant => {
-                    result = result.concat(this.createRhymeListItems(wordVariant.stressRhymes, "stress_syllables"))
-                    result = result.concat(this.createRhymeListItems(wordVariant.lastThreeSyllableRhymes, "last_three_syllables"))
-                    result = result.concat(this.createRhymeListItems(wordVariant.lastTwoSyllablesRhymes, "last_two_syllables"))
-                    result = result.concat(this.createRhymeListItems(wordVariant.lastSyllableRhymes, "last_syllable"))
+                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.stressRhymes, "stress_syllables"))
+                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastThreeSyllableRhymes, "last_three_syllables"))
+                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastTwoSyllablesRhymes, "last_two_syllables"))
+                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastSyllableRhymes, "last_syllable"))
                 })
-                this.rhymes.value = result
+                this.rhymes.value = new ResultList(searchTerm, resultListItems)
             })
         }
     }
 
     createRhymeListItems(rhymes, syllableType) {
-        var result = []
+        var resultListItems = []
         if (rhymes != undefined) {
-            result.push(new ListItem(syllableType, ListItem.ListItemStyles.SUB_HEADER_1))
-            result = result.concat(new ListItem(rhymes.syllables, ListItem.ListItemStyles.SUB_HEADER_2))
-            result = result.concat(rhymes.rhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
+            resultListItems.push(new ListItem(syllableType, ListItem.ListItemStyles.SUB_HEADER_1))
+            resultListItems = resultListItems.concat(new ListItem(rhymes.syllables, ListItem.ListItemStyles.SUB_HEADER_2))
+            resultListItems = resultListItems.concat(rhymes.rhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
         }
-        return result
+        return resultListItems
     }
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
-            this._model.fetchThesaurus(this.cleanSearchTerm(word)).then(thesaurusEntries => {
-                var result = []
+            var searchTerm = this.cleanSearchTerm(word)
+            this._model.fetchThesaurus(searchTerm).then(thesaurusEntries => {
+                var resultListItems = []
                 thesaurusEntries.forEach(thesaurusEntry => {
                     var wordTypeLabel = this.getWordTypeLabel(thesaurusEntry.wordType)
-                    result.push(new ListItem(`part_of_speech_${wordTypeLabel}`, ListItem.ListItemStyles.SUB_HEADER_1))
+                    resultListItems.push(new ListItem(`part_of_speech_${wordTypeLabel}`, ListItem.ListItemStyles.SUB_HEADER_1))
                     if (thesaurusEntry.synonyms.length > 0) {
-                        result.push(new ListItem("synonyms", ListItem.ListItemStyles.SUB_HEADER_2))
-                        result = result.concat(thesaurusEntry.synonyms.map(synonym => new ListItem(synonym, ListItem.ListItemStyles.WORD)))
+                        resultListItems.push(new ListItem("synonyms", ListItem.ListItemStyles.SUB_HEADER_2))
+                        resultListItems = resultListItems.concat(thesaurusEntry.synonyms.map(synonym => new ListItem(synonym, ListItem.ListItemStyles.WORD)))
                     }
                     if (thesaurusEntry.antonyms.length > 0) {
-                        result.push(new ListItem("antonyms", ListItem.ListItemStyles.SUB_HEADER_2))
-                        result = result.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(antonym, ListItem.ListItemStyles.WORD)))
+                        resultListItems.push(new ListItem("antonyms", ListItem.ListItemStyles.SUB_HEADER_2))
+                        resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(antonym, ListItem.ListItemStyles.WORD)))
                     }
                 })
-                this.thesaurusEntries.value = result
+                this.thesaurusEntries.value = new ResultList(searchTerm, resultListItems)
             })
         }
     }
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
-            this._model.fetchDefinitions(this.cleanSearchTerm(word)).then(definitions => {
-                this.definitions.value = definitions.map(dictionaryEntry => {
-                    var wordTypeLabel = this.getWordTypeLabel(dictionaryEntry.wordType)
-                    return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
-                })
+            var searchTerm = this.cleanSearchTerm(word)
+            this._model.fetchDefinitions(searchTerm).then(definitions => {
+                this.definitions.value = new DictionaryResultList(
+                    searchTerm,
+                    definitions.map(dictionaryEntry => {
+                        var wordTypeLabel = this.getWordTypeLabel(dictionaryEntry.wordType)
+                        return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
+                    })
+                )
             })
         }
     }
