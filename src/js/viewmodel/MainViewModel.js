@@ -19,7 +19,8 @@ class MainViewModel {
 
     fetchRhymes(word) {
         if (!this.isLoading.value) {
-            this._model.fetchRhymes(this.cleanSearchTerm(word)).then(rhymes => {
+            var searchTerm = this.cleanSearchTerm(word)
+            this._model.fetchRhymes(searchTerm).then(rhymes => {
                 var resultListItems = []
                 rhymes.forEach(wordVariant => {
                     resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.stressRhymes, "stress_syllables"))
@@ -27,7 +28,7 @@ class MainViewModel {
                     resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastTwoSyllablesRhymes, "last_two_syllables"))
                     resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastSyllableRhymes, "last_syllable"))
                 })
-                this.rhymes.value = new ResultList(word, resultListItems)
+                this.rhymes.value = new ResultList(searchTerm, resultListItems)
             })
         }
     }
@@ -44,7 +45,8 @@ class MainViewModel {
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
-            this._model.fetchThesaurus(this.cleanSearchTerm(word)).then(thesaurusEntries => {
+            var searchTerm = this.cleanSearchTerm(word)
+            this._model.fetchThesaurus(searchTerm).then(thesaurusEntries => {
                 var resultListItems = []
                 thesaurusEntries.forEach(thesaurusEntry => {
                     var wordTypeLabel = this.getWordTypeLabel(thesaurusEntry.wordType)
@@ -58,18 +60,22 @@ class MainViewModel {
                         resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(antonym, ListItem.ListItemStyles.WORD)))
                     }
                 })
-                this.thesaurusEntries.value = new ResultList(word, resultListItems)
+                this.thesaurusEntries.value = new ResultList(searchTerm, resultListItems)
             })
         }
     }
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
-            this._model.fetchDefinitions(this.cleanSearchTerm(word)).then(definitions => {
-                this.definitions.value = definitions.map(dictionaryEntry => {
-                    var wordTypeLabel = this.getWordTypeLabel(dictionaryEntry.wordType)
-                    return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
-                })
+            var searchTerm = this.cleanSearchTerm(word)
+            this._model.fetchDefinitions(searchTerm).then(definitions => {
+                this.definitions.value = new DictionaryResultList(
+                    searchTerm,
+                    definitions.map(dictionaryEntry => {
+                        var wordTypeLabel = this.getWordTypeLabel(dictionaryEntry.wordType)
+                        return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
+                    })
+                )
             })
         }
     }

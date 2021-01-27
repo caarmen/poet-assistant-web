@@ -37,7 +37,8 @@ class Template {
     createInputTextHtml = (id, label) =>
         this._inputTextTemplate.replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
 
-    createDictionaryListHtml = (id, dictionaryListItems) =>
+    createDictionaryListHtml = (id, word, dictionaryListItems) =>
+        this._listHeaderTemplate.replace("__TEXT__", word) +
         this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
             dictionaryListItems.map(item =>
                 this.createDictionaryListItemHtml(item)

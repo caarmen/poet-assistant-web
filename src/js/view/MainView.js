@@ -129,7 +129,7 @@ class MainView {
         this._elemPlaceholderListThesaurus.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
 
     showDefinitions = (definitions) =>
-        this._elemPlaceholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions)
+        this._elemPlaceholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
 
     showLoading(isLoading) {
         if (isLoading) {
