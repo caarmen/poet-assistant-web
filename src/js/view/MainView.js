@@ -141,7 +141,7 @@ class MainView {
     listenForListItemWordClicks(mdcList) {
         mdcList.listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) {
-                this.showContextMenu(e.pageX, e.pageY, e.target.innerText)
+                this.showContextMenu(e.target, e.target.innerText)
             }
         })
     }
@@ -169,7 +169,7 @@ class MainView {
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
     }
-    showContextMenu(x, y, word) {
+    showContextMenu(anchorElement, word) {
         this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(
             [
                 new MenuItem("menu-rhymer", "tab_rhymer_title"),
@@ -178,7 +178,9 @@ class MainView {
             ]
         )
         const mdcMenu = new MainView.MDCMenu(document.querySelector(".mdc-menu"))
-        mdcMenu.setAbsolutePosition(x, y)
+        mdcMenu.setAnchorCorner(mdc.menu.Corner.BOTTOM_LEFT)
+        mdcMenu.setAnchorElement(anchorElement)
+        mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
         mdcMenu.listen('click', (e) =>{
             var selectedTab = this.contextMenuItemIdToTab(e.target.id)
