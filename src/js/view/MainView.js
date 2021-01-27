@@ -13,6 +13,8 @@ class MainView {
         this._elemPlacholderInputTextSearch
         this._elemPlaceholderBtnSearch
 
+        this._mdcListRhymes
+        this._mdcListThesaurus
         this._mdcLinearProgress
         this._mdcInputTextSearch
 
@@ -112,21 +114,36 @@ class MainView {
         }
     }
     searchAll() {
-        this.searchRhymes()
-        this.searchThesaurus()
-        this.searchDefinitions()
+        var word = this._mdcInputTextSearch.value
+        this.searchRhymes(word)
+        this.searchThesaurus(word)
+        this.searchDefinitions(word)
     }
-    searchRhymes = () => this._viewModel.fetchRhymes(this._mdcInputTextSearch.value)
+    searchRhymes = (word) => this._viewModel.fetchRhymes(word)
 
-    searchThesaurus = () => this._viewModel.fetchThesaurus(this._mdcInputTextSearch.value)
+    searchThesaurus = (word) => this._viewModel.fetchThesaurus(word)
 
-    searchDefinitions = () => this._viewModel.fetchDefinitions(this._mdcInputTextSearch.value)
+    searchDefinitions = (word) => this._viewModel.fetchDefinitions(word)
 
-    showRhymes = (rhymes) =>
+    showRhymes(rhymes) {
         this._elemPlaceholderListRhymes.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
+        this._mdcListRhymes = new MainView.MDCList(document.querySelector("#list-rhymes"))
+        this._mdcListRhymes.listen('click', (e) => {
+            if (e.target.classList.contains("word-list-item")) {
+                console.log(`clicked rhyme entry ${e.target.innerText}`)
+            }
+        })
+    }
 
-    showThesaurus = (thesaurusEntries) =>
+    showThesaurus(thesaurusEntries) {
         this._elemPlaceholderListThesaurus.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
+        this._mdcListThesaurus = new MainView.MDCList(document.querySelector("#list-thesaurus"))
+        this._mdcListThesaurus.listen('click', (e) => {
+            if (e.target.classList.contains("word-list-item")) {
+                console.log(`clicked thesaurus entry ${e.target.innerText}`)
+            }
+        })
+    }
 
     showDefinitions = (definitions) =>
         this._elemPlaceholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
@@ -152,9 +169,10 @@ class MainView {
         dialog.open()
     }
 }
-MainView.MDCTabBar = mdc.tabBar.MDCTabBar
-MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCDialog = mdc.dialog.MDCDialog
+MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
+MainView.MDCList = mdc.list.MDCList
+MainView.MDCTabBar = mdc.tabBar.MDCTabBar
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
     var mainView = new MainView()
