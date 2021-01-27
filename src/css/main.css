@@ -36,6 +36,9 @@
 #placeholder-btn-fetch-definitions {
 	display: table-cell;
 }
+#placeholder-context-menu {
+	position: absolute;
+}
 .dictionary-list-item-word-type {
 	font-weight: bold;
 	display: table-cell;

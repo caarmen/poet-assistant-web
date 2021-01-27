@@ -13,6 +13,8 @@ class Template {
         this._progressIndicatorTemplate = await this.loadTemplate("progress-indicator")
         this._buttonTemplate = await this.loadTemplate("button")
         this._buttonIconTemplate = await this.loadTemplate("button-icon")
+        this._contextMenuTemplate = await this.loadTemplate("context-menu")
+        this._contextMenuItemTemplate = await this.loadTemplate("context-menu-item")
         this._dialogTemplate = await this.loadTemplate("dialog")
         this._inputTextTemplate = await this.loadTemplate("input-text")
         this._listTemplate = await this.loadTemplate("list")
@@ -30,6 +32,14 @@ class Template {
 
     createButtonIconHtml = (id, icon, label) =>
         this._buttonIconTemplate.replace("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
+
+    createContextMenuHtml = (items) =>
+        this._contextMenuTemplate.replace(
+            "__ITEMS__",
+            items.map((item) =>
+                this._contextMenuItemTemplate.replace("__ID__", item.id).replace("__LABEL__", this._i18n.translate(item.label))
+            ).join("")
+        )
 
     createDialogHtml = (title, content) =>
         this._dialogTemplate.replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content)).replace("__CONTENT__", this._i18n.translate(content))

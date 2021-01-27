@@ -4,6 +4,7 @@ class MainView {
     constructor() {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
+        this._elemPlaceholderContextMenu = document.querySelector("#placeholder-context-menu")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
         this._elemPlaceholderListRhymes = document.querySelector("#placeholder-list-rhymes")
         this._elemPlaceholderListThesaurus = document.querySelector("#placeholder-list-thesaurus")
@@ -128,19 +129,19 @@ class MainView {
     showRhymes(rhymes) {
         this._elemPlaceholderListRhymes.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
         this._mdcListRhymes = new MainView.MDCList(document.querySelector("#list-rhymes"))
-        this._mdcListRhymes.listen('click', (e) => {
-            if (e.target.classList.contains("word-list-item")) {
-                console.log(`clicked rhyme entry ${e.target.innerText}`)
-            }
-        })
+        this.listenForListItemWordClicks(this._mdcListRhymes)
     }
 
     showThesaurus(thesaurusEntries) {
         this._elemPlaceholderListThesaurus.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
         this._mdcListThesaurus = new MainView.MDCList(document.querySelector("#list-thesaurus"))
-        this._mdcListThesaurus.listen('click', (e) => {
+        this.listenForListItemWordClicks(this._mdcListThesaurus)
+    }
+
+    listenForListItemWordClicks(mdcList) {
+        mdcList.listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) {
-                console.log(`clicked thesaurus entry ${e.target.innerText}`)
+                this.showContextMenu(e.pageX, e.pageY, e.target.innerText)
             }
         })
     }
@@ -168,10 +169,40 @@ class MainView {
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
     }
+    showContextMenu(x, y, word) {
+        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(
+            [
+                new MenuItem("menu-rhymer", "tab_rhymer_title"),
+                new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
+                new MenuItem("menu-dictionary", "tab_dictionary_title"),
+            ]
+        )
+        const mdcMenu = new MainView.MDCMenu(document.querySelector(".mdc-menu"))
+        mdcMenu.setAbsolutePosition(x, y)
+        mdcMenu.open = true
+        mdcMenu.listen('click', (e) =>{
+            var selectedTab = this.contextMenuItemIdToTab(e.target.id)
+            if (selectedTab == MainViewModel.TabIndex.RHYMER) {
+                this.searchRhymes(word)
+            } else if (selectedTab == MainViewModel.TabIndex.THESAURUS) {
+                this.searchThesaurus(word)
+            } else if (selectedTab == MainViewModel.TabIndex.DICTIONARY) {
+                this.searchDefinitions(word)
+            }
+            if (selectedTab != undefined) this.switchToTab(selectedTab)
+        })
+    }
+    contextMenuItemIdToTab(contextMenuItemId) {
+        if (contextMenuItemId == "menu-rhymer") return MainViewModel.TabIndex.RHYMER
+        else if (contextMenuItemId == "menu-thesaurus") return MainViewModel.TabIndex.THESAURUS
+        else if (contextMenuItemId == "menu-dictionary") return MainViewModel.TabIndex.DICTIONARY
+        else return undefined
+    }
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCList = mdc.list.MDCList
+MainView.MDCMenu = mdc.menu.MDCMenu
 MainView.MDCTabBar = mdc.tabBar.MDCTabBar
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
