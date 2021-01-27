@@ -38,8 +38,10 @@
 }
 .dictionary-list-item-word-type {
 	font-weight: bold;
-	padding-inline-end: 16px;
 	display: table-cell;
+	width: 3em;
+	padding-inline-end: 1em;
+	text-align: end;
 }
 .dictionary-list-item-definition {
 	display: table-cell;
