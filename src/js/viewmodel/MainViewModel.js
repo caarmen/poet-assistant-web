@@ -47,11 +47,7 @@ class MainViewModel {
             this._model.fetchThesaurus(this.cleanSearchTerm(word)).then(thesaurusEntries => {
                 var result = []
                 thesaurusEntries.forEach(thesaurusEntry => {
-                    var wordTypeLabel
-                    if (thesaurusEntry.wordType == ThesaurusEntry.WordType.ADJECTIVE) wordTypeLabel = "adjective"
-                    else if (thesaurusEntry.wordType == ThesaurusEntry.WordType.ADVERB) wordTypeLabel = "adverb"
-                    else if (thesaurusEntry.wordType == ThesaurusEntry.WordType.NOUN) wordTypeLabel = "noun"
-                    else if (thesaurusEntry.wordType == ThesaurusEntry.WordType.VERB) wordTypeLabel = "verb"
+                    var wordTypeLabel = this.getWordTypeLabel(thesaurusEntry.wordType)
                     result.push(new ListItem(`part_of_speech_${wordTypeLabel}`, ListItem.ListItemStyles.SUB_HEADER_1))
                     if (thesaurusEntry.synonyms.length > 0) {
                         result.push(new ListItem("synonyms", ListItem.ListItemStyles.SUB_HEADER_2))
@@ -70,9 +66,21 @@ class MainViewModel {
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
             this._model.fetchDefinitions(this.cleanSearchTerm(word)).then(definitions => {
-                this.definitions.value = definitions
+                this.definitions.value = definitions.map(dictionaryEntry => {
+                    var wordTypeLabel = this.getWordTypeLabel(dictionaryEntry.wordType)
+                    return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
+                })
             })
         }
+    }
+
+    getWordTypeLabel(wordType) {
+        var wordTypeLabel
+        if (wordType == WordType.ADJECTIVE) wordTypeLabel = "adjective"
+        else if (wordType == WordType.ADVERB) wordTypeLabel = "adverb"
+        else if (wordType == WordType.NOUN) wordTypeLabel = "noun"
+        else if (wordType == WordType.VERB) wordTypeLabel = "verb"
+        return wordTypeLabel
     }
 
     cleanSearchTerm = (text) => text.toLowerCase().trim()

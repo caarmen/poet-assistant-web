@@ -13,7 +13,13 @@ class DictionaryRepository {
 
         while (stmt.step()) {
             var row = stmt.getAsObject();
-            var definition = new DictionaryListItem(row[DictionaryRepository.COL_PART_OF_SPEECH], row[DictionaryRepository.COL_DEFINITION])
+            var wordTypeStr = row[DictionaryRepository.COL_PART_OF_SPEECH]
+            var wordType
+            if (wordTypeStr == "a") wordType = WordType.ADJECTIVE
+            else if (wordTypeStr == "r") wordType = WordType.ADVERB
+            else if (wordTypeStr == "n") wordType = WordType.NOUN
+            else if (wordTypeStr == "v") wordType = WordType.VERB
+            var definition = new DictionaryEntry(wordType, row[DictionaryRepository.COL_DEFINITION])
             definitions.push(definition)
         }
         return definitions

@@ -16,10 +16,10 @@ class ThesaurusRepository {
             var wordTypeStr = row[ThesaurusRepository.COL_WORD_TYPE]
 
             var wordType
-            if (wordTypeStr == "ADJ") wordType = ThesaurusEntry.WordType.ADJECTIVE
-            else if (wordTypeStr == "ADV") wordType = ThesaurusEntry.WordType.ADVERB
-            else if (wordTypeStr == "NOUN") wordType = ThesaurusEntry.WordType.NOUN
-            else if (wordTypeStr == "VERB") wordType = ThesaurusEntry.WordType.VERB
+            if (wordTypeStr == "ADJ") wordType = WordType.ADJECTIVE
+            else if (wordTypeStr == "ADV") wordType = WordType.ADVERB
+            else if (wordTypeStr == "NOUN") wordType = WordType.NOUN
+            else if (wordTypeStr == "VERB") wordType = WordType.VERB
 
             var synonyms = (row[ThesaurusRepository.COL_SYNONYMS] || "").split(",").filter(item => item != "").sort()
             var antonyms = (row[ThesaurusRepository.COL_ANTONYMS] || "").split(",").filter(item => item != "").sort()

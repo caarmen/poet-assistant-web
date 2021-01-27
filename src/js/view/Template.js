@@ -44,7 +44,9 @@ class Template {
         )
 
     createDictionaryListItemHtml = (dictionaryListItem) =>
-        this._dictionaryListItemTemplate.replace("__WORD_TYPE__", dictionaryListItem.wordType).replace("__DEFINITION__", dictionaryListItem.definition)
+        this._dictionaryListItemTemplate
+            .replace("__WORD_TYPE__", this._i18n.translate(dictionaryListItem.wordTypeLabel))
+            .replace("__DEFINITION__", dictionaryListItem.definition)
 
     createListHtml = (id, items) =>
         this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
