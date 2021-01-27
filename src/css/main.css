@@ -52,6 +52,11 @@
 .mdc-list-item__text{
 	white-space: normal;
 }
+.list-header {
+	font-weight: bold;
+	padding-inline-start: 16px;
+	font-size: 1.2em;
+}
 .list-item-sub-header-1{
 	font-weight: bold;
 	background-color: var(--sub-header-1, #dddddd);
