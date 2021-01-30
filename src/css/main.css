@@ -64,6 +64,12 @@ html {
 	top: 50%;
 	width: 100%;
 }
+.search-results-list {
+	display: block;
+	width: 100%;
+	overflow-y: scroll;
+	height: calc(100vh - 192px - 40px - 16px - 16px);
+}
 .list-header {
 	font-weight: bold;
 	padding-inline-start: 16px;
