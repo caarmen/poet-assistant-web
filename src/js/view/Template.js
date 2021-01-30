@@ -64,15 +64,15 @@ class Template {
         this._listHeaderTemplate.replace("__TEXT__", word) +
         this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
             items.map(item =>
-                this.createListItemHtml(item.text, item.style)
+                this.createListItemHtml(item.style, item.text, item.args)
             ).join("")
         )
 
-    createListItemHtml(text, style) {
+    createListItemHtml(style, text, args) {
         if (style == ListItem.ListItemStyles.SUB_HEADER_1) {
-            return this._listItemSubHeader1Template.replace("__TEXT__", this._i18n.translate(text))
+            return this._listItemSubHeader1Template.replace("__TEXT__", this._i18n.translate(text, args))
         } else if (style == ListItem.ListItemStyles.SUB_HEADER_2) {
-            return this._listItemSubHeader2Template.replace("__TEXT__", this._i18n.translate(text))
+            return this._listItemSubHeader2Template.replace("__TEXT__", this._i18n.translate(text, args))
         } else if (style == ListItem.ListItemStyles.WORD) {
             return this._listItemWordTemplate.replace("__WORD__", text)
         }
