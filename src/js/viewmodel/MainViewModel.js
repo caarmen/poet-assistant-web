@@ -20,28 +20,26 @@ class MainViewModel {
     fetchRhymes(word) {
         if (!this.isLoading.value) {
             var searchTerm = this.cleanSearchTerm(word)
-            this._model.fetchRhymes(searchTerm).then(rhymes => {
-                var resultListItems = []
-                rhymes.forEach(wordVariant => {
-                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.stressRhymes, "stress_syllables"))
-                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastThreeSyllableRhymes, "last_three_syllables"))
-                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastTwoSyllablesRhymes, "last_two_syllables"))
-                    resultListItems = resultListItems.concat(this.createRhymeListItems(wordVariant.lastSyllableRhymes, "last_syllable"))
-                })
-                this.rhymes.value = new ResultList(searchTerm, resultListItems)
+            this._model.fetchRhymes(searchTerm).then(wordRhymes => {
+                this.rhymes.value = new ResultList(searchTerm, [
+                    this.createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables"),
+                    this.createRhymeListItems(wordRhymes.lastThreeSyllableRhymes, "last_three_syllables"),
+                    this.createRhymeListItems(wordRhymes.lastTwoSyllablesRhymes, "last_two_syllables"),
+                    this.createRhymeListItems(wordRhymes.lastSyllableRhymes, "last_syllable")
+                ].flat())
             })
         }
     }
 
-    createRhymeListItems(rhymes, syllableType) {
-        var resultListItems = []
-        if (rhymes != undefined) {
-            resultListItems.push(new ListItem(syllableType, ListItem.ListItemStyles.SUB_HEADER_1))
-            resultListItems = resultListItems.concat(new ListItem(rhymes.syllables, ListItem.ListItemStyles.SUB_HEADER_2))
-            resultListItems = resultListItems.concat(rhymes.rhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD)))
-        }
-        return resultListItems
-    }
+    createRhymeListItems = (syllableRhymes, syllableTypeLabel) =>
+        (syllableRhymes || []).flatMap((item) =>
+            [
+                new ListItem(syllableTypeLabel, ListItem.ListItemStyles.SUB_HEADER_1),
+                new ListItem(item.syllables, ListItem.ListItemStyles.SUB_HEADER_2)
+            ].concat(
+                item.rhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD))
+            )
+        )
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
