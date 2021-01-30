@@ -44,7 +44,8 @@ class RhymerRepository {
             WHERE ${syllableColumn}=? 
                 AND ${RhymerRepository.COL_WORD} != ? 
                 AND ${RhymerRepository.COL_HAS_DEFINITION}=1 ${excludeClause} 
-            ORDER BY ${RhymerRepository.COL_WORD}`)
+            ORDER BY ${RhymerRepository.COL_WORD}
+            LIMIT ${RhymerRepository.LIMIT}`)
         stmt.bind([syllables, word])
         var rhymes = []
         while (stmt.step()) {
@@ -84,6 +85,7 @@ class RhymerRepository {
     }
 }
 RhymerRepository.TABLE_WORD_VARIANTS = "word_variants"
+RhymerRepository.LIMIT = 500
 RhymerRepository.COL_HAS_DEFINITION = "has_definition"
 RhymerRepository.COL_STRESS_SYLLABLES = "stress_syllables"
 RhymerRepository.COL_LAST_THREE_SYLLABLES = "last_three_syllables"
