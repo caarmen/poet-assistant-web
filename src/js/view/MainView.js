@@ -205,6 +205,7 @@ class MainView {
         const mdcMenu = new MainView.MDCMenu(document.querySelector(".mdc-menu"))
         mdcMenu.setAnchorCorner(mdc.menu.Corner.BOTTOM_LEFT)
         mdcMenu.setAnchorElement(anchorElement)
+        mdcMenu.setAnchorMargin({left: 16})
         mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
         mdcMenu.listen('click', (e) => {
