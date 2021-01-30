@@ -195,7 +195,7 @@ class MainView {
             ]
         )
         const mdcMenu = new MainView.MDCMenu(document.querySelector(".mdc-menu"))
-        mdcMenu.setAnchorCorner(mdc.menu.Corner.BOTTOM_LEFT)
+        mdcMenu.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
         mdcMenu.setAnchorElement(anchorElement)
         mdcMenu.setAnchorMargin({left: 16})
         mdcMenu.setFixedPosition(true)
@@ -223,6 +223,7 @@ MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCList = mdc.list.MDCList
 MainView.MDCMenu = mdc.menu.MDCMenu
+MainView.MDCMenuCorner = mdc.menu.Corner
 MainView.MDCTabBar = mdc.tabBar.MDCTabBar
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
