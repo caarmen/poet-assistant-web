@@ -2,13 +2,10 @@ class I18n {
     constructor() {
     }
 
-    translate(text, ...args) {
-        var result = this._strings[text] || text
-        args.forEach((arg, position) => {
-            result = result.replace(new RegExp(`\\{${position}\\}`, "gm"), arg)
-        })
-        return result
-    }
+    translate = (text, ...args) => args.reduce(
+        (previousResult, arg, position) => previousResult.replace(new RegExp(`\\{${position}\\}`, "gm"), arg),
+        this._strings[text] || text
+    )
 
     async load() {
         var response = await fetch("src/i18n/en.json")
