@@ -53,11 +53,11 @@ class MainView {
                 new TabData("tab_dictionary", "tab_dictionary_title")
             ])
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
-        this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-fetch-definitions")
+        this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-search")
 
         this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml("progressbar_label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
-        this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-fetch-definitions", "search", "btn_search_title")
+        this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-search", "search", "btn_search_title")
     }
 
     initializeViews() {
@@ -81,13 +81,13 @@ class MainView {
             if (evt.keyCode == 13) this.searchAll()
         }
 
-        this._elemBtnSearch = document.querySelector("#btn-fetch-definitions")
+        this._elemBtnSearch = document.querySelector("#btn-search")
         this._elemBtnSearch.disabled = true
     }
 
     bindViewModel() {
         // viewmodel -> view bindings
-        this._viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this.template.isLoaded) }
+        this._viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this._template.isLoaded) }
         this._viewModel.rhymes.observer = (newRhymes) => { this.showRhymes(newRhymes) }
         this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
@@ -124,16 +124,8 @@ class MainView {
         }
     }
     searchAll() {
-        var word = this._mdcInputTextSearch.value
-        this.searchRhymes(word)
-        this.searchThesaurus(word)
-        this.searchDefinitions(word)
+        this._viewModel.fetchAll(this._mdcInputTextSearch.value)
     }
-    searchRhymes = (word) => this._viewModel.fetchRhymes(word)
-
-    searchThesaurus = (word) => this._viewModel.fetchThesaurus(word)
-
-    searchDefinitions = (word) => this._viewModel.fetchDefinitions(word)
 
     showRhymes(rhymes) {
         this._elemPlaceholderRhymesList.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
@@ -211,11 +203,11 @@ class MainView {
         mdcMenu.listen('click', (e) => {
             var selectedTab = this.contextMenuItemIdToTab(e.target.id)
             if (selectedTab == MainViewModel.TabIndex.RHYMER) {
-                this.searchRhymes(word)
+                this._viewModel.fetchRhymes(word)
             } else if (selectedTab == MainViewModel.TabIndex.THESAURUS) {
-                this.searchThesaurus(word)
+                this._viewModel.fetchThesaurus(word)
             } else if (selectedTab == MainViewModel.TabIndex.DICTIONARY) {
-                this.searchDefinitions(word)
+                this._viewModel.fetchDefinitions(word)
             }
             if (selectedTab != undefined) this.switchToTab(selectedTab)
         })

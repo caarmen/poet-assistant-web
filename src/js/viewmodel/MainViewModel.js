@@ -17,6 +17,12 @@ class MainViewModel {
         })
     }
 
+    fetchAll(word) {
+        this.fetchRhymes(word)
+        this.fetchThesaurus(word)
+        this.fetchDefinitions(word)
+    }
+
     fetchRhymes(word) {
         if (!this.isLoading.value) {
             var searchTerm = this.cleanSearchTerm(word)
