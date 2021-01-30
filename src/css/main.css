@@ -1,19 +1,28 @@
 html {
 	font-family: var(--mdc-typography-subtitle1-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
 }
+body {
+	margin: 0px;
+}
 :root {
 	--mdc-theme-primary: #607D8B;
 	--mdc-theme-secondary: #455A64; 
 	--mdc-theme-text-primary-on-light: #212121;
 	--mdc-theme-text-secondary-on-light: #727272;
 	--sub-header-1: #EEEEEE;
+	--app-bar-row-height: 64px;
+}
+@media (max-width: 599px) {
+	:root {
+		--app-bar-row-height: 56px;
+	}
 }
 /* https://github.com/material-components/material-components-web/issues/2718 */
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
 	color: var(--mdc-theme-primary);
 }
 #content {
-	padding-top: 192px;
+	padding-top: calc(3*var(--app-bar-row-height));
 }
 #placeholder-tab-bar {
 	width: 100%;
@@ -68,7 +77,7 @@ html {
 	display: block;
 	width: 100%;
 	overflow-y: scroll;
-	height: calc(100vh - 192px - 40px - 16px - 16px);
+	height: calc(100vh - 3*(var(--app-bar-row-height)) - 40px - 16px - 16px);
 }
 .list-header {
 	font-weight: bold;
