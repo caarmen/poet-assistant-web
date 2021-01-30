@@ -6,9 +6,18 @@ class MainView {
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
         this._elemPlaceholderContextMenu = document.querySelector("#placeholder-context-menu")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
-        this._elemPlaceholderListRhymes = document.querySelector("#placeholder-list-rhymes")
-        this._elemPlaceholderListThesaurus = document.querySelector("#placeholder-list-thesaurus")
-        this._elemPlaceholderListDefinitions = document.querySelector("#placeholder-list-definitions")
+
+        this._elemPlaceholderRhymes = document.querySelector("#placeholder-rhymes")
+        this._elemPlaceholderRhymesList = document.querySelector("#placeholder-rhymes-list")
+        this._elemPlaceholderRhymesEmpty = document.querySelector("#placeholder-rhymes-empty")
+
+        this._elemPlaceholderThesaurus = document.querySelector("#placeholder-thesaurus")
+        this._elemPlaceholderThesaurusList = document.querySelector("#placeholder-thesaurus-list")
+        this._elemPlaceholderThesaurusEmpty = document.querySelector("#placeholder-thesaurus-empty")
+
+        this._elemPlaceholderDefinitions = document.querySelector("#placeholder-definitions")
+        this._elemPlaceholderDefinitionsList = document.querySelector("#placeholder-definitions-list")
+        this._elemPlaceholderDefinitionsEmpty = document.querySelector("#placeholder-definitions-empty")
 
         this._elemPlaceholderTabBar
         this._elemPlacholderInputTextSearch
@@ -101,17 +110,17 @@ class MainView {
     }
     onTabActivated(tabIndex) {
         if (tabIndex == MainViewModel.TabIndex.RHYMER) {
-            this._elemPlaceholderListRhymes.style.display = "block"
-            this._elemPlaceholderListThesaurus.style.display = "none"
-            this._elemPlaceholderListDefinitions.style.display = "none"
+            this._elemPlaceholderRhymes.style.display = "block"
+            this._elemPlaceholderThesaurus.style.display = "none"
+            this._elemPlaceholderDefinitions.style.display = "none"
         } else if (tabIndex == MainViewModel.TabIndex.THESAURUS) {
-            this._elemPlaceholderListRhymes.style.display = "none"
-            this._elemPlaceholderListThesaurus.style.display = "block"
-            this._elemPlaceholderListDefinitions.style.display = "none"
+            this._elemPlaceholderRhymes.style.display = "none"
+            this._elemPlaceholderThesaurus.style.display = "block"
+            this._elemPlaceholderDefinitions.style.display = "none"
         } else if (tabIndex == MainViewModel.TabIndex.DICTIONARY) {
-            this._elemPlaceholderListRhymes.style.display = "none"
-            this._elemPlaceholderListThesaurus.style.display = "none"
-            this._elemPlaceholderListDefinitions.style.display = "block"
+            this._elemPlaceholderRhymes.style.display = "none"
+            this._elemPlaceholderThesaurus.style.display = "none"
+            this._elemPlaceholderDefinitions.style.display = "block"
         }
     }
     searchAll() {
@@ -127,13 +136,15 @@ class MainView {
     searchDefinitions = (word) => this._viewModel.fetchDefinitions(word)
 
     showRhymes(rhymes) {
-        this._elemPlaceholderListRhymes.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
+        this._elemPlaceholderRhymesList.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
+        this.setListVisibility(rhymes.listItems, this._elemPlaceholderRhymesList, this._elemPlaceholderRhymesEmpty, "no_results_rhymes", rhymes.word)
         this._mdcListRhymes = new MainView.MDCList(document.querySelector("#list-rhymes"))
         this.listenForListItemWordClicks(this._mdcListRhymes)
     }
 
     showThesaurus(thesaurusEntries) {
-        this._elemPlaceholderListThesaurus.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
+        this._elemPlaceholderThesaurusList.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
+        this.setListVisibility(thesaurusEntries.listItems, this._elemPlaceholderThesaurusList, this._elemPlaceholderThesaurusEmpty, "no_results_thesaurus", thesaurusEntries.word)
         this._mdcListThesaurus = new MainView.MDCList(document.querySelector("#list-thesaurus"))
         this.listenForListItemWordClicks(this._mdcListThesaurus)
     }
@@ -146,8 +157,22 @@ class MainView {
         })
     }
 
-    showDefinitions = (definitions) =>
-        this._elemPlaceholderListDefinitions.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
+    showDefinitions(definitions) {
+        this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
+        this.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
+    }
+
+    setListVisibility(listData, elemList, elemEmpty, emptyText, word) {
+        if (listData && listData.length > 0) {
+            elemList.style.display = "block"
+            elemEmpty.style.display = "none"
+            elemEmpty.innerHTML = ""
+        } else {
+            elemEmpty.innerHTML = this._template.createListEmptyHtml(emptyText, word)
+            elemList.style.display = "none"
+            elemEmpty.style.display = "block"
+        }
+    }
 
     showLoading(isLoading) {
         if (isLoading) {
@@ -182,7 +207,7 @@ class MainView {
         mdcMenu.setAnchorElement(anchorElement)
         mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
-        mdcMenu.listen('click', (e) =>{
+        mdcMenu.listen('click', (e) => {
             var selectedTab = this.contextMenuItemIdToTab(e.target.id)
             if (selectedTab == MainViewModel.TabIndex.RHYMER) {
                 this.searchRhymes(word)

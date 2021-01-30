@@ -1,3 +1,6 @@
+html {
+	font-family: var(--mdc-typography-subtitle1-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
+}
 :root {
 	--mdc-theme-primary: #607D8B;
 	--mdc-theme-secondary: #455A64; 
@@ -49,11 +52,17 @@
 .dictionary-list-item-definition {
 	display: table-cell;
 }
-#placeholder-list-definitions .mdc-list-item {
+#placeholder-definitions-list .mdc-list-item {
 	height: auto;
 }
 .mdc-list-item__text{
 	white-space: normal;
+}
+.empty-list {
+	text-align: center;
+	position: fixed;
+	top: 50%;
+	width: 100%;
 }
 .list-header {
 	font-weight: bold;

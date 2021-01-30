@@ -18,6 +18,7 @@ class Template {
         this._dialogTemplate = await this.loadTemplate("dialog")
         this._inputTextTemplate = await this.loadTemplate("input-text")
         this._listTemplate = await this.loadTemplate("list")
+        this._listEmptyTemplate = await this.loadTemplate("list-empty")
         this._dictionaryListItemTemplate = await this.loadTemplate("dictionary-list-item")
         this._listHeaderTemplate = await this.loadTemplate("list-header")
         this._listItemWordTemplate = await this.loadTemplate("list-item-word")
@@ -60,6 +61,8 @@ class Template {
             .replace("__WORD_TYPE__", this._i18n.translate(dictionaryListItem.wordTypeLabel))
             .replace("__DEFINITION__", dictionaryListItem.definition)
 
+    createListEmptyHtml = (emptyText, word) => this._listEmptyTemplate.replace("__TEXT__", this._i18n.translate(emptyText, word))
+
     createListHtml = (id, word, items) =>
         this._listHeaderTemplate.replace("__TEXT__", word) +
         this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
@@ -67,6 +70,7 @@ class Template {
                 this.createListItemHtml(item.style, item.text, item.args)
             ).join("")
         )
+
 
     createListItemHtml(style, text, args) {
         if (style == ListItem.ListItemStyles.SUB_HEADER_1) {
