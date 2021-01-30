@@ -34,10 +34,9 @@ class MainViewModel {
     createRhymeListItems = (syllableRhymes, syllableTypeLabel) =>
         (syllableRhymes || []).flatMap((item) =>
             [
-                new ListItem(syllableTypeLabel, ListItem.ListItemStyles.SUB_HEADER_1),
-                new ListItem(item.syllables, ListItem.ListItemStyles.SUB_HEADER_2)
+                new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, syllableTypeLabel, item.syllables)
             ].concat(
-                item.rhymes.map(rhyme => new ListItem(rhyme, ListItem.ListItemStyles.WORD))
+                item.rhymes.map(rhyme => new ListItem(ListItem.ListItemStyles.WORD, rhyme))
             )
         )
 
@@ -48,14 +47,14 @@ class MainViewModel {
                 var resultListItems = []
                 thesaurusEntries.forEach(thesaurusEntry => {
                     var wordTypeLabel = this.getWordTypeLabel(thesaurusEntry.wordType)
-                    resultListItems.push(new ListItem(`part_of_speech_${wordTypeLabel}`, ListItem.ListItemStyles.SUB_HEADER_1))
+                    resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, `part_of_speech_${wordTypeLabel}`))
                     if (thesaurusEntry.synonyms.length > 0) {
-                        resultListItems.push(new ListItem("synonyms", ListItem.ListItemStyles.SUB_HEADER_2))
-                        resultListItems = resultListItems.concat(thesaurusEntry.synonyms.map(synonym => new ListItem(synonym, ListItem.ListItemStyles.WORD)))
+                        resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "synonyms"))
+                        resultListItems = resultListItems.concat(thesaurusEntry.synonyms.map(synonym => new ListItem(ListItem.ListItemStyles.WORD, synonym)))
                     }
                     if (thesaurusEntry.antonyms.length > 0) {
-                        resultListItems.push(new ListItem("antonyms", ListItem.ListItemStyles.SUB_HEADER_2))
-                        resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(antonym, ListItem.ListItemStyles.WORD)))
+                        resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "antonyms"))
+                        resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(ListItem.ListItemStyles.WORD, antonym)))
                     }
                 })
                 this.thesaurusEntries.value = new ResultList(searchTerm, resultListItems)
