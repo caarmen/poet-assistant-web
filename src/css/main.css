@@ -102,6 +102,13 @@ a:link, a.active:link,a:hover, a:visited {
 #placeholder-reader-voices {
 	margin-top: 16px;
 	text-align: center;
+	height: 48px;
+}
+#placeholder-reader-input {
+	height: calc(100vh - 3*(var(--app-bar-row-height)) - 48px - 64px - 16px - 16px);
+}
+#placeholder-reader-input #input-text-reader {
+	height: 100%;
 }
 #voice-label, #selected-voice {
 	display: inline-block;
