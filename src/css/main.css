@@ -98,3 +98,25 @@ a:link, a.active:link,a:hover, a:visited {
 	padding-right: 1em;
 	color: var(--mdc-theme-text-secondary-on-light, #727272);
 }
+.about-version {
+	font-weight: bold;
+	width: 100%;
+	text-align: center;
+}
+.about-copyright {
+	font-size: 0.8em;
+	width: 100%;
+	text-align: center;
+}
+.about-contact {
+	font-size: 0.8em;
+	width: 100%;
+	text-align: center;
+	margin-bottom: 16px;
+}
+.about-list .material-icons{
+	margin-inline-end: 16px;
+}
+.about-legal-list {
+	margin-left: 16px
+}
