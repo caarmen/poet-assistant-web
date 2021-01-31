@@ -35,9 +35,7 @@ class MainViewModel {
             this.isLoading.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
-        this._model._speechEngine.voices.observer = (newVoices) => {
-            this.voices.value = newVoices.map((voice) => new MenuItem(voice.voiceURI, `${voice.name} - ${voice.lang}`))
-        }
+        this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
         this.contextMenuItems = [
             new MenuItem("menu-rhymer", "tab_rhymer_title"),
             new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
@@ -154,6 +152,23 @@ class MainViewModel {
     selectVoice = (index) => this._model.selectVoice(this.voices.value[index].id)
 
     playText = (text) => this._model.playText(text)
+
+    updateVoices(newVoices) {
+        this.voices.value = newVoices.sort((a, b) => {
+            var languageA = a.lang.substring(0, 2)
+            var languageB = b.lang.substring(0, 2)
+            if (languageA == languageB) {
+                return a.name.localeCompare(b.name)
+            } else if (languageA == "en") {
+                return -1
+            } else if (languageB == "en") {
+                return 1
+            } else {
+                return languageA.localeCompare(languageB)
+            }
+        }).map((voice) => new MenuItem(voice.voiceURI, `${voice.name} - ${voice.lang}`))
+
+    }
 
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })
