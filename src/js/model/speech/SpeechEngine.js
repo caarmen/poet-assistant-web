@@ -30,7 +30,6 @@ class SpeechEngine {
     }
     selectVoice(id) {
         this._selectedVoice = this.voices.value.find((voice) => voice.voiceURI == id)
-        console.log("selected voice " + this._selectedVoice)
     }
     populateVoiceList() {
         this.voices.value = this._synth.getVoices()
