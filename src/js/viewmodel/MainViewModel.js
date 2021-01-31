@@ -21,6 +21,7 @@ class MainViewModel {
         this.rhymes = new ObservableField()
         this.thesaurusEntries = new ObservableField()
         this.definitions = new ObservableField()
+        this.suggestions = new ObservableField()
         this.isLoading = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
@@ -96,6 +97,15 @@ class MainViewModel {
                         return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
                     })
                 )
+            })
+        }
+    }
+
+    fetchSuggestions(word) {
+        if (!this.isLoading.value) {
+            var searchTerm = this.cleanSearchTerm(word)
+            this._model.fetchSuggestions(searchTerm).then(suggestions => {
+                this.suggestions.value = suggestions.map((suggestion) => new MenuItem(suggestion, suggestion))
             })
         }
     }

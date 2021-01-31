@@ -23,6 +23,7 @@ class MainView {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
         this._elemPlaceholderContextMenu = document.querySelector("#placeholder-context-menu")
+        this._elemPlaceholderSuggestions = document.querySelector("#placeholder-suggestions")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
         this._elemPlaceholderRhymes = document.querySelector("#placeholder-rhymes")
@@ -95,10 +96,6 @@ class MainView {
         this._mdcLinearProgress.open()
 
         this._mdcInputTextSearch = new MainView.MDCTextField(document.querySelector("#input-text-search"))
-        document.querySelector("#input-text-search input").onkeydown = (evt) => {
-            if (evt.keyCode == 13) this.searchAll()
-        }
-
         this._elemBtnSearch = document.querySelector("#btn-search")
         this._elemBtnSearch.disabled = true
     }
@@ -109,10 +106,17 @@ class MainView {
         this._viewModel.rhymes.observer = (newRhymes) => { this.showRhymes(newRhymes) }
         this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
+        this._viewModel.suggestions.observer = (newSuggestions) => { this.showSuggestions(newSuggestions) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
 
         // view -> viewmodel bindings
+        this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('keydown', ((evt) => {
+            if (evt.keyCode == 13) this.searchAll()
+        }))
+        this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
+            this._viewModel.fetchSuggestions(this._mdcInputTextSearch.value)
+        }))
         this._elemBtnSearch.onclick = () => { this.searchAll() }
         this._elemActionItemAbout.onclick = () => { this.showAbout() }
     }
@@ -141,6 +145,7 @@ class MainView {
         }
     }
     searchAll() {
+        this._elemPlaceholderSuggestions.style.display = "none"
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)
     }
 
@@ -169,6 +174,26 @@ class MainView {
     showDefinitions(definitions) {
         this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
         this.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
+    }
+
+    showSuggestions(suggestions) {
+        if (suggestions.length > 0) {
+            this._elemPlaceholderSuggestions.innerHTML = this._template.createContextMenuHtml(suggestions)
+            this._elemPlaceholderSuggestions.style.display = "block"
+            const mdcMenu = new MainView.MDCMenu(this._elemPlaceholderSuggestions.querySelector(".mdc-menu"))
+            mdcMenu.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
+            mdcMenu.setAnchorElement(this._elemPlacholderInputTextSearch)
+            mdcMenu.setFixedPosition(true)
+            mdcMenu.setDefaultFocusState(MainView.DefaultFocusState.NONE)
+            mdcMenu.quickOpen = true
+            mdcMenu.open = true
+            mdcMenu.listen('MDCMenu:selected', (e) => {
+                this._mdcInputTextSearch.value = suggestions[e.detail.index].label
+                this._elemBtnSearch.click()
+            })
+        } else {
+            this._elemPlaceholderSuggestions.style.display = "none"
+        }
     }
 
     setListVisibility(listData, elemList, elemEmpty, emptyText, word) {
@@ -206,21 +231,20 @@ class MainView {
         dialog.open()
     }
     showContextMenu(anchorElement, word) {
-        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(
-            [
-                new MenuItem("menu-rhymer", "tab_rhymer_title"),
-                new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
-                new MenuItem("menu-dictionary", "tab_dictionary_title"),
-            ]
-        )
-        const mdcMenu = new MainView.MDCMenu(document.querySelector(".mdc-menu"))
+        var menuItems = [
+            new MenuItem("menu-rhymer", "tab_rhymer_title"),
+            new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
+            new MenuItem("menu-dictionary", "tab_dictionary_title"),
+        ]
+        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(menuItems)
+        const mdcMenu = new MainView.MDCMenu(this._elemPlaceholderContextMenu.querySelector(".mdc-menu"))
         mdcMenu.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
         mdcMenu.setAnchorElement(anchorElement)
         mdcMenu.setAnchorMargin({ left: 16 })
         mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
-        mdcMenu.listen('click', (e) => {
-            var selectedTab = this.contextMenuItemIdToTab(e.target.id)
+        mdcMenu.listen('MDCMenu:selected', (e) => {
+            var selectedTab = this.contextMenuItemIdToTab(menuItems[e.detail.index].id)
             if (selectedTab == MainViewModel.TabIndex.RHYMER) {
                 this._viewModel.fetchRhymes(word)
             } else if (selectedTab == MainViewModel.TabIndex.THESAURUS) {
@@ -243,6 +267,7 @@ MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCList = mdc.list.MDCList
 MainView.MDCMenu = mdc.menu.MDCMenu
 MainView.MDCMenuCorner = mdc.menu.Corner
+MainView.DefaultFocusState = mdc.menu.DefaultFocusState
 MainView.MDCTabBar = mdc.tabBar.MDCTabBar
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {

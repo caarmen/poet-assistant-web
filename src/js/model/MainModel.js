@@ -31,6 +31,7 @@ class MainModel {
         this._rhymerRepository = new RhymerRepository(this._db)
         this._thesaurusRepository = new ThesaurusRepository(this._db)
         this._dictionaryRepository = new DictionaryRepository(this._db)
+        this._suggestionsRepository = new SuggestionsRepository(this._db)
     }
 
     loadUrl(url, progressCallback) {
@@ -56,5 +57,8 @@ class MainModel {
     }
     async fetchDefinitions(word) {
         return this._dictionaryRepository.fetchDefinitions(word)
+    }
+    async fetchSuggestions(word) {
+        return this._suggestionsRepository.fetchSuggestions(word)
     }
 }
