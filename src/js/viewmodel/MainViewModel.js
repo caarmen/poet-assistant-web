@@ -22,6 +22,7 @@ class MainViewModel {
         this.thesaurusEntries = new ObservableField()
         this.definitions = new ObservableField()
         this.suggestions = new ObservableField()
+        this.voices = new ObservableField([])
         this.isLoading = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
@@ -34,6 +35,9 @@ class MainViewModel {
             this.isLoading.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
+        this._model._speechEngine.voices.observer = (newVoices) => {
+            this.voices.value = newVoices.map((voice) => new MenuItem(voice.voiceURI, `${voice.name} - ${voice.lang}`))
+        }
         this.contextMenuItems = [
             new MenuItem("menu-rhymer", "tab_rhymer_title"),
             new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
@@ -146,6 +150,8 @@ class MainViewModel {
     }
 
     isSpeechSynthesisSupported = () => this._model.isSpeechSynthesisSupported()
+
+    selectVoice = (index) => this._model.selectVoice(this.voices.value[index].id)
 
     playText = (text) => this._model.playText(text)
 

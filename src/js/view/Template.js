@@ -44,6 +44,7 @@ class Template {
         this._listItemWordTemplate = await this.loadTemplate("list-item-word")
         this._listItemSubHeader1Template = await this.loadTemplate("list-item-sub-header-1")
         this._listItemSubHeader2Template = await this.loadTemplate("list-item-sub-header-2")
+        this._voiceSelectionHtml = await this.loadTemplate("voice-selection")
     }
 
     createAboutHtml = () => this._aboutTemplate
@@ -127,6 +128,8 @@ class Template {
     createTabHtml = (id, label) =>
         this._tabTemplate.replace("__ID__", id)
             .replace("__LABEL__", label)
+
+    createVoiceSelectionHtml = () => this._voiceSelectionHtml
 
     async loadTemplate(templateName) {
         return (await fetch(`src/templates/${templateName}.template.html`)).text()

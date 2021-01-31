@@ -99,6 +99,18 @@ a:link, a.active:link,a:hover, a:visited {
 .mdc-list-item__text{
 	white-space: normal;
 }
+#placeholder-reader-voices {
+	margin-top: 16px;
+	text-align: center;
+}
+#voice-label, #selected-voice {
+	display: inline-block;
+	height: 48px;
+}
+#selected-voice::after {
+	font-family: 'Material Icons';
+	content: "keyboard_arrow_down";
+}
 .empty-list {
 	text-align: center;
 	position: fixed;

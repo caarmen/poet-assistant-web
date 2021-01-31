@@ -20,7 +20,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class SpeechEngine {
     constructor() {
         this._synth = window.speechSynthesis
-        this._voices
+        this.voices = new ObservableField([])
         this.populateVoiceList()
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
             this._synth.onvoiceschanged = () => { this.populateVoiceList() }
@@ -28,10 +28,13 @@ class SpeechEngine {
         this._selectedVoice
         this.isPlaying = new ObservableField(false)
     }
+    selectVoice(id) {
+        this._selectedVoice = this.voices.value.find((voice) => voice.voiceURI == id)
+        console.log("selected voice " + this._selectedVoice)
+    }
     populateVoiceList() {
-        this._voices = this._synth.getVoices()
-        if (this._voices.length > 1) this._selectedVoice = this._voices[1]
-        // TODO we need a voice picker: the default voice doesn't work :(
+        this.voices.value = this._synth.getVoices()
+        if (this.voices.value.length > 0) this._selectedVoice = this.voices.value[0]
     }
     isSpeechSynthesisSupported = () => this._synth != undefined
 

@@ -66,6 +66,8 @@ class MainModel {
 
     isSpeechSynthesisSupported = () => this._speechEngine.isSpeechSynthesisSupported()
 
+    selectVoice = (id) => this._speechEngine.selectVoice(id)
+
     playText = (text) => this._speechEngine.playText(text)
 
 }
