@@ -91,13 +91,12 @@ class MainView {
         this._viewModel.rhymes.observer = (newRhymes) => { this.showRhymes(newRhymes) }
         this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
-        this._viewModel.dialog.observer = (newDialog) => { this.showDialog(newDialog) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
 
         // view -> viewmodel bindings
         this._elemBtnSearch.onclick = () => { this.searchAll() }
-        this._elemActionItemAbout.onclick = () => { this._viewModel.onAboutClicked() }
+        this._elemActionItemAbout.onclick = () => { this.showAbout() }
     }
     switchToTab(tabIndex) {
         if (tabIndex == MainViewModel.TabIndex.RHYMER) {
@@ -180,9 +179,11 @@ class MainView {
     updateLoadingProgress(loadingProgress) {
         this._mdcLinearProgress.progress = loadingProgress
     }
-    showDialog(newDialog) {
+    showAbout() {
+        var aboutHtml = this._template.createAboutHtml()
         this._elemPlaceholderDialog.innerHTML =
-            this._template.createDialogHtml(newDialog.title, newDialog.content)
+            this._template.createDialogHtml("about_title", aboutHtml)
+        this._template._i18n.translateElement(this._elemPlaceholderDialog)
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
     }
@@ -197,7 +198,7 @@ class MainView {
         const mdcMenu = new MainView.MDCMenu(document.querySelector(".mdc-menu"))
         mdcMenu.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
         mdcMenu.setAnchorElement(anchorElement)
-        mdcMenu.setAnchorMargin({left: 16})
+        mdcMenu.setAnchorMargin({ left: 16 })
         mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
         mdcMenu.listen('click', (e) => {
