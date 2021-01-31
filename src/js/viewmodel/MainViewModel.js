@@ -152,7 +152,7 @@ class MainViewModel {
 
     selectVoice = (index) => this._model.selectVoice(this.voices.value[index].id)
 
-    playText = (text) => this._model.playText(text)
+    playText = (text, start, end) => this._model.playText(text, start, end)
 
     updateVoices(newVoices) {
         this.voices.value = newVoices.sort((a, b) => {

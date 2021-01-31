@@ -68,6 +68,6 @@ class MainModel {
 
     selectVoice = (id) => this._speechEngine.selectVoice(id)
 
-    playText = (text) => this._speechEngine.playText(text)
+    playText = (text, start, end) => this._speechEngine.playText(text, start, end)
 
 }

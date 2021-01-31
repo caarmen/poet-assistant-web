@@ -37,11 +37,17 @@ class SpeechEngine {
     }
     isSpeechSynthesisSupported = () => this._synth != undefined
 
-    playText(text) {
+    playText(text, start, end) {
+        var selection = text
+        if (start < end) {
+            selection = text.substring(start, end)
+        } else if (start == end && start < text.length) {
+            selection = text.substring(start)
+        }
         if (this._synth.speaking) {
             this._synth.cancel()
         } else {
-            var utterance = new SpeechSynthesisUtterance(text)
+            var utterance = new SpeechSynthesisUtterance(selection)
             utterance.voice = this._selectedVoice
             utterance.lang = this._selectedVoice.lang
             utterance.rate = 1

@@ -292,7 +292,8 @@ class MainView {
         })
     }
     readPoem() {
-        this._viewModel.playText(this._mdcInputTextReader.value)
+        var textInput = this._elemPlaceholderReaderInput.querySelector(".mdc-text-field__input")
+        this._viewModel.playText(this._mdcInputTextReader.value, textInput.selectionStart, textInput.selectionEnd)
     }
     updateVoicesList(voices) {
         this._elemReaderVoices.innerHTML = this._template.createContextMenuHtml(voices)
