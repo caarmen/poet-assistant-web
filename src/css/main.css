@@ -40,7 +40,7 @@ a:link, a.active:link,a:hover, a:visited {
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
 	color: var(--mdc-theme-primary);
 }
-.mdc-icon-button:not(:disabled) {
+#content .mdc-icon-button:not(:disabled) {
     color: var(--mdc-theme-primary);
 }
 #content {
