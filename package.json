@@ -1,6 +1,6 @@
 {
   "name": "poet-assistant",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Poet Assistant",
   "main": "main.js",
   "scripts": {
