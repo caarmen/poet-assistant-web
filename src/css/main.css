@@ -40,6 +40,9 @@ a:link, a.active:link,a:hover, a:visited {
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
 	color: var(--mdc-theme-primary);
 }
+.mdc-icon-button:not(:disabled) {
+    color: var(--mdc-theme-primary);
+}
 #content {
 	padding-top: calc(3*var(--app-bar-row-height));
 }
@@ -82,6 +85,16 @@ a:link, a.active:link,a:hover, a:visited {
 }
 #placeholder-definitions-list .mdc-list-item {
 	height: auto;
+}
+#placeholder-reader {
+	display: none;
+}
+#placeholder-reader, #placeholder-reader .mdc-text-field--textarea {
+	width: 100%;
+}
+#btn-play{
+	left: 50%;
+	transform: translate(-50%, 0%);
 }
 .mdc-list-item__text{
 	white-space: normal;

@@ -36,6 +36,7 @@ class Template {
         this._contextMenuItemTemplate = await this.loadTemplate("context-menu-item")
         this._dialogTemplate = await this.loadTemplate("dialog")
         this._inputTextTemplate = await this.loadTemplate("input-text")
+        this._textareaTemplate = await this.loadTemplate("textarea")
         this._listTemplate = await this.loadTemplate("list")
         this._listEmptyTemplate = await this.loadTemplate("list-empty")
         this._dictionaryListItemTemplate = await this.loadTemplate("dictionary-list-item")
@@ -53,7 +54,7 @@ class Template {
         this._buttonTemplate.replace("__ID__", id).replace("__LABEL__", this._i18n.translate(label))
 
     createButtonIconHtml = (id, icon, label) =>
-        this._buttonIconTemplate.replace("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
+        this._buttonIconTemplate.replaceAll("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
 
     createContextMenuHtml = (items) =>
         this._contextMenuTemplate.replace(
@@ -68,6 +69,9 @@ class Template {
 
     createInputTextHtml = (id, label) =>
         this._inputTextTemplate.replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
+
+    createTextareaHtml = (id, label) =>
+        this._textareaTemplate.replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
 
     createDictionaryListHtml = (id, word, dictionaryListItems) =>
         this._listHeaderTemplate.replace("__TEXT__", word) +

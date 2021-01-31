@@ -27,6 +27,7 @@ class MainViewModel {
         this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
         this._model = new MainModel()
+        this.isSpeechPlaying = this._model.isSpeechPlaying
         this._model.loadDb((loaded, total) => {
             this.loadingProgress.value = loaded / total
         }).then(() => {
@@ -144,6 +145,9 @@ class MainViewModel {
         else return undefined
     }
 
+    isSpeechSynthesisSupported = () => this._model.isSpeechSynthesisSupported()
+
+    playText = (text) => this._model.playText(text)
 
 }
-MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2 })
+MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })
