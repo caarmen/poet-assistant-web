@@ -35,6 +35,7 @@ class MainViewModel {
             this.isLoading.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
+        if (this._model._speechEngine.voices.value != undefined) this.updateVoices(this._model._speechEngine.voices.value)
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
         this.contextMenuItems = [
             new MenuItem("menu-rhymer", "tab_rhymer_title"),

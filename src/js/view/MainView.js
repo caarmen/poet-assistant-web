@@ -133,6 +133,7 @@ class MainView {
         this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this.updateSpeechPlayingState(newIsSpeechPlaying) }
+        if (this._viewModel.voices.value != undefined) this.updateVoicesList(this._viewModel.voices.value)
         this._viewModel.voices.observer = (newVoices) => this.updateVoicesList(newVoices)
         if (!this._viewModel.isSpeechSynthesisSupported()) {
             this._elemTabReader.style.display = "none"

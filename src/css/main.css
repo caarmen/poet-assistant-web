@@ -107,6 +107,12 @@ a:link, a.active:link,a:hover, a:visited {
 	display: inline-block;
 	height: 48px;
 }
+#voices-menu .mdc-list {
+	padding-right: 48px;
+}
+#voices-menu .mdc-list-item {
+	width: 100%;
+}
 #selected-voice::after {
 	font-family: 'Material Icons';
 	content: "keyboard_arrow_down";
