@@ -38,19 +38,29 @@ class MainView {
         this._elemPlaceholderDefinitionsList = document.querySelector("#placeholder-definitions-list")
         this._elemPlaceholderDefinitionsEmpty = document.querySelector("#placeholder-definitions-empty")
 
+        this._elemPlaceholderReader = document.querySelector("#placeholder-reader")
+        this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
+        this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
+        this._elemPlaceholderReaderVoices = document.querySelector("#placeholder-reader-voices")
+
         this._elemPlaceholderTabBar
         this._elemPlacholderInputTextSearch
-        this._elemPlaceholderBtnSearch
 
         this._mdcListRhymes
         this._mdcListThesaurus
         this._mdcLinearProgress
         this._mdcInputTextSearch
+        this._mdcMenuVoices
 
         this._elemActionItemAbout
         this._elemTabRhymer
         this._elemTabDictionary
+        this._elemTabReader
         this._elemBtnSearch
+        this._elemBtnPlay
+        this._elemBtnPlayIcon
+        this._elemReaderVoices
+        this._elemReaderSelectedVoice
 
         this._template = new Template()
         this._template.loadTemplates().then(() => {
@@ -69,7 +79,8 @@ class MainView {
             [
                 new TabData("tab_rhymer", "tab_rhymer_title"),
                 new TabData("tab_thesaurus", "tab_thesaurus_title"),
-                new TabData("tab_dictionary", "tab_dictionary_title")
+                new TabData("tab_dictionary", "tab_dictionary_title"),
+                new TabData("tab_reader", "tab_reader_title")
             ])
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
         this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-search")
@@ -77,6 +88,11 @@ class MainView {
         this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml("progressbar_label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-search", "search", "btn_search_title")
+
+        this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
+        this._elemPlaceholderReaderPlayButton.innerHTML = this._template.createButtonIconHtml("btn-play", "play_circle_filled", "btn_play_title")
+        this._elemPlaceholderReaderVoices.innerHTML = this._template.createVoiceSelectionHtml()
+        this._template._i18n.translateElement(this._elemPlaceholderReaderVoices)
     }
 
     initializeViews() {
@@ -89,6 +105,7 @@ class MainView {
         this._elemTabRhymer = document.querySelector("#tab_rhymer")
         this._elemTabThesaurus = document.querySelector("#tab_thesaurus")
         this._elemTabDictionary = document.querySelector("#tab_dictionary")
+        this._elemTabReader = document.querySelector("#tab_reader")
 
         this._mdcLinearProgress = new MainView.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
         this._mdcLinearProgress.determinate = true
@@ -98,6 +115,12 @@ class MainView {
         this._mdcInputTextSearch = new MainView.MDCTextField(document.querySelector("#input-text-search"))
         this._elemBtnSearch = document.querySelector("#btn-search")
         this._elemBtnSearch.disabled = true
+
+        this._mdcInputTextReader = new MainView.MDCTextField(document.querySelector("#input-text-reader"))
+        this._elemBtnPlay = document.querySelector("#btn-play")
+        this._elemBtnPlayIcon = document.querySelector("#btn-play-icon")
+        this._elemReaderVoices = document.querySelector("#placeholder-reader-voices #voices-menu")
+        this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader-voices #selected-voice")
     }
 
     bindViewModel() {
@@ -109,6 +132,11 @@ class MainView {
         this._viewModel.suggestions.observer = (newSuggestions) => { this.showSuggestions(newSuggestions) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
+        this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this.updateSpeechPlayingState(newIsSpeechPlaying) }
+        this._viewModel.voices.observer = (newVoices) => this.updateVoicesList(newVoices)
+        if (!this._viewModel.isSpeechSynthesisSupported()) {
+            this._elemTabReader.style.display = "none"
+        }
 
         // view -> viewmodel bindings
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('keydown', ((evt) => {
@@ -117,8 +145,13 @@ class MainView {
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
             this._viewModel.fetchSuggestions(this._mdcInputTextSearch.value)
         }))
+        this._mdcInputTextReader.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
+            this._elemBtnPlay.disabled = this._mdcInputTextReader.value.length == 0
+        }))
         this._elemBtnSearch.onclick = () => { this.searchAll() }
         this._elemActionItemAbout.onclick = () => { this.showAbout() }
+        this._elemBtnPlay.disabled = true
+        this._elemBtnPlay.onclick = () => { this.readPoem() }
     }
     switchToTab(tabIndex) {
         if (tabIndex == MainViewModel.TabIndex.RHYMER) {
@@ -134,14 +167,22 @@ class MainView {
             this._elemPlaceholderRhymes.style.display = "block"
             this._elemPlaceholderThesaurus.style.display = "none"
             this._elemPlaceholderDefinitions.style.display = "none"
+            this._elemPlaceholderReader.style.display = "none"
         } else if (tabIndex == MainViewModel.TabIndex.THESAURUS) {
             this._elemPlaceholderRhymes.style.display = "none"
             this._elemPlaceholderThesaurus.style.display = "block"
             this._elemPlaceholderDefinitions.style.display = "none"
+            this._elemPlaceholderReader.style.display = "none"
         } else if (tabIndex == MainViewModel.TabIndex.DICTIONARY) {
             this._elemPlaceholderRhymes.style.display = "none"
             this._elemPlaceholderThesaurus.style.display = "none"
             this._elemPlaceholderDefinitions.style.display = "block"
+            this._elemPlaceholderReader.style.display = "none"
+        } else if (tabIndex == MainViewModel.TabIndex.READER) {
+            this._elemPlaceholderRhymes.style.display = "none"
+            this._elemPlaceholderThesaurus.style.display = "none"
+            this._elemPlaceholderDefinitions.style.display = "none"
+            this._elemPlaceholderReader.style.display = "block"
         }
     }
     searchAll() {
@@ -222,6 +263,13 @@ class MainView {
     updateLoadingProgress(loadingProgress) {
         this._mdcLinearProgress.progress = loadingProgress
     }
+    updateSpeechPlayingState(newIsSpeechPlaying) {
+        if (newIsSpeechPlaying) {
+            this._elemBtnPlayIcon.innerText = "stop"
+        } else {
+            this._elemBtnPlayIcon.innerText = "play_circle_filled"
+        }
+    }
     showAbout() {
         var aboutHtml = this._template.createAboutHtml()
         this._elemPlaceholderDialog.innerHTML =
@@ -241,6 +289,24 @@ class MainView {
         mdcMenu.listen('MDCMenu:selected', (e) => {
             this._viewModel.onContextMenuItemSelected(word, e.detail.index)
         })
+    }
+    readPoem() {
+        this._viewModel.playText(this._mdcInputTextReader.value)
+    }
+    updateVoicesList(voices) {
+        this._elemReaderVoices.innerHTML = this._template.createContextMenuHtml(voices)
+        this.mdcMenuVoices = new MainView.MDCMenu(this._elemReaderVoices.querySelector(".mdc-menu"))
+        this.mdcMenuVoices.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
+        this.mdcMenuVoices.setAnchorElement(this._elemReaderSelectedVoice)
+        this.mdcMenuVoices.setFixedPosition(true)
+        this.mdcMenuVoices.listen('MDCMenu:selected', (e) => {
+            this._viewModel.selectVoice(e.detail.index)
+            this._elemReaderSelectedVoice.innerText = voices[e.detail.index].label
+        })
+        if (voices.length > 0) this._elemReaderSelectedVoice.innerText = voices[0].label
+        this._elemReaderSelectedVoice.onclick = () => {
+            this.mdcMenuVoices.open = true
+        }
     }
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog

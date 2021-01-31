@@ -22,17 +22,20 @@ class MainViewModel {
         this.thesaurusEntries = new ObservableField()
         this.definitions = new ObservableField()
         this.suggestions = new ObservableField()
+        this.voices = new ObservableField([])
         this.isLoading = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
         this._model = new MainModel()
+        this.isSpeechPlaying = this._model.isSpeechPlaying
         this._model.loadDb((loaded, total) => {
             this.loadingProgress.value = loaded / total
         }).then(() => {
             this.isLoading.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
+        this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
         this.contextMenuItems = [
             new MenuItem("menu-rhymer", "tab_rhymer_title"),
             new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
@@ -144,6 +147,28 @@ class MainViewModel {
         else return undefined
     }
 
+    isSpeechSynthesisSupported = () => this._model.isSpeechSynthesisSupported()
+
+    selectVoice = (index) => this._model.selectVoice(this.voices.value[index].id)
+
+    playText = (text) => this._model.playText(text)
+
+    updateVoices(newVoices) {
+        this.voices.value = newVoices.sort((a, b) => {
+            var languageA = a.lang.substring(0, 2)
+            var languageB = b.lang.substring(0, 2)
+            if (languageA == languageB) {
+                return a.name.localeCompare(b.name)
+            } else if (languageA == "en") {
+                return -1
+            } else if (languageB == "en") {
+                return 1
+            } else {
+                return languageA.localeCompare(languageB)
+            }
+        }).map((voice) => new MenuItem(voice.voiceURI, `${voice.name} - ${voice.lang}`))
+
+    }
 
 }
-MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2 })
+MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })

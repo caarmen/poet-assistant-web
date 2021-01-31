@@ -19,6 +19,8 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class MainModel {
     constructor() {
         this._db = undefined
+        this._speechEngine = new SpeechEngine()
+        this.isSpeechPlaying = this._speechEngine.isPlaying
     }
     async loadDb(progressCallback) {
         var config = {
@@ -61,4 +63,11 @@ class MainModel {
     async fetchSuggestions(word) {
         return this._suggestionsRepository.fetchSuggestions(word)
     }
+
+    isSpeechSynthesisSupported = () => this._speechEngine.isSpeechSynthesisSupported()
+
+    selectVoice = (id) => this._speechEngine.selectVoice(id)
+
+    playText = (text) => this._speechEngine.playText(text)
+
 }
