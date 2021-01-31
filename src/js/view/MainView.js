@@ -231,21 +231,20 @@ class MainView {
         dialog.open()
     }
     showContextMenu(anchorElement, word) {
-        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(
-            [
-                new MenuItem("menu-rhymer", "tab_rhymer_title"),
-                new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
-                new MenuItem("menu-dictionary", "tab_dictionary_title"),
-            ]
-        )
+        var menuItems = [
+            new MenuItem("menu-rhymer", "tab_rhymer_title"),
+            new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
+            new MenuItem("menu-dictionary", "tab_dictionary_title"),
+        ]
+        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(menuItems)
         const mdcMenu = new MainView.MDCMenu(this._elemPlaceholderContextMenu.querySelector(".mdc-menu"))
         mdcMenu.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
         mdcMenu.setAnchorElement(anchorElement)
         mdcMenu.setAnchorMargin({ left: 16 })
         mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
-        mdcMenu.listen('click', (e) => {
-            var selectedTab = this.contextMenuItemIdToTab(e.target.id)
+        mdcMenu.listen('MDCMenu:selected', (e) => {
+            var selectedTab = this.contextMenuItemIdToTab(menuItems[e.detail.index].id)
             if (selectedTab == MainViewModel.TabIndex.RHYMER) {
                 this._viewModel.fetchRhymes(word)
             } else if (selectedTab == MainViewModel.TabIndex.THESAURUS) {
