@@ -231,12 +231,7 @@ class MainView {
         dialog.open()
     }
     showContextMenu(anchorElement, word) {
-        var menuItems = [
-            new MenuItem("menu-rhymer", "tab_rhymer_title"),
-            new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
-            new MenuItem("menu-dictionary", "tab_dictionary_title"),
-        ]
-        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(menuItems)
+        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(this._viewModel.contextMenuItems)
         const mdcMenu = new MainView.MDCMenu(this._elemPlaceholderContextMenu.querySelector(".mdc-menu"))
         mdcMenu.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
         mdcMenu.setAnchorElement(anchorElement)
@@ -244,22 +239,8 @@ class MainView {
         mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
         mdcMenu.listen('MDCMenu:selected', (e) => {
-            var selectedTab = this.contextMenuItemIdToTab(menuItems[e.detail.index].id)
-            if (selectedTab == MainViewModel.TabIndex.RHYMER) {
-                this._viewModel.fetchRhymes(word)
-            } else if (selectedTab == MainViewModel.TabIndex.THESAURUS) {
-                this._viewModel.fetchThesaurus(word)
-            } else if (selectedTab == MainViewModel.TabIndex.DICTIONARY) {
-                this._viewModel.fetchDefinitions(word)
-            }
-            if (selectedTab != undefined) this.switchToTab(selectedTab)
+            this._viewModel.onContextMenuItemSelected(word, e.detail.index)
         })
-    }
-    contextMenuItemIdToTab(contextMenuItemId) {
-        if (contextMenuItemId == "menu-rhymer") return MainViewModel.TabIndex.RHYMER
-        else if (contextMenuItemId == "menu-thesaurus") return MainViewModel.TabIndex.THESAURUS
-        else if (contextMenuItemId == "menu-dictionary") return MainViewModel.TabIndex.DICTIONARY
-        else return undefined
     }
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog

@@ -33,6 +33,11 @@ class MainViewModel {
             this.isLoading.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
+        this.contextMenuItems = [
+            new MenuItem("menu-rhymer", "tab_rhymer_title"),
+            new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
+            new MenuItem("menu-dictionary", "tab_dictionary_title"),
+        ]
     }
 
     fetchAll(word) {
@@ -120,6 +125,25 @@ class MainViewModel {
     }
 
     cleanSearchTerm = (text) => text.toLowerCase().trim()
+
+    onContextMenuItemSelected(word, index) {
+        var selectedTab = this.contextMenuItemIdToTab(this.contextMenuItems[index].id)
+        if (selectedTab == MainViewModel.TabIndex.RHYMER) {
+            this.fetchRhymes(word)
+        } else if (selectedTab == MainViewModel.TabIndex.THESAURUS) {
+            this.fetchThesaurus(word)
+        } else if (selectedTab == MainViewModel.TabIndex.DICTIONARY) {
+            this.fetchDefinitions(word)
+        }
+        if (selectedTab != undefined) this.activeTab.value = selectedTab
+    }
+    contextMenuItemIdToTab(contextMenuItemId) {
+        if (contextMenuItemId == "menu-rhymer") return MainViewModel.TabIndex.RHYMER
+        else if (contextMenuItemId == "menu-thesaurus") return MainViewModel.TabIndex.THESAURUS
+        else if (contextMenuItemId == "menu-dictionary") return MainViewModel.TabIndex.DICTIONARY
+        else return undefined
+    }
+
 
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2 })
