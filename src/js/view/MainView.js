@@ -304,7 +304,10 @@ class MainView {
             this._viewModel.selectVoice(e.detail.index)
             this._elemReaderSelectedVoice.innerText = voices[e.detail.index].label
         })
-        if (voices.length > 0) this._elemReaderSelectedVoice.innerText = voices[0].label
+        if (voices.length > 0) {
+            this._elemReaderSelectedVoice.innerText = voices[0].label
+            this._viewModel.selectVoice(0)
+        }
         this._elemReaderSelectedVoice.onclick = () => {
             this.mdcMenuVoices.open = true
         }

@@ -42,17 +42,18 @@ class SpeechEngine {
         if (this._synth.speaking) {
             this._synth.cancel()
         } else {
-            var utterThis = new SpeechSynthesisUtterance(text)
-            utterThis.voice = this._selectedVoice
-            utterThis.rate = 1
-            utterThis.pitch = 1
-            utterThis.onboundary = (evt) => { this.updateState() }
-            utterThis.onend = (evt) => { this.updateState() }
-            utterThis.onerror = (evt) => { this.updateState() }
-            utterThis.onpause = (evt) => { this.updateState() }
-            utterThis.onresume = (evt) => { this.updateState() }
-            utterThis.onstart = (evt) => { this.updateState() }
-            this._synth.speak(utterThis)
+            var utterance = new SpeechSynthesisUtterance(text)
+            utterance.voice = this._selectedVoice
+            utterance.lang = this._selectedVoice.lang
+            utterance.rate = 1
+            utterance.pitch = 1
+            utterance.onboundary = (evt) => { this.updateState() }
+            utterance.onend = (evt) => { this.updateState() }
+            utterance.onerror = (evt) => { this.updateState() }
+            utterance.onpause = (evt) => { this.updateState() }
+            utterance.onresume = (evt) => { this.updateState() }
+            utterance.onstart = (evt) => { this.updateState() }
+            this._synth.speak(utterance)
         }
     }
 
