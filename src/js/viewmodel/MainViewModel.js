@@ -4,7 +4,6 @@ class MainViewModel {
         this.thesaurusEntries = new ObservableField()
         this.definitions = new ObservableField()
         this.isLoading = new ObservableField()
-        this.dialog = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
@@ -94,7 +93,5 @@ class MainViewModel {
 
     cleanSearchTerm = (text) => text.toLowerCase().trim()
 
-    onAboutClicked = () =>
-        this.dialog.value = new DialogInfo("dialog_about_title", "dialog_about_content")
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2 })

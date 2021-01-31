@@ -17,6 +17,11 @@ body {
 		--app-bar-row-height: 56px;
 	}
 }
+a:link, a.active:link,a:hover, a:visited {
+	color: var(--mdc-theme-primary);
+	text-decoration: none;
+	font-weight: bold;
+}
 /* https://github.com/material-components/material-components-web/issues/2718 */
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
 	color: var(--mdc-theme-primary);

@@ -6,6 +6,7 @@ class Template {
     }
     async loadTemplates() {
         await this._i18n.load()
+        this._aboutTemplate = await this.loadTemplate("about")
         this._appBarTemplate = await this.loadTemplate("app-bar")
         this._appBarActionItemTemplate = await this.loadTemplate("app-bar-action-item")
         this._tabBarTemplate = await this.loadTemplate("tab-bar")
@@ -25,6 +26,8 @@ class Template {
         this._listItemSubHeader1Template = await this.loadTemplate("list-item-sub-header-1")
         this._listItemSubHeader2Template = await this.loadTemplate("list-item-sub-header-2")
     }
+
+    createAboutHtml = () => this._aboutTemplate
 
     createProgressIndicatorHtml = (text) => this._progressIndicatorTemplate.replace("__TEXT__", this._i18n.translate(text))
 
