@@ -24,6 +24,7 @@ class ReaderView {
 
         this._elemBtnPlay
         this._elemBtnPlayIcon
+        this._elemBtnPlayLabel
         this._elemTextInput
 
         this._template = template
@@ -35,13 +36,14 @@ class ReaderView {
     }
     applyTemplates() {
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
-        this._elemPlaceholderReaderPlayButton.innerHTML = this._template.createButtonIconHtml("btn-play", "play_circle_filled", "btn_play_title")
+        this._elemPlaceholderReaderPlayButton.innerHTML = this._template.createButtonIconTextHtml("btn-play", "play_circle_filled", "btn_play_title")
     }
 
     initializeViews() {
         this._mdcInputTextReader = new ReaderView.MDCTextField(document.querySelector("#input-text-reader"))
         this._elemBtnPlay = document.querySelector("#btn-play")
         this._elemBtnPlayIcon = document.querySelector("#btn-play-icon")
+        this._elemBtnPlayLabel = document.querySelector("#btn-play-label")
 
         this._elemTextInput = this._elemPlaceholderReaderInput.querySelector(".mdc-text-field__input")
 
@@ -57,8 +59,11 @@ class ReaderView {
     updateSpeechPlayingState(newIsSpeechPlaying) {
         if (newIsSpeechPlaying) {
             this._elemBtnPlayIcon.innerText = "stop"
+            this._elemBtnPlayLabel.innerText = this._template._i18n.translate("btn_stop_title")
+
         } else {
             this._elemBtnPlayIcon.innerText = "play_circle_filled"
+            this._elemBtnPlayLabel.innerText = this._template._i18n.translate("btn_play_title")
         }
     }
 }

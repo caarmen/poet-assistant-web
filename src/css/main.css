@@ -97,6 +97,7 @@ a:link, a.active:link,a:hover, a:visited {
 	width: 100%;
 }
 #btn-play{
+	margin-top: 16px;
 	left: 50%;
 	transform: translate(-50%, 0%);
 }

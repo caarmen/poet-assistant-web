@@ -17,6 +17,7 @@
     "app_version": "0.1.0",
     "btn_search_title": "Search",
     "btn_play_title": "Play",
+    "btn_stop_title": "Stop",
     "last_three_syllables": "Last 3 syllables - {0}",
     "last_two_syllables": "Last 2 syllables - {0}",
     "last_syllable": "Last syllable - {0}",
