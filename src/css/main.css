@@ -21,9 +21,10 @@ body {
 :root {
 	--mdc-theme-primary: #607D8B;
 	--mdc-theme-secondary: #455A64; 
+	--mdc-theme-surface:#f6f7f9;
 	--mdc-theme-text-primary-on-light: #212121;
 	--mdc-theme-text-secondary-on-light: #727272;
-	--sub-header-1: #EEEEEE;
+	--sub-header-1: #eaeef0;
 	--app-bar-row-height: 64px;
 }
 @media (max-width: 599px) {
