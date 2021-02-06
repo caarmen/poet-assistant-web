@@ -41,7 +41,10 @@ a:link, a.active:link,a:hover, a:visited {
 	color: var(--mdc-theme-primary);
 }
 #content .mdc-icon-button:not(:disabled) {
-    color: var(--mdc-theme-primary);
+	color: var(--mdc-theme-primary);
+}
+.mdc-top-app-bar .mdc-icon-button:disabled {
+	color:#ffffff88;
 }
 #content {
 	padding-top: calc(3*var(--app-bar-row-height));
