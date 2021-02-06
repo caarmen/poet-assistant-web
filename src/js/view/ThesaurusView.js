@@ -31,6 +31,9 @@ class ThesaurusView {
     showThesaurus(thesaurusEntries) {
         this._elemPlaceholderThesaurusList.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
         this._listVisibility.setListVisibility(thesaurusEntries.listItems, this._elemPlaceholderThesaurusList, this._elemPlaceholderThesaurusEmpty, "no_results_thesaurus", thesaurusEntries.word)
+        this._elemPlaceholderThesaurusList.querySelector(".list-header").onclick = (e) => {
+            this.wordClickedObserver(e.target)
+        }
         new ThesaurusView.MDCList(document.querySelector("#list-thesaurus")).listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) this.wordClickedObserver(e.target)
         })

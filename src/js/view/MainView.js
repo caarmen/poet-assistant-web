@@ -116,6 +116,7 @@ class MainView {
 
         this._viewRhymer.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
+        this._viewDefinitions.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }

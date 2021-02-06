@@ -36,6 +36,9 @@ class RhymerView {
     showRhymes(rhymes) {
         this._elemPlaceholderRhymesList.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
         this._listVisibility.setListVisibility(rhymes.listItems, this._elemPlaceholderRhymesList, this._elemPlaceholderRhymesEmpty, "no_results_rhymes", rhymes.word)
+        this._elemPlaceholderRhymesList.querySelector(".list-header").onclick = (e) => {
+            this.wordClickedObserver(e.target)
+        }
         new RhymerView.MDCList(document.querySelector("#list-rhymes")).listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) this.wordClickedObserver(e.target)
         })
