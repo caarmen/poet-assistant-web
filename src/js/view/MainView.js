@@ -22,7 +22,6 @@ class MainView {
     constructor() {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
-        this._elemPlaceholderContextMenu = document.querySelector("#placeholder-context-menu")
         this._elemPlaceholderSuggestions = document.querySelector("#placeholder-suggestions")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
@@ -64,6 +63,7 @@ class MainView {
 
         this._template = new Template()
         this._template.loadTemplates().then(() => {
+            this._viewContextMenu = new ContextMenuView(this._template)
             this.applyTemplates()
             this.initializeViews()
             this._viewModel = new MainViewModel()
@@ -153,6 +153,7 @@ class MainView {
         this._elemActionItemAbout.onclick = () => { this.showAbout() }
         this._elemBtnPlay.disabled = true
         this._elemBtnPlay.onclick = () => { this.readPoem() }
+        this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
     }
     switchToTab(tabIndex) {
         if (tabIndex == MainViewModel.TabIndex.RHYMER) {
@@ -208,7 +209,7 @@ class MainView {
     listenForListItemWordClicks(mdcList) {
         mdcList.listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) {
-                this.showContextMenu(e.target, e.target.innerText)
+                this._viewContextMenu.showContextMenu(e.target, e.target.innerText, this._viewModel.contextMenuItems)
             }
         })
     }
@@ -278,18 +279,6 @@ class MainView {
         this._template._i18n.translateElement(this._elemPlaceholderDialog)
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
-    }
-    showContextMenu(anchorElement, word) {
-        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(this._viewModel.contextMenuItems)
-        const mdcMenu = new MainView.MDCMenu(this._elemPlaceholderContextMenu.querySelector(".mdc-menu"))
-        mdcMenu.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
-        mdcMenu.setAnchorElement(anchorElement)
-        mdcMenu.setAnchorMargin({ left: 16 })
-        mdcMenu.setFixedPosition(true)
-        mdcMenu.open = true
-        mdcMenu.listen('MDCMenu:selected', (e) => {
-            this._viewModel.onContextMenuItemSelected(word, e.detail.index)
-        })
     }
     readPoem() {
         var textInput = this._elemPlaceholderReaderInput.querySelector(".mdc-text-field__input")
