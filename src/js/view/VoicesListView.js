@@ -52,6 +52,12 @@ class VoicesListView {
         this._mdcSliderSpeed.listen('MDCSlider:change', (e) => this.speedObserver(e.detail.value))
     }
 
+    layout() {
+        setTimeout(() => {
+            this._mdcSliderPitch.layout()
+            this._mdcSliderSpeed.layout()
+        }, 1000)
+    }
     updateVoicesList(voices) {
         this._elemReaderVoices.innerHTML = this._template.createContextMenuHtml(voices)
         this._mdcMenuVoices = new VoicesListView.MDCMenu(this._elemReaderVoices.querySelector(".mdc-menu"))

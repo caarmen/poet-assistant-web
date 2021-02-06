@@ -103,6 +103,9 @@ class MainView {
         }
 
         // view -> viewmodel bindings
+        this._viewTabs.observer = (tabIndex) => {
+            if (tabIndex == MainViewModel.TabIndex.READER) this._viewVoicesList.layout()
+        }
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('keydown', ((evt) => {
             if (evt.keyCode == 13) this.searchAll()
         }))

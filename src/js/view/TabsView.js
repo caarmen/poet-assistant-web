@@ -19,6 +19,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class TabsView {
 
     constructor(template, tabDatas) {
+        this.observer = (tabSelected) => { }
         this._template = template
         this._tabDatas = tabDatas
 
@@ -36,7 +37,7 @@ class TabsView {
         this._elemContents = this._tabDatas.map(tabData => document.querySelector(`#${tabData.contentElemId}`))
         var mdcTabBar = new TabsView.MDCTabBar(document.querySelector(".mdc-tab-bar"))
         mdcTabBar.listen("MDCTabBar:activated", (eventData) => {
-            this.onTabActivated(eventData["detail"]["index"])
+            this.onTabActivated(eventData.detail.index)
         })
     }
 
@@ -46,6 +47,7 @@ class TabsView {
         this._elemTabs[tabIndex].click()
     }
     onTabActivated(tabIndex) {
+        this.observer(tabIndex)
         this._elemContents.forEach((elemContent, index) => {
             if (index == tabIndex) {
                 elemContent.style.display = "block"
