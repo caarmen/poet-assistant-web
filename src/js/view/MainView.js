@@ -24,12 +24,6 @@ class MainView {
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
-        this._elemPlaceholderRhymesList = document.querySelector("#placeholder-rhymes-list")
-        this._elemPlaceholderRhymesEmpty = document.querySelector("#placeholder-rhymes-empty")
-
-        this._elemPlaceholderThesaurusList = document.querySelector("#placeholder-thesaurus-list")
-        this._elemPlaceholderThesaurusEmpty = document.querySelector("#placeholder-thesaurus-empty")
-
         this._elemPlaceholderDefinitionsList = document.querySelector("#placeholder-definitions-list")
         this._elemPlaceholderDefinitionsEmpty = document.querySelector("#placeholder-definitions-empty")
 
@@ -38,8 +32,6 @@ class MainView {
 
         this._elemPlacholderInputTextSearch
 
-        this._mdcListRhymes
-        this._mdcListThesaurus
         this._mdcLinearProgress
         this._mdcInputTextSearch
 
@@ -48,10 +40,15 @@ class MainView {
         this._elemBtnPlay
         this._elemBtnPlayIcon
 
+        this._listVisibility
+
         this._template = new Template()
         this._template.loadTemplates().then(() => {
+            this._listVisibility = new ListVisibility(this._template)
             this._viewContextMenu = new ContextMenuView(this._template)
             this._viewSuggestions = new SuggestionsView(this._template)
+            this._viewRhymer = new RhymerView(this._template)
+            this._viewThesaurus = new ThesaurusView(this._template)
             this._viewVoicesList = new VoicesListView(this._template)
             this._viewTabs = new TabsView(this._template,
                 [
@@ -102,8 +99,8 @@ class MainView {
     bindViewModel() {
         // viewmodel -> view bindings
         this._viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this._template.isLoaded) }
-        this._viewModel.rhymes.observer = (newRhymes) => { this.showRhymes(newRhymes) }
-        this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this.showThesaurus(newThesaurusEntries) }
+        this._viewModel.rhymes.observer = (newRhymes) => { this._viewRhymer.showRhymes(newRhymes) }
+        this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this._viewThesaurus.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
         this._viewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
@@ -131,6 +128,8 @@ class MainView {
         this._elemBtnPlay.onclick = () => { this.readPoem() }
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
         this._viewSuggestions.observer = (word) => { this.onSuggestionSelected(word) }
+        this._viewRhymer.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
+        this._viewThesaurus.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
         this._viewVoicesList.observer = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
     }
 
@@ -139,48 +138,18 @@ class MainView {
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)
     }
 
-    showRhymes(rhymes) {
-        this._elemPlaceholderRhymesList.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
-        this.setListVisibility(rhymes.listItems, this._elemPlaceholderRhymesList, this._elemPlaceholderRhymesEmpty, "no_results_rhymes", rhymes.word)
-        this._mdcListRhymes = new MainView.MDCList(document.querySelector("#list-rhymes"))
-        this.listenForListItemWordClicks(this._mdcListRhymes)
-    }
-
-    showThesaurus(thesaurusEntries) {
-        this._elemPlaceholderThesaurusList.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
-        this.setListVisibility(thesaurusEntries.listItems, this._elemPlaceholderThesaurusList, this._elemPlaceholderThesaurusEmpty, "no_results_thesaurus", thesaurusEntries.word)
-        this._mdcListThesaurus = new MainView.MDCList(document.querySelector("#list-thesaurus"))
-        this.listenForListItemWordClicks(this._mdcListThesaurus)
-    }
-
     onSuggestionSelected(word) {
         this._mdcInputTextSearch.value = word
         this._elemBtnSearch.click()
     }
 
-    listenForListItemWordClicks(mdcList) {
-        mdcList.listen('click', (e) => {
-            if (e.target.classList.contains("word-list-item")) {
-                this._viewContextMenu.showContextMenu(e.target, e.target.innerText, this._viewModel.contextMenuItems)
-            }
-        })
+    onWordElemClicked(wordElem) {
+        this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._viewModel.contextMenuItems)
     }
 
     showDefinitions(definitions) {
         this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
-        this.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
-    }
-
-    setListVisibility(listData, elemList, elemEmpty, emptyText, word) {
-        if (listData && listData.length > 0) {
-            elemList.style.display = "block"
-            elemEmpty.style.display = "none"
-            elemEmpty.innerHTML = ""
-        } else {
-            elemEmpty.innerHTML = this._template.createListEmptyHtml(emptyText, word)
-            elemList.style.display = "none"
-            elemEmpty.style.display = "block"
-        }
+        this._listVisibility.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
     }
 
     showLoading(isLoading) {
