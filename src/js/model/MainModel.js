@@ -70,4 +70,16 @@ class MainModel {
 
     playText = (text, start, end) => this._speechEngine.playText(text, start, end)
 
+    copyText(text) {
+        if (navigator.permissions == undefined) {
+            navigator.clipboard.writeText(text)
+        } else {
+            navigator.permissions.query({ name: "clipboard-write" }).then(result => {
+                if (result.state == "granted" || result.state == "prompt") {
+                    navigator.clipboard.writeText(text)
+                }
+            })
+        }
+    }
+
 }

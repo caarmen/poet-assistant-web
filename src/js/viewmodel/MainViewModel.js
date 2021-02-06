@@ -41,9 +41,11 @@ class MainViewModel {
         if (this._model._speechEngine.voices.value != undefined) this.updateVoices(this._model._speechEngine.voices.value)
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
         this.contextMenuItems = [
-            new MenuItem("menu-rhymer", "tab_rhymer_title"),
-            new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
-            new MenuItem("menu-dictionary", "tab_dictionary_title"),
+            new MenuItem("menu-copy", "menu_copy_title", new MenuItemIcon("content_copy", MenuItemIcon.IconSource.MATERIAL)),
+            new MenuItem("menu-speak", "menu_speak_title", new MenuItemIcon("record_voice_over", MenuItemIcon.IconSource.MATERIAL)),
+            new MenuItem("menu-rhymer", "tab_rhymer_title", new MenuItemIcon("ic_rhymer", MenuItemIcon.IconSource.CUSTOM)),
+            new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
+            new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
         ]
     }
 
@@ -138,21 +140,21 @@ class MainViewModel {
     cleanSearchTerm = (text) => text.toLowerCase().trim()
 
     onContextMenuItemSelected(word, index) {
-        var selectedTab = this.contextMenuItemIdToTab(this.contextMenuItems[index].id)
-        if (selectedTab == MainViewModel.TabIndex.RHYMER) {
+        var selectedMenuId = this.contextMenuItems[index].id
+        if (selectedMenuId == "menu-copy") {
+            this._model.copyText(word)
+        } else if (selectedMenuId == "menu-speak") {
+            this.playText(word, 0, word.length)
+        } else if (selectedMenuId == "menu-rhymer") {
             this.fetchRhymes(word)
-        } else if (selectedTab == MainViewModel.TabIndex.THESAURUS) {
+            this.activeTab.value = MainViewModel.TabIndex.RHYMER
+        } else if (selectedMenuId == "menu-thesaurus") {
             this.fetchThesaurus(word)
-        } else if (selectedTab == MainViewModel.TabIndex.DICTIONARY) {
+            this.activeTab.value = MainViewModel.TabIndex.THESAURUS
+        } else if (selectedMenuId == "menu-dictionary") {
             this.fetchDefinitions(word)
+            this.activeTab.value = MainViewModel.TabIndex.DICTIONARY
         }
-        if (selectedTab != undefined) this.activeTab.value = selectedTab
-    }
-    contextMenuItemIdToTab(contextMenuItemId) {
-        if (contextMenuItemId == "menu-rhymer") return MainViewModel.TabIndex.RHYMER
-        else if (contextMenuItemId == "menu-thesaurus") return MainViewModel.TabIndex.THESAURUS
-        else if (contextMenuItemId == "menu-dictionary") return MainViewModel.TabIndex.DICTIONARY
-        else return undefined
     }
 
     isSpeechSynthesisSupported = () => this._model.isSpeechSynthesisSupported()

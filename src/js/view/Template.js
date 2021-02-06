@@ -34,6 +34,8 @@ class Template {
         this._buttonIconTemplate = await this.loadTemplate("button-icon")
         this._contextMenuTemplate = await this.loadTemplate("context-menu")
         this._contextMenuItemTemplate = await this.loadTemplate("context-menu-item")
+        this._contextMenuItemMaterialIconTemplate = await this.loadTemplate("context-menu-item-material-icon")
+        this._contextMenuItemCustomIconTemplate = await this.loadTemplate("context-menu-item-custom-icon")
         this._dialogTemplate = await this.loadTemplate("dialog")
         this._inputTextTemplate = await this.loadTemplate("input-text")
         this._textareaTemplate = await this.loadTemplate("textarea")
@@ -61,9 +63,24 @@ class Template {
         this._contextMenuTemplate.replace(
             "__ITEMS__",
             items.map((item) =>
-                this._contextMenuItemTemplate.replace("__ID__", item.id).replace("__LABEL__", this._i18n.translate(item.label))
+                this._contextMenuItemTemplate
+                    .replace("__ID__", item.id)
+                    .replace("__ICON__", this.createContextMenuIconHtml(item.icon))
+                    .replace("__LABEL__", this._i18n.translate(item.label))
             ).join("")
         )
+
+    createContextMenuIconHtml(menuItemIcon) {
+        if (menuItemIcon) {
+            if (menuItemIcon.type == MenuItemIcon.IconSource.MATERIAL) {
+                return this._contextMenuItemMaterialIconTemplate.replace("__ICON__", menuItemIcon.name)
+            } else {
+                return this._contextMenuItemCustomIconTemplate.replace("__ICON__", menuItemIcon.name)
+            }
+        } else {
+            return ""
+        }
+    }
 
     createDialogHtml = (title, content) =>
         this._dialogTemplate.replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content)).replace("__CONTENT__", this._i18n.translate(content))
