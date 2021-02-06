@@ -22,7 +22,6 @@ class MainView {
     constructor() {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
-        this._elemPlaceholderSuggestions = document.querySelector("#placeholder-suggestions")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
         this._elemPlaceholderRhymes = document.querySelector("#placeholder-rhymes")
@@ -64,6 +63,7 @@ class MainView {
         this._template = new Template()
         this._template.loadTemplates().then(() => {
             this._viewContextMenu = new ContextMenuView(this._template)
+            this._viewSuggestions = new SuggestionsView(this._template)
             this.applyTemplates()
             this.initializeViews()
             this._viewModel = new MainViewModel()
@@ -129,7 +129,7 @@ class MainView {
         this._viewModel.rhymes.observer = (newRhymes) => { this.showRhymes(newRhymes) }
         this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
-        this._viewModel.suggestions.observer = (newSuggestions) => { this.showSuggestions(newSuggestions) }
+        this._viewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this.updateSpeechPlayingState(newIsSpeechPlaying) }
@@ -154,6 +154,7 @@ class MainView {
         this._elemBtnPlay.disabled = true
         this._elemBtnPlay.onclick = () => { this.readPoem() }
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
+        this._viewSuggestions.observer = (word) => { this.onSuggestionSelected(word) }
     }
     switchToTab(tabIndex) {
         if (tabIndex == MainViewModel.TabIndex.RHYMER) {
@@ -188,7 +189,7 @@ class MainView {
         }
     }
     searchAll() {
-        this._elemPlaceholderSuggestions.style.display = "none"
+        this._viewSuggestions.hide()
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)
     }
 
@@ -206,6 +207,11 @@ class MainView {
         this.listenForListItemWordClicks(this._mdcListThesaurus)
     }
 
+    onSuggestionSelected(word) {
+        this._mdcInputTextSearch.value = word
+        this._elemBtnSearch.click()
+    }
+
     listenForListItemWordClicks(mdcList) {
         mdcList.listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) {
@@ -217,26 +223,6 @@ class MainView {
     showDefinitions(definitions) {
         this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
         this.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
-    }
-
-    showSuggestions(suggestions) {
-        if (suggestions.length > 0) {
-            this._elemPlaceholderSuggestions.innerHTML = this._template.createContextMenuHtml(suggestions)
-            this._elemPlaceholderSuggestions.style.display = "block"
-            const mdcMenu = new MainView.MDCMenu(this._elemPlaceholderSuggestions.querySelector(".mdc-menu"))
-            mdcMenu.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
-            mdcMenu.setAnchorElement(this._elemPlacholderInputTextSearch)
-            mdcMenu.setFixedPosition(true)
-            mdcMenu.setDefaultFocusState(MainView.DefaultFocusState.NONE)
-            mdcMenu.quickOpen = true
-            mdcMenu.open = true
-            mdcMenu.listen('MDCMenu:selected', (e) => {
-                this._mdcInputTextSearch.value = suggestions[e.detail.index].label
-                this._elemBtnSearch.click()
-            })
-        } else {
-            this._elemPlaceholderSuggestions.style.display = "none"
-        }
     }
 
     setListVisibility(listData, elemList, elemEmpty, emptyText, word) {
