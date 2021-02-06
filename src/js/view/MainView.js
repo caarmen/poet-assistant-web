@@ -105,12 +105,13 @@ class MainView {
             if (evt.keyCode == 13) this.searchAll()
         }))
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
-            this._viewModel.fetchSuggestions(this._mdcInputTextSearch.value)
+            this.onSearchTextInput(this._mdcInputTextSearch.value)
         }))
         this._elemBtnSearch.onclick = () => { this.searchAll() }
         this._elemActionItemAbout.onclick = () => { this.showAbout() }
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
         this._viewSuggestions.observer = (word) => { this.onSuggestionSelected(word) }
+
         this._viewRhymer.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
@@ -122,6 +123,11 @@ class MainView {
     searchAll() {
         this._viewSuggestions.hide()
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)
+    }
+
+    onSearchTextInput(text) {
+        this._viewModel.fetchSuggestions(text)
+        this._elemBtnSearch.disabled = (text.length == 0 || this._viewModel.isLoading.value)
     }
 
     onSuggestionSelected(word) {
@@ -140,7 +146,7 @@ class MainView {
             this._elemBtnSearch.disabled = true
         } else {
             this._mdcLinearProgress.close()
-            this._elemBtnSearch.disabled = false
+            this._elemBtnSearch.disabled = this._mdcInputTextSearch.value.length == 0
             this._elemPlaceholderProgressIndicator.style.display = "none"
         }
     }
