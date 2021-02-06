@@ -42,7 +42,7 @@ class MainView {
             this._viewThesaurus = new ThesaurusView(this._template)
             this._viewDefinitions = new DefinitionsView(this._template)
             this._viewReader = new ReaderView(this._template)
-            this._viewVoicesList = new VoicesListView(this._template)
+            this._viewVoiceSettings = new VoiceSettingsView(this._template)
             this._viewTabs = new TabsView(this._template,
                 [
                     new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
@@ -96,15 +96,15 @@ class MainView {
         this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
-        if (this._viewModel.voices.value != undefined) this._viewVoicesList.updateVoicesList(this._viewModel.voices.value)
-        this._viewModel.voices.observer = (newVoices) => this._viewVoicesList.updateVoicesList(newVoices)
+        if (this._viewModel.voices.value != undefined) this._viewVoiceSettings.updateVoicesList(this._viewModel.voices.value)
+        this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
         if (!this._viewModel.isSpeechSynthesisSupported()) {
             this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
         }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
-            if (tabIndex == MainViewModel.TabIndex.READER) this._viewVoicesList.layout()
+            if (tabIndex == MainViewModel.TabIndex.READER) this._viewVoiceSettings.layout()
         }
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('keydown', ((evt) => {
             if (evt.keyCode == 13) this.searchAll()
@@ -123,9 +123,9 @@ class MainView {
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }
-        this._viewVoicesList.voiceSelectonObserver = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
-        this._viewVoicesList.pitchObserver = (pitchValue) => { this._viewModel.setVoicePitch(pitchValue) }
-        this._viewVoicesList.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }
+        this._viewVoiceSettings.voiceSelectonObserver = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
+        this._viewVoiceSettings.pitchObserver = (pitchValue) => { this._viewModel.setVoicePitch(pitchValue) }
+        this._viewVoiceSettings.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }
     }
 
     searchAll() {

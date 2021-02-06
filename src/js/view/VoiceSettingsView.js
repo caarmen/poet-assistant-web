@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-class VoicesListView {
+class VoiceSettingsView {
 
     constructor(template) {
         this.voiceSelectonObserver = (selectedVoiceIndex) => { }
@@ -46,8 +46,8 @@ class VoicesListView {
     initializeViews() {
         this._elemReaderVoices = document.querySelector("#placeholder-reader-voices #voices-menu")
         this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader-voices #selected-voice")
-        this._mdcSliderPitch = new VoicesListView.MDCSlider(document.querySelector("#voice-pitch"))
-        this._mdcSliderSpeed = new VoicesListView.MDCSlider(document.querySelector("#voice-speed"))
+        this._mdcSliderPitch = new VoiceSettingsView.MDCSlider(document.querySelector("#voice-pitch"))
+        this._mdcSliderSpeed = new VoiceSettingsView.MDCSlider(document.querySelector("#voice-speed"))
         this._mdcSliderPitch.listen('MDCSlider:change', (e) => this.pitchObserver(e.detail.value))
         this._mdcSliderSpeed.listen('MDCSlider:change', (e) => this.speedObserver(e.detail.value))
     }
@@ -60,8 +60,8 @@ class VoicesListView {
     }
     updateVoicesList(voices) {
         this._elemReaderVoices.innerHTML = this._template.createContextMenuHtml(voices)
-        this._mdcMenuVoices = new VoicesListView.MDCMenu(this._elemReaderVoices.querySelector(".mdc-menu"))
-        this._mdcMenuVoices.setAnchorCorner(VoicesListView.MDCMenuCorner.BOTTOM_LEFT)
+        this._mdcMenuVoices = new VoiceSettingsView.MDCMenu(this._elemReaderVoices.querySelector(".mdc-menu"))
+        this._mdcMenuVoices.setAnchorCorner(VoiceSettingsView.MDCMenuCorner.BOTTOM_LEFT)
         this._mdcMenuVoices.setAnchorElement(this._elemReaderSelectedVoice)
         this._mdcMenuVoices.setFixedPosition(true)
         this._mdcMenuVoices.listen('MDCMenu:selected', (e) => {
@@ -77,6 +77,6 @@ class VoicesListView {
         }
     }
 }
-VoicesListView.MDCMenu = mdc.menu.MDCMenu
-VoicesListView.MDCMenuCorner = mdc.menu.Corner
-VoicesListView.MDCSlider = mdc.slider.MDCSlider
+VoiceSettingsView.MDCMenu = mdc.menu.MDCMenu
+VoiceSettingsView.MDCMenuCorner = mdc.menu.Corner
+VoiceSettingsView.MDCSlider = mdc.slider.MDCSlider
