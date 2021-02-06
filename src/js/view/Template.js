@@ -33,6 +33,7 @@ class Template {
         this._buttonTemplate = await this.loadTemplate("button")
         this._buttonIconTemplate = await this.loadTemplate("button-icon")
         this._contextMenuTemplate = await this.loadTemplate("context-menu")
+        this._contextMenuHeaderTemplate = await this.loadTemplate("context-menu-header")
         this._contextMenuItemTemplate = await this.loadTemplate("context-menu-item")
         this._contextMenuItemMaterialIconTemplate = await this.loadTemplate("context-menu-item-material-icon")
         this._contextMenuItemCustomIconTemplate = await this.loadTemplate("context-menu-item-custom-icon")
@@ -59,7 +60,7 @@ class Template {
     createButtonIconHtml = (id, icon, label) =>
         this._buttonIconTemplate.replaceAll("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
 
-    createContextMenuHtml = (items) =>
+    createContextMenuHtml = (items, headerText) =>
         this._contextMenuTemplate.replace(
             "__ITEMS__",
             items.map((item) =>
@@ -68,7 +69,15 @@ class Template {
                     .replace("__ICON__", this.createContextMenuIconHtml(item.icon))
                     .replace("__LABEL__", this._i18n.translate(item.label))
             ).join("")
-        )
+        ).replace("__HEADER__", this.createContextMenuHeader(headerText))
+
+    createContextMenuHeader(headerText) {
+        if (headerText) {
+            return this._contextMenuHeaderTemplate.replace("__TITLE__", headerText)
+        } else {
+            return ""
+        }
+    }
 
     createContextMenuIconHtml(menuItemIcon) {
         if (menuItemIcon) {

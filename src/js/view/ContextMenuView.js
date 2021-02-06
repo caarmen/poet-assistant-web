@@ -25,7 +25,7 @@ class ContextMenuView {
     }
 
     showContextMenu(anchorElement, word, items) {
-        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(items)
+        this._elemPlaceholderContextMenu.innerHTML = this._template.createContextMenuHtml(items, word)
         const mdcMenu = new ContextMenuView.MDCMenu(this._elemPlaceholderContextMenu.querySelector(".mdc-menu"))
         mdcMenu.setAnchorCorner(ContextMenuView.MDCMenuCorner.BOTTOM_LEFT)
         mdcMenu.setAnchorElement(anchorElement)
@@ -33,7 +33,7 @@ class ContextMenuView {
         mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
         mdcMenu.listen('MDCMenu:selected', (e) => {
-            this.observer(word, e.detail.index)
+            this.observer(word, e.detail.index - 1)
         })
     }
 }
