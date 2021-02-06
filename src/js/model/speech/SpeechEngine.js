@@ -27,10 +27,20 @@ class SpeechEngine {
         }
         this._selectedVoice
         this.isPlaying = new ObservableField(false)
+        this._pitch = 1
+        this._speed = 1
     }
     selectVoice(id) {
         this._selectedVoice = this.voices.value.find((voice) => voice.voiceURI == id)
     }
+    setVoicePitch = (pitchValue) => {
+        this._pitch = pitchValue
+    }
+
+    setVoiceSpeed = (speedValue) => {
+        this._speed = speedValue
+    }
+
     populateVoiceList() {
         this.voices.value = this._synth.getVoices()
         if (this.voices.value.length > 0) this._selectedVoice = this.voices.value[0]
@@ -50,8 +60,8 @@ class SpeechEngine {
             var utterance = new SpeechSynthesisUtterance(selection)
             utterance.voice = this._selectedVoice
             utterance.lang = this._selectedVoice.lang
-            utterance.rate = 1
-            utterance.pitch = 1
+            utterance.pitch = this._pitch
+            utterance.rate = this._speed
             utterance.onboundary = (evt) => { this.updateState() }
             utterance.onend = (evt) => { this.updateState() }
             utterance.onerror = (evt) => { this.updateState() }

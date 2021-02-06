@@ -102,7 +102,7 @@ a:link, a.active:link,a:hover, a:visited {
 #placeholder-reader-voices {
 	margin-top: 16px;
 	text-align: center;
-	height: 48px;
+	height: 144px;
 }
 #placeholder-reader-input {
 	height: calc(100vh - 3*(var(--app-bar-row-height)) - 48px - 64px - 16px - 16px);
@@ -119,6 +119,22 @@ a:link, a.active:link,a:hover, a:visited {
 }
 #voices-menu .mdc-list-item {
 	width: 100%;
+}
+.voice-settings-table {
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
+.voice-settings-row {
+	display: table-row;
+	text-align: start;
+}
+.voice-settings-cell {
+	display: table-cell;
+	vertical-align: middle;
+}
+.mdc-slider {
+	min-width: 192px;
 }
 #selected-voice::after {
 	font-family: 'Material Icons';

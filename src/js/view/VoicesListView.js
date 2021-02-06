@@ -19,10 +19,14 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class VoicesListView {
 
     constructor(template) {
-        this.observer = (selectedVoiceIndex) => { }
+        this.voiceSelectonObserver = (selectedVoiceIndex) => { }
+        this.pitchObserver = (pitchValue) => { }
+        this.speedObserver = (speedValue) => { }
         this._elemPlaceholderReaderVoices = document.querySelector("#placeholder-reader-voices")
 
         this._mdcMenuVoices
+        this._mdcSliderPitch
+        this._mdcSliderSpeed
 
         this._elemReaderVoices
         this._elemReaderSelectedVoice
@@ -32,33 +36,41 @@ class VoicesListView {
         this.initializeViews()
     }
     applyTemplates() {
-        this._elemPlaceholderReaderVoices.innerHTML = this._template.createVoiceSelectionHtml()
+        this._elemPlaceholderReaderVoices.innerHTML = this._template.createVoiceSelectionHtml(
+            new SliderData("voice-pitch", "voice-pitch", 0.0, 2.0, 1.0),
+            new SliderData("voice-speed", "voice-speed", 0.5, 2.0, 1.0)
+        )
         this._template._i18n.translateElement(this._elemPlaceholderReaderVoices)
     }
 
     initializeViews() {
         this._elemReaderVoices = document.querySelector("#placeholder-reader-voices #voices-menu")
         this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader-voices #selected-voice")
+        this._mdcSliderPitch = new VoicesListView.MDCSlider(document.querySelector("#voice-pitch"))
+        this._mdcSliderSpeed = new VoicesListView.MDCSlider(document.querySelector("#voice-speed"))
+        this._mdcSliderPitch.listen('MDCSlider:change', (e) => this.pitchObserver(e.detail.value))
+        this._mdcSliderSpeed.listen('MDCSlider:change', (e) => this.speedObserver(e.detail.value))
     }
 
     updateVoicesList(voices) {
         this._elemReaderVoices.innerHTML = this._template.createContextMenuHtml(voices)
-        this.mdcMenuVoices = new VoicesListView.MDCMenu(this._elemReaderVoices.querySelector(".mdc-menu"))
-        this.mdcMenuVoices.setAnchorCorner(VoicesListView.MDCMenuCorner.BOTTOM_LEFT)
-        this.mdcMenuVoices.setAnchorElement(this._elemReaderSelectedVoice)
-        this.mdcMenuVoices.setFixedPosition(true)
-        this.mdcMenuVoices.listen('MDCMenu:selected', (e) => {
-            this.observer(e.detail.index)
+        this._mdcMenuVoices = new VoicesListView.MDCMenu(this._elemReaderVoices.querySelector(".mdc-menu"))
+        this._mdcMenuVoices.setAnchorCorner(VoicesListView.MDCMenuCorner.BOTTOM_LEFT)
+        this._mdcMenuVoices.setAnchorElement(this._elemReaderSelectedVoice)
+        this._mdcMenuVoices.setFixedPosition(true)
+        this._mdcMenuVoices.listen('MDCMenu:selected', (e) => {
+            this.voiceSelectonObserver(e.detail.index)
             this._elemReaderSelectedVoice.innerText = voices[e.detail.index].label
         })
         if (voices.length > 0) {
-            this.observer(0)
+            this.voiceSelectonObserver(0)
             this._elemReaderSelectedVoice.innerText = voices[0].label
         }
         this._elemReaderSelectedVoice.onclick = () => {
-            this.mdcMenuVoices.open = true
+            this._mdcMenuVoices.open = true
         }
     }
 }
 VoicesListView.MDCMenu = mdc.menu.MDCMenu
 VoicesListView.MDCMenuCorner = mdc.menu.Corner
+VoicesListView.MDCSlider = mdc.slider.MDCSlider

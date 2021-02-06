@@ -120,7 +120,9 @@ class MainView {
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }
-        this._viewVoicesList.observer = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
+        this._viewVoicesList.voiceSelectonObserver = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
+        this._viewVoicesList.pitchObserver = (pitchValue) => { this._viewModel.setVoicePitch(pitchValue) }
+        this._viewVoicesList.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }
     }
 
     searchAll() {

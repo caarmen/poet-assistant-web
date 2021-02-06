@@ -47,6 +47,7 @@ class Template {
         this._listItemWordTemplate = await this.loadTemplate("list-item-word")
         this._listItemSubHeader1Template = await this.loadTemplate("list-item-sub-header-1")
         this._listItemSubHeader2Template = await this.loadTemplate("list-item-sub-header-2")
+        this._sliderTemplate = await this.loadTemplate("slider")
         this._voiceSelectionHtml = await this.loadTemplate("voice-selection")
     }
 
@@ -155,7 +156,17 @@ class Template {
         this._tabTemplate.replace("__ID__", id)
             .replace("__LABEL__", label)
 
-    createVoiceSelectionHtml = () => this._voiceSelectionHtml
+    createSliderHtml = (sliderData) =>
+        this._sliderTemplate.replace("__ID__", sliderData.id)
+            .replace("__LABEL__", this._i18n.translate(sliderData.label))
+            .replace("__MIN__", sliderData.min)
+            .replace("__MAX__", sliderData.max)
+            .replace("__VALUE__", sliderData.value)
+
+    createVoiceSelectionHtml = (pitchSliderData, speedSliderData) =>
+        this._voiceSelectionHtml
+            .replace("__SLIDER_PITCH__", this.createSliderHtml(pitchSliderData))
+            .replace("__SLIDER_SPEED__", this.createSliderHtml(speedSliderData))
 
     async loadTemplate(templateName) {
         return (await fetch(`src/templates/${templateName}.template.html`)).text()

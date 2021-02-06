@@ -35,11 +35,13 @@
     "part_of_speech_verb_short": "v",
     "progressbar_label": "Loading",
     "reader_hint": "Paste your poem text here",
-    "voice": "Voice:",
     "stress_syllables": "Strict matches - {0}",
     "synonyms": "Synonyms",
     "tab_dictionary_title": "Dictionary",
     "tab_rhymer_title": "Rhymer",
     "tab_thesaurus_title": "Thesaurus",
-    "tab_reader_title": "Reader"
+    "tab_reader_title": "Reader",
+    "voice": "Voice:",
+    "voice-pitch": "Voice pitch:",
+    "voice-speed": "Voice speed:"
 }
