@@ -33,7 +33,7 @@ class ContextMenuView {
         mdcMenu.setFixedPosition(true)
         mdcMenu.open = true
         mdcMenu.listen('MDCMenu:selected', (e) => {
-            this.observer(word, e.detail.index - 1)
+            if (e.detail.index > 0) this.observer(word, e.detail.index - 1)
         })
     }
 }
