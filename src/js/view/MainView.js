@@ -24,9 +24,6 @@ class MainView {
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
-        this._elemPlaceholderDefinitionsList = document.querySelector("#placeholder-definitions-list")
-        this._elemPlaceholderDefinitionsEmpty = document.querySelector("#placeholder-definitions-empty")
-
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
         this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
 
@@ -40,15 +37,13 @@ class MainView {
         this._elemBtnPlay
         this._elemBtnPlayIcon
 
-        this._listVisibility
-
         this._template = new Template()
         this._template.loadTemplates().then(() => {
-            this._listVisibility = new ListVisibility(this._template)
             this._viewContextMenu = new ContextMenuView(this._template)
             this._viewSuggestions = new SuggestionsView(this._template)
             this._viewRhymer = new RhymerView(this._template)
             this._viewThesaurus = new ThesaurusView(this._template)
+            this._viewDefinitions = new DefinitionsView(this._template)
             this._viewVoicesList = new VoicesListView(this._template)
             this._viewTabs = new TabsView(this._template,
                 [
@@ -101,7 +96,7 @@ class MainView {
         this._viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this._template.isLoaded) }
         this._viewModel.rhymes.observer = (newRhymes) => { this._viewRhymer.showRhymes(newRhymes) }
         this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this._viewThesaurus.showThesaurus(newThesaurusEntries) }
-        this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
+        this._viewModel.definitions.observer = (newDefinitions) => { this._viewDefinitions.showDefinitions(newDefinitions) }
         this._viewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
@@ -147,11 +142,6 @@ class MainView {
         this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._viewModel.contextMenuItems)
     }
 
-    showDefinitions(definitions) {
-        this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
-        this._listVisibility.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
-    }
-
     showLoading(isLoading) {
         if (isLoading) {
             this._elemPlaceholderProgressIndicator.style.display = "block"
@@ -188,7 +178,6 @@ class MainView {
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
-MainView.MDCList = mdc.list.MDCList
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
     var mainView = new MainView()
