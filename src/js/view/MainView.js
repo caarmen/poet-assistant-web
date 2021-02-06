@@ -24,23 +24,18 @@ class MainView {
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
-        this._elemPlaceholderRhymes = document.querySelector("#placeholder-rhymes")
         this._elemPlaceholderRhymesList = document.querySelector("#placeholder-rhymes-list")
         this._elemPlaceholderRhymesEmpty = document.querySelector("#placeholder-rhymes-empty")
 
-        this._elemPlaceholderThesaurus = document.querySelector("#placeholder-thesaurus")
         this._elemPlaceholderThesaurusList = document.querySelector("#placeholder-thesaurus-list")
         this._elemPlaceholderThesaurusEmpty = document.querySelector("#placeholder-thesaurus-empty")
 
-        this._elemPlaceholderDefinitions = document.querySelector("#placeholder-definitions")
         this._elemPlaceholderDefinitionsList = document.querySelector("#placeholder-definitions-list")
         this._elemPlaceholderDefinitionsEmpty = document.querySelector("#placeholder-definitions-empty")
 
-        this._elemPlaceholderReader = document.querySelector("#placeholder-reader")
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
         this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
 
-        this._elemPlaceholderTabBar
         this._elemPlacholderInputTextSearch
 
         this._mdcListRhymes
@@ -49,9 +44,6 @@ class MainView {
         this._mdcInputTextSearch
 
         this._elemActionItemAbout
-        this._elemTabRhymer
-        this._elemTabDictionary
-        this._elemTabReader
         this._elemBtnSearch
         this._elemBtnPlay
         this._elemBtnPlayIcon
@@ -61,6 +53,13 @@ class MainView {
             this._viewContextMenu = new ContextMenuView(this._template)
             this._viewSuggestions = new SuggestionsView(this._template)
             this._viewVoicesList = new VoicesListView(this._template)
+            this._viewTabs = new TabsView(this._template,
+                [
+                    new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
+                    new TabData("tab_thesaurus", "tab_thesaurus_title", "placeholder-thesaurus"),
+                    new TabData("tab_dictionary", "tab_dictionary_title", "placeholder-definitions"),
+                    new TabData("tab_reader", "tab_reader_title", "placeholder-reader")
+                ])
             this.applyTemplates()
             this.initializeViews()
             this._viewModel = new MainViewModel()
@@ -70,15 +69,6 @@ class MainView {
     applyTemplates() {
         this._elemPlaceholderAppBar.innerHTML = this._template.createAppBarHtml("app-bar", "app_name",
             [new AppBarActionItem("action_item_about", "action_item_label_about", "info")])
-        this._elemPlaceholderTabBar = document.querySelector("#placeholder-tab-bar")
-
-        this._elemPlaceholderTabBar.innerHTML = this._template.createTabBarHtml("tab-bar",
-            [
-                new TabData("tab_rhymer", "tab_rhymer_title"),
-                new TabData("tab_thesaurus", "tab_thesaurus_title"),
-                new TabData("tab_dictionary", "tab_dictionary_title"),
-                new TabData("tab_reader", "tab_reader_title")
-            ])
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
         this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-search")
 
@@ -88,19 +78,11 @@ class MainView {
 
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
         this._elemPlaceholderReaderPlayButton.innerHTML = this._template.createButtonIconHtml("btn-play", "play_circle_filled", "btn_play_title")
+        this._viewTabs.applyTemplates()
     }
 
     initializeViews() {
-        var mdcTabBar = new MainView.MDCTabBar(document.querySelector(".mdc-tab-bar"))
-        mdcTabBar.listen("MDCTabBar:activated", (eventData) => {
-            this.onTabActivated(eventData["detail"]["index"])
-        })
-
         this._elemActionItemAbout = document.querySelector("#action_item_about")
-        this._elemTabRhymer = document.querySelector("#tab_rhymer")
-        this._elemTabThesaurus = document.querySelector("#tab_thesaurus")
-        this._elemTabDictionary = document.querySelector("#tab_dictionary")
-        this._elemTabReader = document.querySelector("#tab_reader")
 
         this._mdcLinearProgress = new MainView.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
         this._mdcLinearProgress.determinate = true
@@ -114,6 +96,7 @@ class MainView {
         this._mdcInputTextReader = new MainView.MDCTextField(document.querySelector("#input-text-reader"))
         this._elemBtnPlay = document.querySelector("#btn-play")
         this._elemBtnPlayIcon = document.querySelector("#btn-play-icon")
+        this._viewTabs.initializeViews()
     }
 
     bindViewModel() {
@@ -123,13 +106,13 @@ class MainView {
         this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this.showDefinitions(newDefinitions) }
         this._viewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
-        this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
+        this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this.updateSpeechPlayingState(newIsSpeechPlaying) }
         if (this._viewModel.voices.value != undefined) this._viewVoicesList.updateVoicesList(this._viewModel.voices.value)
         this._viewModel.voices.observer = (newVoices) => this._viewVoicesList.updateVoicesList(newVoices)
         if (!this._viewModel.isSpeechSynthesisSupported()) {
-            this._elemTabReader.style.display = "none"
+            this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
         }
 
         // view -> viewmodel bindings
@@ -150,38 +133,7 @@ class MainView {
         this._viewSuggestions.observer = (word) => { this.onSuggestionSelected(word) }
         this._viewVoicesList.observer = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
     }
-    switchToTab(tabIndex) {
-        if (tabIndex == MainViewModel.TabIndex.RHYMER) {
-            this._elemTabRhymer.click()
-        } else if (tabIndex == MainViewModel.TabIndex.THESAURUS) {
-            this._elemTabThesaurus.click()
-        } else if (tabIndex == MainViewModel.TabIndex.DICTIONARY) {
-            this._elemTabDictionary.click()
-        }
-    }
-    onTabActivated(tabIndex) {
-        if (tabIndex == MainViewModel.TabIndex.RHYMER) {
-            this._elemPlaceholderRhymes.style.display = "block"
-            this._elemPlaceholderThesaurus.style.display = "none"
-            this._elemPlaceholderDefinitions.style.display = "none"
-            this._elemPlaceholderReader.style.display = "none"
-        } else if (tabIndex == MainViewModel.TabIndex.THESAURUS) {
-            this._elemPlaceholderRhymes.style.display = "none"
-            this._elemPlaceholderThesaurus.style.display = "block"
-            this._elemPlaceholderDefinitions.style.display = "none"
-            this._elemPlaceholderReader.style.display = "none"
-        } else if (tabIndex == MainViewModel.TabIndex.DICTIONARY) {
-            this._elemPlaceholderRhymes.style.display = "none"
-            this._elemPlaceholderThesaurus.style.display = "none"
-            this._elemPlaceholderDefinitions.style.display = "block"
-            this._elemPlaceholderReader.style.display = "none"
-        } else if (tabIndex == MainViewModel.TabIndex.READER) {
-            this._elemPlaceholderRhymes.style.display = "none"
-            this._elemPlaceholderThesaurus.style.display = "none"
-            this._elemPlaceholderDefinitions.style.display = "none"
-            this._elemPlaceholderReader.style.display = "block"
-        }
-    }
+
     searchAll() {
         this._viewSuggestions.hide()
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)
@@ -268,7 +220,6 @@ class MainView {
 MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCList = mdc.list.MDCList
-MainView.MDCTabBar = mdc.tabBar.MDCTabBar
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
     var mainView = new MainView()
