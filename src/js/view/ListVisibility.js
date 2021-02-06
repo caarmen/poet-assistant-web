@@ -16,10 +16,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-class TabData {
-    constructor(tabElemId, tabLabel, contentElemId) {
-        this.tabElemId = tabElemId
-        this.tabLabel = tabLabel
-        this.contentElemId = contentElemId
+class ListVisibility {
+
+    constructor(template) {
+        this._template = template
     }
+    setListVisibility(listData, elemList, elemEmpty, emptyText, word) {
+        if (listData && listData.length > 0) {
+            elemList.style.display = "block"
+            elemEmpty.style.display = "none"
+            elemEmpty.innerHTML = ""
+        } else {
+            elemEmpty.innerHTML = this._template.createListEmptyHtml(emptyText, word)
+            elemList.style.display = "none"
+            elemEmpty.style.display = "block"
+        }
+    }
+
 }
