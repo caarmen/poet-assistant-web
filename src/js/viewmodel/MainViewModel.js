@@ -41,9 +41,9 @@ class MainViewModel {
         if (this._model._speechEngine.voices.value != undefined) this.updateVoices(this._model._speechEngine.voices.value)
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
         this.contextMenuItems = [
-            new MenuItem("menu-rhymer", "tab_rhymer_title"),
-            new MenuItem("menu-thesaurus", "tab_thesaurus_title"),
-            new MenuItem("menu-dictionary", "tab_dictionary_title"),
+            new MenuItem("menu-rhymer", "tab_rhymer_title", "ic_rhymer"),
+            new MenuItem("menu-thesaurus", "tab_thesaurus_title", "ic_thesaurus"),
+            new MenuItem("menu-dictionary", "tab_dictionary_title", "ic_dictionary"),
         ]
     }
 

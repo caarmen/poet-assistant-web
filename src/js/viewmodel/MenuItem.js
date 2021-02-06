@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class MenuItem {
-    constructor(id, label) {
+    constructor(id, label, icon) {
         this.id = id
         this.label = label
+        this.icon = icon
     }
 }
