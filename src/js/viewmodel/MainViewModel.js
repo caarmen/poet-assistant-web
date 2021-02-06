@@ -19,6 +19,8 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class MainViewModel {
     constructor() {
         this.rhymes = new ObservableField()
+        this.searchTextDisabled = new ObservableField(true)
+        this.searchButtonDisabled = new ObservableField(true)
         this.thesaurusEntries = new ObservableField()
         this.definitions = new ObservableField()
         this.suggestions = new ObservableField()
@@ -33,6 +35,7 @@ class MainViewModel {
             this.loadingProgress.value = loaded / total
         }).then(() => {
             this.isLoading.value = false
+            this.searchTextDisabled.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
         if (this._model._speechEngine.voices.value != undefined) this.updateVoices(this._model._speechEngine.voices.value)
@@ -110,6 +113,10 @@ class MainViewModel {
         }
     }
 
+    onSearchTextInput(text) {
+        this.fetchDefinitions(text)
+        this.searchButtonDisabled.value = text.length == 0
+    }
     fetchSuggestions(word) {
         if (!this.isLoading.value) {
             var searchTerm = this.cleanSearchTerm(word)

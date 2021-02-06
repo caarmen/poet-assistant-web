@@ -87,6 +87,8 @@ class MainView {
     bindViewModel() {
         // viewmodel -> view bindings
         this._viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this._template.isLoaded) }
+        this._viewModel.searchTextDisabled.observer = (isDisabled) => this._mdcInputTextSearch.disabled = isDisabled
+        this._viewModel.searchButtonDisabled.observer = (isDisabled) => this._elemBtnSearch.disabled = isDisabled
         this._viewModel.rhymes.observer = (newRhymes) => { this._viewRhymer.showRhymes(newRhymes) }
         this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this._viewThesaurus.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this._viewDefinitions.showDefinitions(newDefinitions) }
@@ -105,7 +107,7 @@ class MainView {
             if (evt.keyCode == 13) this.searchAll()
         }))
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
-            this.onSearchTextInput(this._mdcInputTextSearch.value)
+            this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
         }))
         this._elemBtnSearch.onclick = () => { this.searchAll() }
         this._elemActionItemAbout.onclick = () => { this.showAbout() }
@@ -125,11 +127,6 @@ class MainView {
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)
     }
 
-    onSearchTextInput(text) {
-        this._viewModel.fetchSuggestions(text)
-        this._elemBtnSearch.disabled = (text.length == 0 || this._viewModel.isLoading.value)
-    }
-
     onSuggestionSelected(word) {
         this._mdcInputTextSearch.value = word
         this._elemBtnSearch.click()
@@ -143,10 +140,8 @@ class MainView {
         if (isLoading) {
             this._elemPlaceholderProgressIndicator.style.display = "block"
             this._mdcLinearProgress.open()
-            this._elemBtnSearch.disabled = true
         } else {
             this._mdcLinearProgress.close()
-            this._elemBtnSearch.disabled = this._mdcInputTextSearch.value.length == 0
             this._elemPlaceholderProgressIndicator.style.display = "none"
         }
     }
