@@ -39,7 +39,6 @@ class MainView {
         this._elemPlaceholderReader = document.querySelector("#placeholder-reader")
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
         this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
-        this._elemPlaceholderReaderVoices = document.querySelector("#placeholder-reader-voices")
 
         this._elemPlaceholderTabBar
         this._elemPlacholderInputTextSearch
@@ -48,7 +47,6 @@ class MainView {
         this._mdcListThesaurus
         this._mdcLinearProgress
         this._mdcInputTextSearch
-        this._mdcMenuVoices
 
         this._elemActionItemAbout
         this._elemTabRhymer
@@ -57,13 +55,12 @@ class MainView {
         this._elemBtnSearch
         this._elemBtnPlay
         this._elemBtnPlayIcon
-        this._elemReaderVoices
-        this._elemReaderSelectedVoice
 
         this._template = new Template()
         this._template.loadTemplates().then(() => {
             this._viewContextMenu = new ContextMenuView(this._template)
             this._viewSuggestions = new SuggestionsView(this._template)
+            this._viewVoicesList = new VoicesListView(this._template)
             this.applyTemplates()
             this.initializeViews()
             this._viewModel = new MainViewModel()
@@ -91,8 +88,6 @@ class MainView {
 
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
         this._elemPlaceholderReaderPlayButton.innerHTML = this._template.createButtonIconHtml("btn-play", "play_circle_filled", "btn_play_title")
-        this._elemPlaceholderReaderVoices.innerHTML = this._template.createVoiceSelectionHtml()
-        this._template._i18n.translateElement(this._elemPlaceholderReaderVoices)
     }
 
     initializeViews() {
@@ -119,8 +114,6 @@ class MainView {
         this._mdcInputTextReader = new MainView.MDCTextField(document.querySelector("#input-text-reader"))
         this._elemBtnPlay = document.querySelector("#btn-play")
         this._elemBtnPlayIcon = document.querySelector("#btn-play-icon")
-        this._elemReaderVoices = document.querySelector("#placeholder-reader-voices #voices-menu")
-        this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader-voices #selected-voice")
     }
 
     bindViewModel() {
@@ -133,8 +126,8 @@ class MainView {
         this._viewModel.activeTab.observer = (newActiveTab) => { this.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this.updateSpeechPlayingState(newIsSpeechPlaying) }
-        if (this._viewModel.voices.value != undefined) this.updateVoicesList(this._viewModel.voices.value)
-        this._viewModel.voices.observer = (newVoices) => this.updateVoicesList(newVoices)
+        if (this._viewModel.voices.value != undefined) this._viewVoicesList.updateVoicesList(this._viewModel.voices.value)
+        this._viewModel.voices.observer = (newVoices) => this._viewVoicesList.updateVoicesList(newVoices)
         if (!this._viewModel.isSpeechSynthesisSupported()) {
             this._elemTabReader.style.display = "none"
         }
@@ -155,6 +148,7 @@ class MainView {
         this._elemBtnPlay.onclick = () => { this.readPoem() }
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
         this._viewSuggestions.observer = (word) => { this.onSuggestionSelected(word) }
+        this._viewVoicesList.observer = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
     }
     switchToTab(tabIndex) {
         if (tabIndex == MainViewModel.TabIndex.RHYMER) {
@@ -270,31 +264,10 @@ class MainView {
         var textInput = this._elemPlaceholderReaderInput.querySelector(".mdc-text-field__input")
         this._viewModel.playText(this._mdcInputTextReader.value, textInput.selectionStart, textInput.selectionEnd)
     }
-    updateVoicesList(voices) {
-        this._elemReaderVoices.innerHTML = this._template.createContextMenuHtml(voices)
-        this.mdcMenuVoices = new MainView.MDCMenu(this._elemReaderVoices.querySelector(".mdc-menu"))
-        this.mdcMenuVoices.setAnchorCorner(MainView.MDCMenuCorner.BOTTOM_LEFT)
-        this.mdcMenuVoices.setAnchorElement(this._elemReaderSelectedVoice)
-        this.mdcMenuVoices.setFixedPosition(true)
-        this.mdcMenuVoices.listen('MDCMenu:selected', (e) => {
-            this._viewModel.selectVoice(e.detail.index)
-            this._elemReaderSelectedVoice.innerText = voices[e.detail.index].label
-        })
-        if (voices.length > 0) {
-            this._elemReaderSelectedVoice.innerText = voices[0].label
-            this._viewModel.selectVoice(0)
-        }
-        this._elemReaderSelectedVoice.onclick = () => {
-            this.mdcMenuVoices.open = true
-        }
-    }
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCList = mdc.list.MDCList
-MainView.MDCMenu = mdc.menu.MDCMenu
-MainView.MDCMenuCorner = mdc.menu.Corner
-MainView.DefaultFocusState = mdc.menu.DefaultFocusState
 MainView.MDCTabBar = mdc.tabBar.MDCTabBar
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
