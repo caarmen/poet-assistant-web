@@ -114,7 +114,7 @@ class MainViewModel {
     }
 
     onSearchTextInput(text) {
-        this.fetchDefinitions(text)
+        this.fetchSuggestions(text)
         this.searchButtonDisabled.value = text.length == 0
     }
     fetchSuggestions(word) {
