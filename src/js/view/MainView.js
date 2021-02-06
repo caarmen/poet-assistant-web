@@ -24,9 +24,6 @@ class MainView {
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
-        this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
-        this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
-
         this._elemPlacholderInputTextSearch
 
         this._mdcLinearProgress
@@ -44,6 +41,7 @@ class MainView {
             this._viewRhymer = new RhymerView(this._template)
             this._viewThesaurus = new ThesaurusView(this._template)
             this._viewDefinitions = new DefinitionsView(this._template)
+            this._viewReader = new ReaderView(this._template)
             this._viewVoicesList = new VoicesListView(this._template)
             this._viewTabs = new TabsView(this._template,
                 [
@@ -68,8 +66,6 @@ class MainView {
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-search", "search", "btn_search_title")
 
-        this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
-        this._elemPlaceholderReaderPlayButton.innerHTML = this._template.createButtonIconHtml("btn-play", "play_circle_filled", "btn_play_title")
         this._viewTabs.applyTemplates()
     }
 
@@ -85,9 +81,6 @@ class MainView {
         this._elemBtnSearch = document.querySelector("#btn-search")
         this._elemBtnSearch.disabled = true
 
-        this._mdcInputTextReader = new MainView.MDCTextField(document.querySelector("#input-text-reader"))
-        this._elemBtnPlay = document.querySelector("#btn-play")
-        this._elemBtnPlayIcon = document.querySelector("#btn-play-icon")
         this._viewTabs.initializeViews()
     }
 
@@ -100,7 +93,7 @@ class MainView {
         this._viewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
-        this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this.updateSpeechPlayingState(newIsSpeechPlaying) }
+        this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
         if (this._viewModel.voices.value != undefined) this._viewVoicesList.updateVoicesList(this._viewModel.voices.value)
         this._viewModel.voices.observer = (newVoices) => this._viewVoicesList.updateVoicesList(newVoices)
         if (!this._viewModel.isSpeechSynthesisSupported()) {
@@ -114,17 +107,15 @@ class MainView {
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
             this._viewModel.fetchSuggestions(this._mdcInputTextSearch.value)
         }))
-        this._mdcInputTextReader.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
-            this._elemBtnPlay.disabled = this._mdcInputTextReader.value.length == 0
-        }))
         this._elemBtnSearch.onclick = () => { this.searchAll() }
         this._elemActionItemAbout.onclick = () => { this.showAbout() }
-        this._elemBtnPlay.disabled = true
-        this._elemBtnPlay.onclick = () => { this.readPoem() }
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
         this._viewSuggestions.observer = (word) => { this.onSuggestionSelected(word) }
         this._viewRhymer.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
+        this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
+            this._viewModel.playText(poemText, selectionStart, selectionEnd)
+        }
         this._viewVoicesList.observer = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
     }
 
@@ -156,13 +147,6 @@ class MainView {
     updateLoadingProgress(loadingProgress) {
         this._mdcLinearProgress.progress = loadingProgress
     }
-    updateSpeechPlayingState(newIsSpeechPlaying) {
-        if (newIsSpeechPlaying) {
-            this._elemBtnPlayIcon.innerText = "stop"
-        } else {
-            this._elemBtnPlayIcon.innerText = "play_circle_filled"
-        }
-    }
     showAbout() {
         var aboutHtml = this._template.createAboutHtml()
         this._elemPlaceholderDialog.innerHTML =
@@ -170,10 +154,6 @@ class MainView {
         this._template._i18n.translateElement(this._elemPlaceholderDialog)
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
-    }
-    readPoem() {
-        var textInput = this._elemPlaceholderReaderInput.querySelector(".mdc-text-field__input")
-        this._viewModel.playText(this._mdcInputTextReader.value, textInput.selectionStart, textInput.selectionEnd)
     }
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog

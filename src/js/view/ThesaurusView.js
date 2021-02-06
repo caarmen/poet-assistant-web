@@ -24,6 +24,8 @@ class ThesaurusView {
 
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
+
+        this.wordClickedObserver = (wordElem) => { }
     }
 
     showThesaurus(thesaurusEntries) {
