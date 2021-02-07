@@ -74,11 +74,18 @@ class MainModel {
         if (navigator.permissions == undefined) {
             navigator.clipboard.writeText(text)
         } else {
-            navigator.permissions.query({ name: "clipboard-write" }).then(result => {
-                if (result.state == "granted" || result.state == "prompt") {
+            navigator.permissions.query({ name: "clipboard-write" })
+                .then(result => {
+                    if (result.state == "granted" || result.state == "prompt") {
+                        navigator.clipboard.writeText(text)
+                    }
+                })
+                .catch(err => {
+                    // https://bugzilla.mozilla.org/show_bug.cgi?id=1560373
+                    // On firefox, it doesn't recognize the permission "clipboard-write".
+                    // The write works without a permission.
                     navigator.clipboard.writeText(text)
-                }
-            })
+                })
         }
     }
 
