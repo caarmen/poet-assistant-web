@@ -12,6 +12,7 @@ tar czf ../PoetAssistant-mac.tar.gz "Poet Assistant.app"
 
 echo "Packaging linux..."
 cd ..
+cp ../linux/poet-assistant.bash "Poet Assistant-linux-x64"/
 tar czf PoetAssistant-linux.tar.gz "Poet Assistant-linux-x64"
 
 echo "Packaging win32..."
