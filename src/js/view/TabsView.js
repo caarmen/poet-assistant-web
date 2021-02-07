@@ -43,6 +43,8 @@ class TabsView {
 
     hideTab = (tabIndex) => { this._elemTabs(tabIndex).style.display = "none" }
 
+    showTab = (tabIndex) => { this._elemTabs(tabIndex).style.display = "block" }
+
     switchToTab(tabIndex) {
         this._elemTabs[tabIndex].click()
     }

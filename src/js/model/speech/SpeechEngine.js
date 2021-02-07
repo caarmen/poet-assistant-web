@@ -46,9 +46,10 @@ class SpeechEngine {
 
     populateVoiceList() {
         this.voices.value = this._synth.getVoices()
-        if (this.voices.value.length > 0) this._selectedVoice = this.voices.value[0]
+        if (this.voices.value.length > 0) {
+            this._selectedVoice = this.voices.value[0]
+        } 
     }
-    isSpeechSynthesisSupported = () => this._synth != undefined
 
     playText(text, start, end) {
         var selection = text

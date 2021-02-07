@@ -25,6 +25,7 @@ class MainViewModel {
         this.definitions = new ObservableField()
         this.suggestions = new ObservableField()
         this.voices = new ObservableField([])
+        this.isReaderTabVisible = new ObservableField(false)
         this.isLoading = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
@@ -157,8 +158,6 @@ class MainViewModel {
         }
     }
 
-    isSpeechSynthesisSupported = () => this._model.isSpeechSynthesisSupported()
-
     selectVoice = (index) => this._model.selectVoice(this.voices.value[index].id)
     setVoicePitch = (pitchValue) => this._model.setVoicePitch(pitchValue)
     setVoiceSpeed = (speedValue) => this._model.setVoiceSpeed(speedValue)
@@ -180,7 +179,7 @@ class MainViewModel {
                 return languageA.localeCompare(languageB)
             }
         }).map((voice) => new MenuItem(voice.voiceURI, `${voice.name} - ${voice.lang}`))
-
+        this.isReaderTabVisible.value = this.voices.value.length > 0
     }
 
 }

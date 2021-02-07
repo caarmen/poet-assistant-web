@@ -98,8 +98,8 @@ class MainView {
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
         if (this._viewModel.voices.value != undefined) this._viewVoiceSettings.updateVoicesList(this._viewModel.voices.value)
         this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
-        if (!this._viewModel.isSpeechSynthesisSupported()) {
-            this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
+        this._viewModel.isReaderTabVisible.observer = (isVisible) => {
+            this.updateReaderTabVisibility(isVisible)
         }
 
         // view -> viewmodel bindings
@@ -129,6 +129,11 @@ class MainView {
         this._viewVoiceSettings.openedEmptyVoiceListObserver = () => { this._viewModel.requeryVoices() }
     }
 
+    updateReaderTabVisibility(isVisible) {
+        if (!isVisible) this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
+        else this._viewTabs.showTab(MainViewModel.TabIndex.READER)
+
+    }
     searchAll() {
         this._viewSuggestions.hide()
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)
