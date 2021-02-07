@@ -18,13 +18,17 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class ObservableField {
     constructor() {
-        this.observer = (newValue) => { }
+        this._observer = (newValue) => { }
     }
     get value() {
         return this._value
     }
     set value(newValue) {
         this._value = newValue
-        this.observer(this._value)
+        this._observer(this._value)
+    }
+    set observer(newObserver) {
+        this._observer = newObserver
+        if (this._value != undefined) this._observer(this._value)
     }
 }

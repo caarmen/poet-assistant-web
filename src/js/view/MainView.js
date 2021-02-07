@@ -96,12 +96,8 @@ class MainView {
         this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
-        if (this._viewModel.voices.value != undefined) this._viewVoiceSettings.updateVoicesList(this._viewModel.voices.value)
         this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
-        this.updateReaderTabVisibility(this._viewModel.isReaderTabVisible.value)
-        this._viewModel.isReaderTabVisible.observer = (isVisible) => {
-            this.updateReaderTabVisibility(isVisible)
-        }
+        this._viewModel.isReaderTabVisible.observer = (isVisible) => { this.updateReaderTabVisibility(isVisible) }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
