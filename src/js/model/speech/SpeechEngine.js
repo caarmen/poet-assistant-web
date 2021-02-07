@@ -43,10 +43,11 @@ class SpeechEngine {
 
     populateVoiceList(onVoiceChangeEvent) {
         this.voices.value = this._synth.getVoices()
+        const KEY_STORAGE_HAS_RELOADED = "has_reloaded"
         if (this.voices.value.length > 0) {
             this._selectedVoice = this.voices.value[0]
+            window.localStorage && window.localStorage.removeItem(KEY_STORAGE_HAS_RELOADED)
         } else if (onVoiceChangeEvent && window.localStorage) {
-            const KEY_STORAGE_HAS_RELOADED = "has_reloaded"
             if (!window.localStorage.getItem(KEY_STORAGE_HAS_RELOADED)) {
                 window.localStorage[KEY_STORAGE_HAS_RELOADED] = true
                 if (document.readyState == "complete") {
