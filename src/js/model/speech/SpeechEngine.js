@@ -21,9 +21,9 @@ class SpeechEngine {
     constructor() {
         this._synth = window.speechSynthesis
         this.voices = new ObservableField([])
-        this.populateVoiceList()
+        this.populateVoiceList(false)
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
-            this._synth.onvoiceschanged = () => { this.populateVoiceList() }
+            this._synth.onvoiceschanged = () => { this.populateVoiceList(true) }
         }
         this._selectedVoice
         this.isPlaying = new ObservableField(false)
@@ -41,9 +41,29 @@ class SpeechEngine {
         this._speed = speedValue
     }
 
-    populateVoiceList() {
+    populateVoiceList(onVoiceChangeEvent) {
         this.voices.value = this._synth.getVoices()
-        if (this.voices.value.length > 0) this._selectedVoice = this.voices.value[0]
+        const KEY_STORAGE_HAS_RELOADED = "has_reloaded"
+        if (this.voices.value.length > 0) {
+            this._selectedVoice = this.voices.value[0]
+            window.localStorage && window.localStorage.removeItem(KEY_STORAGE_HAS_RELOADED)
+        } else if (onVoiceChangeEvent && window.localStorage) {
+            // Unfortunate hack to work around bug in linux where
+            // a reload is required for voices to be present
+            // https://github.com/electron/electron/issues/22844
+            if (!window.localStorage.getItem(KEY_STORAGE_HAS_RELOADED)) {
+                window.localStorage[KEY_STORAGE_HAS_RELOADED] = true
+                if (document.readyState == "complete") {
+                    location.reload()
+                } else {
+                    window.addEventListener("load", () => {
+                        location.reload()
+                    })
+                }
+            } else {
+                window.localStorage.removeItem(KEY_STORAGE_HAS_RELOADED)
+            }
+        }
     }
 
     playText(text, start, end) {
