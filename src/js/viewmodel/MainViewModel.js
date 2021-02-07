@@ -41,15 +41,17 @@ class MainViewModel {
         })
         if (this._model._speechEngine.voices.value != undefined) this.updateVoices(this._model._speechEngine.voices.value)
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
-        this.contextMenuItems = [
+    }
+
+    getContextMenuItems() {
+        return [
             new MenuItem("menu-copy", "menu_copy_title", new MenuItemIcon("content_copy", MenuItemIcon.IconSource.MATERIAL)),
             new MenuItem("menu-speak", "menu_speak_title", new MenuItemIcon("record_voice_over", MenuItemIcon.IconSource.MATERIAL)),
             new MenuItem("menu-rhymer", "tab_rhymer_title", new MenuItemIcon("ic_rhymer", MenuItemIcon.IconSource.CUSTOM)),
             new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
             new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
-        ]
+        ].filter((item) => item.id != "menu-speak" || this.voices.value.length > 0)
     }
-
     fetchAll(word) {
         this.fetchRhymes(word)
         this.fetchThesaurus(word)

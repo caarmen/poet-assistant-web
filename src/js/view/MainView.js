@@ -146,7 +146,7 @@ class MainView {
     }
 
     onWordElemClicked(wordElem) {
-        this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._viewModel.contextMenuItems)
+        this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._viewModel.getContextMenuItems())
     }
 
     showLoading(isLoading) {
