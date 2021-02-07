@@ -1,5 +1,6 @@
 {
-  "name": "Poet Assistant",
+  "name": "PoetAssistant",
+  "productName": "Poet Assistant",
   "version": "0.1.1",
   "description": "Poet Assistant",
   "main": "main.js",
