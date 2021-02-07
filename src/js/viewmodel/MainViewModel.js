@@ -39,19 +39,11 @@ class MainViewModel {
             this.searchTextDisabled.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
-        if (this._model._speechEngine.voices.value != undefined) this.updateVoices(this._model._speechEngine.voices.value)
+        this.contextMenuItems = this.createContextMenuItems(false)
+
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
     }
 
-    getContextMenuItems() {
-        return [
-            new MenuItem("menu-copy", "menu_copy_title", new MenuItemIcon("content_copy", MenuItemIcon.IconSource.MATERIAL)),
-            new MenuItem("menu-speak", "menu_speak_title", new MenuItemIcon("record_voice_over", MenuItemIcon.IconSource.MATERIAL)),
-            new MenuItem("menu-rhymer", "tab_rhymer_title", new MenuItemIcon("ic_rhymer", MenuItemIcon.IconSource.CUSTOM)),
-            new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
-            new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
-        ].filter((item) => item.id != "menu-speak" || this.voices.value.length > 0)
-    }
     fetchAll(word) {
         this.fetchRhymes(word)
         this.fetchThesaurus(word)
@@ -180,8 +172,20 @@ class MainViewModel {
                 return languageA.localeCompare(languageB)
             }
         }).map((voice) => new MenuItem(voice.voiceURI, `${voice.name} - ${voice.lang}`))
+
         this.isReaderTabVisible.value = this.voices.value.length > 0
+
+        this.contextMenuItems = this.createContextMenuItems(newVoices.length > 0)
     }
+
+    createContextMenuItems = (isSpeechEnabled) => [
+        new MenuItem("menu-copy", "menu_copy_title", new MenuItemIcon("content_copy", MenuItemIcon.IconSource.MATERIAL)),
+        new MenuItem("menu-speak", "menu_speak_title", new MenuItemIcon("record_voice_over", MenuItemIcon.IconSource.MATERIAL)),
+        new MenuItem("menu-rhymer", "tab_rhymer_title", new MenuItemIcon("ic_rhymer", MenuItemIcon.IconSource.CUSTOM)),
+        new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
+        new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
+    ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
+
 
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })
