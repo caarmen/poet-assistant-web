@@ -8,7 +8,7 @@ electron-packager .  --platform win32 --icon ./favicon.ico --out out
 
 echo "Packaging darwin..."
 cd "out/Poet Assistant-darwin-x64"
-zip -r ../PoetAssistant-iOS.zip "Poet Assistant.app"
+zip -r ../PoetAssistant-mac.zip "Poet Assistant.app"
 
 echo "Packaging linux..."
 cd ..
