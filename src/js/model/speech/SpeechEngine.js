@@ -21,9 +21,9 @@ class SpeechEngine {
     constructor() {
         this._synth = window.speechSynthesis
         this.voices = new ObservableField([])
-        this.populateVoiceList()
+        this.populateVoiceList(false)
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
-            this._synth.onvoiceschanged = () => { this.populateVoiceList() }
+            this._synth.onvoiceschanged = () => { this.populateVoiceList(true) }
         }
         this._selectedVoice
         this.isPlaying = new ObservableField(false)
@@ -41,9 +41,19 @@ class SpeechEngine {
         this._speed = speedValue
     }
 
-    populateVoiceList() {
+    populateVoiceList(onVoiceChangeEvent) {
         this.voices.value = this._synth.getVoices()
-        if (this.voices.value.length > 0) this._selectedVoice = this.voices.value[0]
+        if (this.voices.value.length > 0) {
+            this._selectedVoice = this.voices.value[0]
+        } else if (onVoiceChangeEvent && window.localStorage) {
+            const KEY_STORAGE_HAS_RELOADED = "has_reloaded"
+            if (!window.localStorage.getItem(KEY_STORAGE_HAS_RELOADED)) {
+                window.localStorage[KEY_STORAGE_HAS_RELOADED] = true
+                location.reload()
+            } else {
+                window.localStorage.removeItem(KEY_STORAGE_HAS_RELOADED)
+            }
+        }
     }
 
     playText(text, start, end) {
