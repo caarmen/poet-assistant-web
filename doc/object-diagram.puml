@@ -1,0 +1,47 @@
+@startuml
+object TabsView
+object SuggestionsView
+object ContextMenuView
+object RhymerView
+object ThesaurusView
+object DefinitionsView
+object ReaderView
+object VoiceSettingsView
+object MainView
+
+object MainViewModel
+
+object MainModel
+object RhymerRepository
+object ThesaurusRepository
+object DictionaryRepository
+object SuggestionsRepository
+object SpeechEngine
+
+
+object Db
+
+TabsView <.. MainView
+ContextMenuView <.. MainView
+RhymerView <.. MainView
+ThesaurusView <.. MainView
+DefinitionsView <.. MainView
+ReaderView <.. MainView
+VoiceSettingsView <.. MainView
+SuggestionsView <.. MainView
+MainView ..> MainViewModel
+
+MainViewModel ..> MainModel
+
+MainModel ..> SpeechEngine
+MainModel ..> RhymerRepository
+MainModel ..> ThesaurusRepository 
+MainModel ..> DictionaryRepository
+MainModel ..> SuggestionsRepository
+
+RhymerRepository ..> Db
+ThesaurusRepository ..> Db
+DictionaryRepository ..> Db
+SuggestionsRepository ..> Db
+
+@enduml
