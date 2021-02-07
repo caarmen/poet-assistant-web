@@ -1,7 +1,7 @@
 {
   "name": "PoetAssistant",
   "productName": "Poet Assistant",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Poet Assistant",
   "main": "main.js",
   "scripts": {
