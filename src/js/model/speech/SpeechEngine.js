@@ -24,6 +24,9 @@ class SpeechEngine {
         this.populateVoiceList()
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
             this._synth.onvoiceschanged = () => { this.populateVoiceList() }
+            this._synth.addEventListener("voiceschanged", function() {
+                this.populateVoiceList()
+            })
         }
         this._selectedVoice
         this.isPlaying = new ObservableField(false)
