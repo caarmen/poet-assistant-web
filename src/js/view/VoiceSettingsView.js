@@ -22,6 +22,7 @@ class VoiceSettingsView {
         this.voiceSelectonObserver = (selectedVoiceIndex) => { }
         this.pitchObserver = (pitchValue) => { }
         this.speedObserver = (speedValue) => { }
+        this.openedEmptyVoiceListObserver = () => {}
         this._elemPlaceholderReaderVoices = document.querySelector("#placeholder-reader-voices")
 
         this._mdcMenuVoices
@@ -73,7 +74,8 @@ class VoiceSettingsView {
             this._elemReaderSelectedVoice.innerText = voices[0].label
         }
         this._elemReaderSelectedVoice.onclick = () => {
-            this._mdcMenuVoices.open = true
+            if (voices.length == 0) this.openedEmptyVoiceListObserver()
+            else this._mdcMenuVoices.open = true
         }
     }
 }
