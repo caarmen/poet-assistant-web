@@ -11,9 +11,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^11.2.1"
+    "electron": "^11.2.3"
   },
-  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "git@github.com-caarmen:caarmen/poet-assistant-web.git"
