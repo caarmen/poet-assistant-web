@@ -24,9 +24,6 @@ class SpeechEngine {
         this.populateVoiceList()
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
             this._synth.onvoiceschanged = () => { this.populateVoiceList() }
-            this._synth.addEventListener("voiceschanged", () => {
-                this.populateVoiceList()
-            })
         }
         this._selectedVoice
         this.isPlaying = new ObservableField(false)
@@ -46,9 +43,7 @@ class SpeechEngine {
 
     populateVoiceList() {
         this.voices.value = this._synth.getVoices()
-        if (this.voices.value.length > 0) {
-            this._selectedVoice = this.voices.value[0]
-        }
+        if (this.voices.value.length > 0) this._selectedVoice = this.voices.value[0]
     }
 
     playText(text, start, end) {

@@ -163,7 +163,6 @@ class MainViewModel {
     selectVoice = (index) => this._model.selectVoice(this.voices.value[index].id)
     setVoicePitch = (pitchValue) => this._model.setVoicePitch(pitchValue)
     setVoiceSpeed = (speedValue) => this._model.setVoiceSpeed(speedValue)
-    requeryVoices = () => this._model.requeryVoices()
 
     playText = (text, start, end) => this._model.playText(text, start, end)
 
