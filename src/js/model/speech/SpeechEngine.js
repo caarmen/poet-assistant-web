@@ -24,7 +24,7 @@ class SpeechEngine {
         this.populateVoiceList()
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
             this._synth.onvoiceschanged = () => { this.populateVoiceList() }
-            this._synth.addEventListener("voiceschanged", function() {
+            this._synth.addEventListener("voiceschanged", () => {
                 this.populateVoiceList()
             })
         }
@@ -48,7 +48,7 @@ class SpeechEngine {
         this.voices.value = this._synth.getVoices()
         if (this.voices.value.length > 0) {
             this._selectedVoice = this.voices.value[0]
-        } 
+        }
     }
 
     playText(text, start, end) {
