@@ -49,10 +49,13 @@ class SpeechEngine {
             const KEY_STORAGE_HAS_RELOADED = "has_reloaded"
             if (!window.localStorage.getItem(KEY_STORAGE_HAS_RELOADED)) {
                 window.localStorage[KEY_STORAGE_HAS_RELOADED] = true
-                window.addEventListener("load", () => {
+                if (document.readyState == "complete") {
                     location.reload()
-
-                })
+                } else {
+                    window.addEventListener("load", () => {
+                        location.reload()
+                    })
+                }
             } else {
                 window.localStorage.removeItem(KEY_STORAGE_HAS_RELOADED)
             }
