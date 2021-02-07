@@ -125,6 +125,11 @@ class MainView {
         this._viewVoiceSettings.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }
     }
 
+    updateReaderTabVisibility(isVisible) {
+        if (!isVisible) this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
+        else this._viewTabs.showTab(MainViewModel.TabIndex.READER)
+
+    }
     searchAll() {
         this._viewSuggestions.hide()
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)

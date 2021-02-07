@@ -64,8 +64,6 @@ class MainModel {
         return this._suggestionsRepository.fetchSuggestions(word)
     }
 
-    isSpeechSynthesisSupported = () => this._speechEngine.isSpeechSynthesisSupported()
-
     selectVoice = (id) => this._speechEngine.selectVoice(id)
     setVoicePitch = (pitchValue) => this._speechEngine.setVoicePitch(pitchValue)
     setVoiceSpeed = (speedValue) => this._speechEngine.setVoiceSpeed(speedValue)
