@@ -8,3 +8,5 @@ Poet Assistant is a single-page web app which offers a set of tools to help with
 * a screen where you can enter your poem text, and have it read aloud back to you by the device's text-to-speech engine.
 
 
+More information:
+* [Technical architecture](doc/architecture.md)
