@@ -2,8 +2,9 @@ Poet Assistant Web Architecture
 ===============================
 
 This project is essentially a "vanilla javascript" project. The libraries included are:
-* material design
-* sql.js
+* material components web (js, css)
+* material icons (font)
+* sql.js (js, wasm)
 
 When starting this project, I didn't know any javascript frameworks (I still don't...).  I was a bit intimidated by the task of having to choose a framework, and then by the learning curve of the selected framework.  I thought I would give a try at starting a project without a framework, and then consider using one if it really got to be too challenging without.
 
