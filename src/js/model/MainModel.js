@@ -18,7 +18,6 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class MainModel {
     constructor() {
-        this._db = undefined
         this._speechEngine = new SpeechEngine()
         this.isSpeechPlaying = this._speechEngine.isPlaying
     }
@@ -29,11 +28,11 @@ class MainModel {
         var SQL = await initSqlJs(config)
         var response = await this.loadUrl('src/resources/poet_assistant.db', progressCallback)
         var arrayBuffer = new Uint8Array(response)
-        this._db = new SQL.Database(new Uint8Array(arrayBuffer))
-        this._rhymerRepository = new RhymerRepository(this._db)
-        this._thesaurusRepository = new ThesaurusRepository(this._db)
-        this._dictionaryRepository = new DictionaryRepository(this._db)
-        this._suggestionsRepository = new SuggestionsRepository(this._db)
+        var db = new SQL.Database(new Uint8Array(arrayBuffer))
+        this._rhymerRepository = new RhymerRepository(db)
+        this._thesaurusRepository = new ThesaurusRepository(db)
+        this._dictionaryRepository = new DictionaryRepository(db)
+        this._suggestionsRepository = new SuggestionsRepository(db)
     }
 
     loadUrl(url, progressCallback) {
