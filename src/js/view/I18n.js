@@ -21,7 +21,7 @@ class I18n {
     }
 
     translate = (text, ...args) => args.reduce(
-        (previousResult, arg, position) => previousResult.replace(new RegExp(`\\{${position}\\}`, "gm"), arg),
+        (previousResult, arg, position) => previousResult.replace(`{${position}}`, arg),
         this._strings[text] || text
     )
 
