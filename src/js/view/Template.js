@@ -17,58 +17,43 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class Template {
-    constructor(i18n) {
+    constructor(i18n, templates) {
         this._progressIndicatorTemplate = undefined
         this._buttonTemplate = undefined
         this._i18n = i18n
-        this._templateReader = new Worker("src/js/view/TemplateReader.js")
-        this._templates = new Map()
+        this._templates = templates
     }
-    loadTemplates() {
-        return new Promise((completionFunc) => {
-            const keepThis = this
-            this._i18n.load().then(() => {
-
-                const templateNames = [
-                    "about",
-                    "app-bar",
-                    "app-bar-action-item",
-                    "button-icon",
-                    "button-icon-text",
-                    "context-menu",
-                    "context-menu-header",
-                    "context-menu-item",
-                    "context-menu-item-custom-icon",
-                    "context-menu-item-material-icon",
-                    "dialog",
-                    "dictionary-list-item",
-                    "input-text",
-                    "list",
-                    "list-empty",
-                    "list-header",
-                    "list-item-sub-header-1",
-                    "list-item-sub-header-2",
-                    "list-item-word",
-                    "progress-indicator",
-                    "slider",
-                    "tab",
-                    "tab-bar",
-                    "textarea",
-                    "voice-selection"
-                ].sort()
-                keepThis._templateReader.onmessage = (e) => {
-                    const templateName = e.data[0]
-                    const templateContext = e.data[1]
-                    keepThis._templates.set(templateName, templateContext)
-                    const remainingTemplates = templateNames.filter((item) => !keepThis._templates.has(item))
-                    if (remainingTemplates.length == 0) {
-                        completionFunc()
-                    }
-                }
-                templateNames.forEach((templateName) => { keepThis._templateReader.postMessage(templateName) })
-            })
+    loadTemplates = () => new FilesReader().loadFiles(
+        [
+            "about",
+            "app-bar",
+            "app-bar-action-item",
+            "button-icon",
+            "button-icon-text",
+            "context-menu",
+            "context-menu-header",
+            "context-menu-item",
+            "context-menu-item-custom-icon",
+            "context-menu-item-material-icon",
+            "dialog",
+            "dictionary-list-item",
+            "input-text",
+            "list",
+            "list-empty",
+            "list-header",
+            "list-item-sub-header-1",
+            "list-item-sub-header-2",
+            "list-item-word",
+            "progress-indicator",
+            "slider",
+            "tab",
+            "tab-bar",
+            "textarea",
+            "voice-selection"
+        ].map((templateName) => new FileReaderInput(templateName, `../../../templates/${templateName}.template.html`))
+        ).then((templates) => {
+            this._templates = templates
         })
-    }
 
     createAboutHtml = () => this._templates.get("about")
 

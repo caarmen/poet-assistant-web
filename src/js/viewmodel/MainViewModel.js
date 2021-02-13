@@ -32,6 +32,11 @@ class MainViewModel {
         this.isLoading.value = true
         this._model = new MainModel()
         this.isSpeechPlaying = this._model.isSpeechPlaying
+        this.contextMenuItems = this.createContextMenuItems(false)
+        this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
+    }
+
+    loadDb() {
         this._model.loadDb((loaded, total) => {
             this.loadingProgress.value = loaded / total
         }).then(() => {
@@ -39,10 +44,36 @@ class MainViewModel {
             this.searchTextDisabled.value = false
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
-        this.contextMenuItems = this.createContextMenuItems(false)
-
-        this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
     }
+
+    loadTemplates = () => this._model.loadFiles(
+        [
+            "about",
+            "app-bar",
+            "app-bar-action-item",
+            "button-icon",
+            "button-icon-text",
+            "context-menu",
+            "context-menu-header",
+            "context-menu-item",
+            "context-menu-item-custom-icon",
+            "context-menu-item-material-icon",
+            "dialog",
+            "dictionary-list-item",
+            "input-text",
+            "list",
+            "list-empty",
+            "list-header",
+            "list-item-sub-header-1",
+            "list-item-sub-header-2",
+            "list-item-word",
+            "progress-indicator",
+            "slider",
+            "tab",
+            "tab-bar",
+            "textarea",
+            "voice-selection"
+        ].map((templateName) => new FileReaderInput(templateName, `../../../templates/${templateName}.template.html`)))
 
     fetchAll(word) {
         this.fetchRhymes(word)

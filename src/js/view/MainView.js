@@ -36,9 +36,10 @@ class MainView {
         this._elemBtnPlayIcon
 
         this._i18n = new I18n()
+        this._viewModel = new MainViewModel()
         this._i18n.load().then(() => {
-            this._template = new Template(this._i18n)
-            this._template.loadTemplates().then(() => {
+            this._viewModel.loadTemplates().then((templates) => {
+                this._template = new Template(this._i18n, templates)
                 this._viewContextMenu = new ContextMenuView(this._template)
                 this._viewSuggestions = new SuggestionsView(this._template)
                 this._viewRhymer = new RhymerView(this._template)
@@ -55,8 +56,8 @@ class MainView {
                     ])
                 this.applyTemplates()
                 this.initializeViews()
-                this._viewModel = new MainViewModel()
                 this.bindViewModel()
+                this._viewModel.loadDb()
             })
         })
     }
