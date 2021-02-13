@@ -53,7 +53,7 @@ class Template {
 
     createAboutHtml = () => this._aboutTemplate
 
-    createProgressIndicatorHtml = (text) => this._progressIndicatorTemplate.replace("__TEXT__", this._i18n.translate(text))
+    createProgressIndicatorHtml = () => this._progressIndicatorTemplate
 
     createButtonIconTextHtml = (id, icon, label) =>
         this._buttonIconTextTemplate

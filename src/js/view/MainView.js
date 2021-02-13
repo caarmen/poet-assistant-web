@@ -29,6 +29,7 @@ class MainView {
         this._mdcLinearProgress
         this._mdcInputTextSearch
 
+        this._elemProgressBarLabel
         this._elemActionItemAbout
         this._elemBtnSearch
         this._elemBtnPlay
@@ -59,10 +60,12 @@ class MainView {
     applyTemplates() {
         this._elemPlaceholderAppBar.innerHTML = this._template.createAppBarHtml("app-bar", "app_name",
             [new AppBarActionItem("action_item_about", "action_item_label_about", "info")])
+
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
         this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-search")
 
-        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml("progressbar_label")
+        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml()
+        this._elemProgressBarLabel = document.querySelector("#progressbar-label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-search", "search", "btn_search_title")
 
@@ -73,7 +76,8 @@ class MainView {
         this._elemActionItemAbout = document.querySelector("#action_item_about")
 
         this._mdcLinearProgress = new MainView.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
-        this._mdcLinearProgress.determinate = true
+        this._elemProgressBarLabel.innerText = this._template._i18n.translate("progressbar_app_label")
+        this._mdcLinearProgress.determinate = false
         this._mdcLinearProgress.progress = 0
         this._mdcLinearProgress.open()
 
@@ -154,7 +158,13 @@ class MainView {
         }
     }
     updateLoadingProgress(loadingProgress) {
-        this._mdcLinearProgress.progress = loadingProgress
+        this._elemProgressBarLabel.innerText = this._template._i18n.translate("progressbar_db_label", Math.round(loadingProgress*100))
+        if (loadingProgress > 0 && loadingProgress < 1) {
+            this._mdcLinearProgress.progress = loadingProgress
+            this._mdcLinearProgress.determinate = true
+        } else {
+            this._mdcLinearProgress.determinate = false
+        }
     }
     showAbout() {
         var aboutHtml = this._template.createAboutHtml()
