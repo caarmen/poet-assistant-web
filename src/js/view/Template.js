@@ -21,54 +21,73 @@ class Template {
         this._progressIndicatorTemplate = undefined
         this._buttonTemplate = undefined
         this._i18n = new I18n()
+        this._templateReader = new Worker("src/js/view/TemplateReader.js")
+        this._templates = new Map()
     }
-    async loadTemplates() {
-        await this._i18n.load()
-        this._aboutTemplate = await this.loadTemplate("about")
-        this._appBarTemplate = await this.loadTemplate("app-bar")
-        this._appBarActionItemTemplate = await this.loadTemplate("app-bar-action-item")
-        this._tabBarTemplate = await this.loadTemplate("tab-bar")
-        this._tabTemplate = await this.loadTemplate("tab")
-        this._progressIndicatorTemplate = await this.loadTemplate("progress-indicator")
-        this._buttonIconTextTemplate = await this.loadTemplate("button-icon-text")
-        this._buttonIconTemplate = await this.loadTemplate("button-icon")
-        this._contextMenuTemplate = await this.loadTemplate("context-menu")
-        this._contextMenuHeaderTemplate = await this.loadTemplate("context-menu-header")
-        this._contextMenuItemTemplate = await this.loadTemplate("context-menu-item")
-        this._contextMenuItemMaterialIconTemplate = await this.loadTemplate("context-menu-item-material-icon")
-        this._contextMenuItemCustomIconTemplate = await this.loadTemplate("context-menu-item-custom-icon")
-        this._dialogTemplate = await this.loadTemplate("dialog")
-        this._inputTextTemplate = await this.loadTemplate("input-text")
-        this._textareaTemplate = await this.loadTemplate("textarea")
-        this._listTemplate = await this.loadTemplate("list")
-        this._listEmptyTemplate = await this.loadTemplate("list-empty")
-        this._dictionaryListItemTemplate = await this.loadTemplate("dictionary-list-item")
-        this._listHeaderTemplate = await this.loadTemplate("list-header")
-        this._listItemWordTemplate = await this.loadTemplate("list-item-word")
-        this._listItemSubHeader1Template = await this.loadTemplate("list-item-sub-header-1")
-        this._listItemSubHeader2Template = await this.loadTemplate("list-item-sub-header-2")
-        this._sliderTemplate = await this.loadTemplate("slider")
-        this._voiceSelectionHtml = await this.loadTemplate("voice-selection")
+    loadTemplates() {
+        return new Promise((completionFunc) => {
+            const keepThis = this
+            this._i18n.load().then(() => {
+
+                const templateNames = [
+                    "about",
+                    "app-bar",
+                    "app-bar-action-item",
+                    "button-icon",
+                    "button-icon-text",
+                    "context-menu",
+                    "context-menu-header",
+                    "context-menu-item",
+                    "context-menu-item-custom-icon",
+                    "context-menu-item-material-icon",
+                    "dialog",
+                    "dictionary-list-item",
+                    "input-text",
+                    "list",
+                    "list-empty",
+                    "list-header",
+                    "list-item-sub-header-1",
+                    "list-item-sub-header-2",
+                    "list-item-word",
+                    "progress-indicator",
+                    "slider",
+                    "tab",
+                    "tab-bar",
+                    "textarea",
+                    "voice-selection"
+                ].sort()
+                keepThis._templateReader.onmessage = (e) => {
+                    const templateName = e.data[0]
+                    const templateContext = e.data[1]
+                    keepThis._templates.set(templateName, templateContext)
+                    const remainingTemplates = templateNames.filter((item) => !keepThis._templates.has(item))
+                    if (remainingTemplates.length == 0) {
+                        completionFunc()
+                    }
+                }
+                templateNames.forEach((templateName) => { keepThis._templateReader.postMessage(templateName) })
+            })
+        })
     }
 
-    createAboutHtml = () => this._aboutTemplate
+    createAboutHtml = () => this._templates.get("about")
 
-    createProgressIndicatorHtml = () => this._progressIndicatorTemplate
+    createProgressIndicatorHtml = () => this._templates.get("progress-indicator")
 
     createButtonIconTextHtml = (id, icon, label) =>
-        this._buttonIconTextTemplate
+        this._templates.get("button-icon-text")
             .replaceAll("__ID__", id)
             .replaceAll("__ICON__", icon)
             .replaceAll("__LABEL__", this._i18n.translate(label))
 
     createButtonIconHtml = (id, icon, label) =>
-        this._buttonIconTemplate.replaceAll("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
+        this._templates.get("button-icon").replaceAll("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
 
     createContextMenuHtml = (items, headerText) =>
-        this._contextMenuTemplate.replace(
+        this._templates.get("context-menu").replace(
             "__ITEMS__",
             items.map((item) =>
-                this._contextMenuItemTemplate
+                this._templates.get("context-menu-item")
                     .replace("__ID__", item.id)
                     .replace("__ICON__", this.createContextMenuIconHtml(item.icon))
                     .replace("__LABEL__", this._i18n.translate(item.label))
@@ -77,7 +96,7 @@ class Template {
 
     createContextMenuHeader(headerText) {
         if (headerText) {
-            return this._contextMenuHeaderTemplate.replace("__TITLE__", headerText)
+            return this._templates.get("context-menu-header").replace("__TITLE__", headerText)
         } else {
             return ""
         }
@@ -86,9 +105,9 @@ class Template {
     createContextMenuIconHtml(menuItemIcon) {
         if (menuItemIcon) {
             if (menuItemIcon.type == MenuItemIcon.IconSource.MATERIAL) {
-                return this._contextMenuItemMaterialIconTemplate.replace("__ICON__", menuItemIcon.name)
+                return this._templates.get("context-menu-item-material-icon").replace("__ICON__", menuItemIcon.name)
             } else {
-                return this._contextMenuItemCustomIconTemplate.replace("__ICON__", menuItemIcon.name)
+                return this._templates.get("context-menu-item-custom-icon").replace("__ICON__", menuItemIcon.name)
             }
         } else {
             return ""
@@ -96,32 +115,32 @@ class Template {
     }
 
     createDialogHtml = (title, content) =>
-        this._dialogTemplate.replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content)).replace("__CONTENT__", this._i18n.translate(content))
+        this._templates.get("dialog").replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content)).replace("__CONTENT__", this._i18n.translate(content))
 
     createInputTextHtml = (id, label) =>
-        this._inputTextTemplate.replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
+        this._templates.get("input-text").replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
 
     createTextareaHtml = (id, label) =>
-        this._textareaTemplate.replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
+        this._templates.get("textarea").replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
 
     createDictionaryListHtml = (id, word, dictionaryListItems) =>
-        this._listHeaderTemplate.replace("__TEXT__", word) +
-        this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
+        this._templates.get("list-header").replace("__TEXT__", word) +
+        this._templates.get("list").replace("__ID__", id).replace("__ITEMS__",
             dictionaryListItems.map(item =>
                 this.createDictionaryListItemHtml(item)
             ).join("")
         )
 
     createDictionaryListItemHtml = (dictionaryListItem) =>
-        this._dictionaryListItemTemplate
+        this._templates.get("dictionary-list-item")
             .replace("__WORD_TYPE__", this._i18n.translate(dictionaryListItem.wordTypeLabel))
             .replace("__DEFINITION__", dictionaryListItem.definition)
 
-    createListEmptyHtml = (emptyText, word) => this._listEmptyTemplate.replace("__TEXT__", this._i18n.translate(emptyText, word))
+    createListEmptyHtml = (emptyText, word) => this._templates.get("list-empty").replace("__TEXT__", this._i18n.translate(emptyText, word))
 
     createListHtml = (id, word, items) =>
-        this._listHeaderTemplate.replace("__TEXT__", word) +
-        this._listTemplate.replace("__ID__", id).replace("__ITEMS__",
+        this._templates.get("list-header").replace("__TEXT__", word) +
+        this._templates.get("list").replace("__ID__", id).replace("__ITEMS__",
             items.map(item =>
                 this.createListItemHtml(item.style, item.text, item.args)
             ).join("")
@@ -130,24 +149,24 @@ class Template {
 
     createListItemHtml(style, text, args) {
         if (style == ListItem.ListItemStyles.SUB_HEADER_1) {
-            return this._listItemSubHeader1Template.replace("__TEXT__", this._i18n.translate(text, args))
+            return this._templates.get("list-item-sub-header-1").replace("__TEXT__", this._i18n.translate(text, args))
         } else if (style == ListItem.ListItemStyles.SUB_HEADER_2) {
-            return this._listItemSubHeader2Template.replace("__TEXT__", this._i18n.translate(text, args))
+            return this._templates.get("list-item-sub-header-2").replace("__TEXT__", this._i18n.translate(text, args))
         } else if (style == ListItem.ListItemStyles.WORD) {
-            return this._listItemWordTemplate.replace("__WORD__", text)
+            return this._templates.get("list-item-word").replace("__WORD__", text)
         }
     }
     createAppBarActionItemHtml = (id, label, icon) =>
-        this._appBarActionItemTemplate.replace("__ID__", id).replace("__LABEL__", label).replace("__ICON__", icon)
+        this._templates.get("app-bar-action-item").replace("__ID__", id).replace("__LABEL__", label).replace("__ICON__", icon)
 
     createAppBarHtml = (id, title, actionItems) =>
-        this._appBarTemplate.replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title)).replace("__ACTION_ITEMS__",
+        this._templates.get("app-bar").replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title)).replace("__ACTION_ITEMS__",
             actionItems.map(item =>
                 this.createAppBarActionItemHtml(item.id, this._i18n.translate(item.label), item.icon)
             ).join(""))
 
     createTabBarHtml = (id, tabs) =>
-        this._tabBarTemplate.replace("__ID__", id)
+        this._templates.get("tab-bar").replace("__ID__", id)
             .replace("__TABS__",
                 tabs.map(tab =>
                     this.createTabHtml(
@@ -156,22 +175,19 @@ class Template {
                     .join(""))
 
     createTabHtml = (id, label) =>
-        this._tabTemplate.replace("__ID__", id)
+        this._templates.get("tab").replace("__ID__", id)
             .replace("__LABEL__", label)
 
     createSliderHtml = (sliderData) =>
-        this._sliderTemplate.replace("__ID__", sliderData.id)
+        this._templates.get("slider").replace("__ID__", sliderData.id)
             .replace("__LABEL__", this._i18n.translate(sliderData.label))
             .replace("__MIN__", sliderData.min)
             .replace("__MAX__", sliderData.max)
             .replace("__VALUE__", sliderData.value)
 
     createVoiceSelectionHtml = (pitchSliderData, speedSliderData) =>
-        this._voiceSelectionHtml
+        this._templates.get("voice-selection")
             .replace("__SLIDER_PITCH__", this.createSliderHtml(pitchSliderData))
             .replace("__SLIDER_SPEED__", this.createSliderHtml(speedSliderData))
 
-    async loadTemplate(templateName) {
-        return (await fetch(`src/templates/${templateName}.template.html`)).text()
-    }
 }

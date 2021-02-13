@@ -158,13 +158,13 @@ class MainView {
         }
     }
     updateLoadingProgress(loadingProgress) {
-        this._elemProgressBarLabel.innerText = this._template._i18n.translate("progressbar_db_label", Math.round(loadingProgress*100))
-        if (loadingProgress > 0 && loadingProgress < 1) {
-            this._mdcLinearProgress.progress = loadingProgress
+        if (!this._mdcLinearProgress.determinate) {
+            this._mdcLinearProgress.close()
             this._mdcLinearProgress.determinate = true
-        } else {
-            this._mdcLinearProgress.determinate = false
+            this._mdcLinearProgress.open()
         }
+        this._elemProgressBarLabel.innerText = this._template._i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
+        this._mdcLinearProgress.progress = loadingProgress
     }
     showAbout() {
         var aboutHtml = this._template.createAboutHtml()
