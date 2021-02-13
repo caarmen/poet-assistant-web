@@ -21,16 +21,13 @@ class ThesaurusRepository {
         this._db = db
     }
     async fetch(word) {
-        var stmt = this._db.prepare(`
+        var stmt = `
             SELECT ${ThesaurusRepository.COL_WORD_TYPE}, ${ThesaurusRepository.COL_SYNONYMS}, ${ThesaurusRepository.COL_ANTONYMS} 
             FROM ${ThesaurusRepository.TABLE_THESAURUS}
             WHERE ${ThesaurusRepository.COL_WORD}=? 
-            ORDER BY ${ThesaurusRepository.COL_WORD_TYPE}`)
-        stmt.bind([word])
-        var result = []
+            ORDER BY ${ThesaurusRepository.COL_WORD_TYPE}`
 
-        while (stmt.step()) {
-            var row = stmt.getAsObject();
+        return (await this._db.query(stmt, [word])).map((row) => {
             var wordTypeStr = row[ThesaurusRepository.COL_WORD_TYPE]
 
             var wordType
@@ -42,14 +39,12 @@ class ThesaurusRepository {
             var synonyms = (row[ThesaurusRepository.COL_SYNONYMS] || "").split(",").filter(item => item != "").sort()
             var antonyms = (row[ThesaurusRepository.COL_ANTONYMS] || "").split(",").filter(item => item != "").sort()
 
-            var thesaurusEntry = new ThesaurusEntry(
+            return new ThesaurusEntry(
                 wordType,
                 synonyms,
                 antonyms
             )
-            result.push(thesaurusEntry)
-        }
-        return result
+        })
     }
 }
 ThesaurusRepository.TABLE_THESAURUS = "thesaurus"

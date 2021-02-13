@@ -41,55 +41,57 @@ class RhymerRepository {
         return this.getSyllableRhymes(RhymerRepository.COL_LAST_SYLLABLE, [RhymerRepository.COL_STRESS_SYLLABLES, RhymerRepository.COL_LAST_THREE_SYLLABLES, RhymerRepository.COL_LAST_TWO_SYLLABLES], word)
     }
 
-    async getSyllableRhymes(syllableColumn, excludeSyllableColumns, word) {
-        // A word may have multiple pronunciations. 
-        // Example: "dove":
-        // "dove" has two variants of "stress_syllables": "AHV" and "OWV"
-        var syllablesVariants = this.getSyllables(syllableColumn, word)
-        if (syllablesVariants.length == 0) return undefined
-        var excludeClause = excludeSyllableColumns.map(excludeColumn => {
-            var excludeSyllables = this.getSyllables(excludeColumn, word)
-            return excludeSyllables && `${excludeColumn} <> '${excludeSyllables}'`
-        }).filter(clause => clause != undefined)
-            .join(" AND ")
-        if (excludeClause.length > 0) excludeClause = ` AND ${excludeClause}`
+    getSyllableRhymes(syllableColumn, excludeSyllableColumns, word) {
+        return new Promise((completionFunc) => {
+            // A word may have multiple pronunciations. 
+            // Example: "dove":
+            // "dove" has two variants of "stress_syllables": "AHV" and "OWV"
+            this.getSyllables(syllableColumn, word).then((syllablesVariants) => {
 
-        var syllableRhymes = []
-        syllablesVariants.forEach((syllables) => {
-            var rhymes = []
-            var stmt = this._db.prepare(`
-                SELECT DISTINCT ${RhymerRepository.COL_WORD} 
-                FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
-                WHERE ${syllableColumn}=? 
-                    AND ${RhymerRepository.COL_WORD} != ? 
-                    AND ${RhymerRepository.COL_HAS_DEFINITION}=1 ${excludeClause} 
-                ORDER BY ${RhymerRepository.COL_WORD}
-                LIMIT ${RhymerRepository.LIMIT}`)
-            stmt.bind([syllables, word])
-            while (stmt.step()) {
-                var row = stmt.getAsObject();
-                rhymes.push(row["word"])
-            }
-            if (rhymes.length > 0) syllableRhymes.push(new SyllableRhymes(syllables, rhymes))
+                if (syllablesVariants.length == 0) {
+                    completionFunc(undefined)
+                    return
+                }
+                var excludeClause = excludeSyllableColumns.map(excludeColumn => {
+                    var excludeSyllables = this.getSyllables(excludeColumn, word)
+                    return excludeSyllables && `${excludeColumn} <> '${excludeSyllables}'`
+                }).filter(clause => clause != undefined)
+                    .join(" AND ")
+                if (excludeClause.length > 0) excludeClause = ` AND ${excludeClause}`
+
+                var syllableRhymes = []
+
+                Promise.all(syllablesVariants.map((syllables) => {
+                    var rhymes = []
+                    var stmt = `
+                        SELECT DISTINCT ${RhymerRepository.COL_WORD} 
+                        FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
+                        WHERE ${syllableColumn}=? 
+                            AND ${RhymerRepository.COL_WORD} != ? 
+                            AND ${RhymerRepository.COL_HAS_DEFINITION}=1 ${excludeClause} 
+                        ORDER BY ${RhymerRepository.COL_WORD}
+                        LIMIT ${RhymerRepository.LIMIT}`
+                    return this._db.query(stmt, [syllables, word]).then((rows) => {
+                        rhymes = rows.map((row) => row[RhymerRepository.COL_WORD])
+                        if (rhymes.length > 0) syllableRhymes.push(new SyllableRhymes(syllables, rhymes))
+                    })
+                })).then(() => {
+                    if (syllableRhymes.length > 0) completionFunc(syllableRhymes)
+                    else return completionFunc(undefined)
+                })
+            })
         })
-        if (syllableRhymes.length > 0) return syllableRhymes
-        else return undefined
     }
 
-    getSyllables(syllablesColumn, word) {
-        var stmt = this._db.prepare(`
+    async getSyllables(syllablesColumn, word) {
+        var stmt = `
             SELECT DISTINCT ${syllablesColumn} 
             FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
             WHERE ${RhymerRepository.COL_WORD} =? 
                 AND ${RhymerRepository.COL_HAS_DEFINITION}=1
-            ORDER BY ${RhymerRepository.COL_VARIANT_NUMBER}`)
-        stmt.bind([word])
-        var syllables = []
-        while (stmt.step()) {
-            var row = stmt.getAsObject()
-            syllables.push(row[syllablesColumn])
-        }
-        return syllables
+            ORDER BY ${RhymerRepository.COL_VARIANT_NUMBER}`
+
+        return (await this._db.query(stmt, [word])).map((row) => row[syllablesColumn])
     }
 }
 RhymerRepository.TABLE_WORD_VARIANTS = "word_variants"

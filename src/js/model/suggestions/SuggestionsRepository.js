@@ -20,9 +20,8 @@ class SuggestionsRepository {
     constructor(db) {
         this._db = db
     }
-    fetchSuggestions(word) {
-        return new Promise((completionFunc) => {
-            var query = `
+    async fetchSuggestions(word) {
+        var query = `
                 SELECT DISTINCT ${SuggestionsRepository.COL_WORD}
                 FROM ${SuggestionsRepository.TABLE_WORD_VARIANTS}
                 WHERE ${SuggestionsRepository.COL_WORD} LIKE ?
@@ -30,15 +29,9 @@ class SuggestionsRepository {
                     AND ${SuggestionsRepository.COL_HAS_DEFINITION}=1
                 ORDER BY ${SuggestionsRepository.COL_WORD}
                 LIMIT ${SuggestionsRepository.LIMIT}`
-            var stmt = this._db.prepare(query)
-            stmt.bind([`${word}%`, word])
-            var suggestions = []
-            while (stmt.step()) {
-                var row = stmt.getAsObject();
-                suggestions.push(row[SuggestionsRepository.COL_WORD])
-            }
-            completionFunc(suggestions)
-        })
+        return (await this._db.query(query, [`${word}%`, word])).map((row) =>
+            row[SuggestionsRepository.COL_WORD]
+        )
     }
 }
 SuggestionsRepository.LIMIT = 10

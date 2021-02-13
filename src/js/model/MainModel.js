@@ -22,32 +22,12 @@ class MainModel {
         this.isSpeechPlaying = this._speechEngine.isPlaying
     }
     async loadDb(progressCallback) {
-        var config = {
-            locateFile: filename => `libs/${filename}`
-        }
-        var SQL = await initSqlJs(config)
-        var response = await this.loadUrl('src/resources/poet_assistant.db', progressCallback)
-        var arrayBuffer = new Uint8Array(response)
-        var db = new SQL.Database(new Uint8Array(arrayBuffer))
+        var db = new Db()
+        await db.load(progressCallback)
         this._rhymerRepository = new RhymerRepository(db)
         this._thesaurusRepository = new ThesaurusRepository(db)
         this._dictionaryRepository = new DictionaryRepository(db)
         this._suggestionsRepository = new SuggestionsRepository(db)
-    }
-
-    loadUrl(url, progressCallback) {
-        return new Promise((completionFunc) => {
-            let xhr = new XMLHttpRequest()
-            xhr.open("GET", url, true)
-            xhr.responseType = 'arraybuffer'
-            xhr.onprogress = event => {
-                progressCallback(event.loaded, event.total)
-            }
-            xhr.onload = () => {
-                completionFunc(xhr.response)
-            }
-            xhr.send()
-        })
     }
 
     async loadFiles(fileReaderInputs) {
