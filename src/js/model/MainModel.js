@@ -50,6 +50,10 @@ class MainModel {
         })
     }
 
+    async loadFiles(fileReaderInputs) {
+        return new FilesReader().loadFiles(fileReaderInputs)
+    }
+
     async fetchRhymes(word) {
         return this._rhymerRepository.fetchRhymes(word)
     }

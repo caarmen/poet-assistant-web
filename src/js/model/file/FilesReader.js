@@ -16,11 +16,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-onmessage = function (e) {
-    const templateName = e.data
-    const url = `../../templates/${templateName}.template.html`
-    let xhr = new XMLHttpRequest()
-    xhr.open("GET", url, false)
-    xhr.send()
-    postMessage([templateName, xhr.responseText])
+class FilesReader {
+    constructor() {
+    }
+    loadFiles = (fileReaderInputs) => new Promise((completionFunc) => {
+        const worker = new Worker("src/js/model/file/FilesReaderWorker.js")
+        const templates = new Map()
+        worker.onmessage = (e) => {
+            const fileReaderOutput = e.data
+            templates.set(fileReaderOutput.id, fileReaderOutput.content)
+            const remainingTemplates = fileReaderInputs.filter((item) => !templates.has(item.id))
+            if (remainingTemplates.length == 0) {
+                completionFunc(templates)
+            }
+        }
+        fileReaderInputs.forEach((fileReaderInput) => { worker.postMessage(fileReaderInput) })
+    })
+
 }
