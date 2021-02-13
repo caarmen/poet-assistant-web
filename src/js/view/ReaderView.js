@@ -18,7 +18,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class ReaderView {
 
-    constructor(template) {
+    constructor(i18n, template) {
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
         this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
 
@@ -27,6 +27,7 @@ class ReaderView {
         this._elemBtnPlayLabel
         this._elemTextInput
 
+        this._i18n = i18n
         this._template = template
 
         this.applyTemplates()
@@ -59,11 +60,11 @@ class ReaderView {
     updateSpeechPlayingState(newIsSpeechPlaying) {
         if (newIsSpeechPlaying) {
             this._elemBtnPlayIcon.innerText = "stop"
-            this._elemBtnPlayLabel.innerText = this._template._i18n.translate("btn_stop_title")
+            this._elemBtnPlayLabel.innerText = this._i18n.translate("btn_stop_title")
 
         } else {
             this._elemBtnPlayIcon.innerText = "play_circle_filled"
-            this._elemBtnPlayLabel.innerText = this._template._i18n.translate("btn_play_title")
+            this._elemBtnPlayLabel.innerText = this._i18n.translate("btn_play_title")
         }
     }
 }

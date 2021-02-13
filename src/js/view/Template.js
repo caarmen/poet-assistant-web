@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class Template {
-    constructor() {
+    constructor(i18n) {
         this._progressIndicatorTemplate = undefined
         this._buttonTemplate = undefined
-        this._i18n = new I18n()
+        this._i18n = i18n
         this._templateReader = new Worker("src/js/view/TemplateReader.js")
         this._templates = new Map()
     }

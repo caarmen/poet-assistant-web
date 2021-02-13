@@ -35,26 +35,29 @@ class MainView {
         this._elemBtnPlay
         this._elemBtnPlayIcon
 
-        this._template = new Template()
-        this._template.loadTemplates().then(() => {
-            this._viewContextMenu = new ContextMenuView(this._template)
-            this._viewSuggestions = new SuggestionsView(this._template)
-            this._viewRhymer = new RhymerView(this._template)
-            this._viewThesaurus = new ThesaurusView(this._template)
-            this._viewDefinitions = new DefinitionsView(this._template)
-            this._viewReader = new ReaderView(this._template)
-            this._viewVoiceSettings = new VoiceSettingsView(this._template)
-            this._viewTabs = new TabsView(this._template,
-                [
-                    new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
-                    new TabData("tab_thesaurus", "tab_thesaurus_title", "placeholder-thesaurus"),
-                    new TabData("tab_dictionary", "tab_dictionary_title", "placeholder-definitions"),
-                    new TabData("tab_reader", "tab_reader_title", "placeholder-reader")
-                ])
-            this.applyTemplates()
-            this.initializeViews()
-            this._viewModel = new MainViewModel()
-            this.bindViewModel()
+        this._i18n = new I18n()
+        this._i18n.load().then(() => {
+            this._template = new Template(this._i18n)
+            this._template.loadTemplates().then(() => {
+                this._viewContextMenu = new ContextMenuView(this._template)
+                this._viewSuggestions = new SuggestionsView(this._template)
+                this._viewRhymer = new RhymerView(this._template)
+                this._viewThesaurus = new ThesaurusView(this._template)
+                this._viewDefinitions = new DefinitionsView(this._template)
+                this._viewReader = new ReaderView(this._i18n, this._template)
+                this._viewVoiceSettings = new VoiceSettingsView(this._i18n, this._template)
+                this._viewTabs = new TabsView(this._template,
+                    [
+                        new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
+                        new TabData("tab_thesaurus", "tab_thesaurus_title", "placeholder-thesaurus"),
+                        new TabData("tab_dictionary", "tab_dictionary_title", "placeholder-definitions"),
+                        new TabData("tab_reader", "tab_reader_title", "placeholder-reader")
+                    ])
+                this.applyTemplates()
+                this.initializeViews()
+                this._viewModel = new MainViewModel()
+                this.bindViewModel()
+            })
         })
     }
     applyTemplates() {
@@ -76,7 +79,7 @@ class MainView {
         this._elemActionItemAbout = document.querySelector("#action_item_about")
 
         this._mdcLinearProgress = new MainView.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
-        this._elemProgressBarLabel.innerText = this._template._i18n.translate("progressbar_app_label")
+        this._elemProgressBarLabel.innerText = this._i18n.translate("progressbar_app_label")
         this._mdcLinearProgress.determinate = false
         this._mdcLinearProgress.progress = 0
         this._mdcLinearProgress.open()
@@ -163,14 +166,14 @@ class MainView {
             this._mdcLinearProgress.determinate = true
             this._mdcLinearProgress.open()
         }
-        this._elemProgressBarLabel.innerText = this._template._i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
+        this._elemProgressBarLabel.innerText = this._i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
         this._mdcLinearProgress.progress = loadingProgress
     }
     showAbout() {
         var aboutHtml = this._template.createAboutHtml()
         this._elemPlaceholderDialog.innerHTML =
             this._template.createDialogHtml("about_title", aboutHtml)
-        this._template._i18n.translateElement(this._elemPlaceholderDialog)
+        this._i18n.translateElement(this._elemPlaceholderDialog)
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
     }

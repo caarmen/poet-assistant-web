@@ -18,7 +18,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class VoiceSettingsView {
 
-    constructor(template) {
+    constructor(i18n, template) {
         this.voiceSelectonObserver = (selectedVoiceIndex) => { }
         this.pitchObserver = (pitchValue) => { }
         this.speedObserver = (speedValue) => { }
@@ -31,6 +31,7 @@ class VoiceSettingsView {
         this._elemReaderVoices
         this._elemReaderSelectedVoice
 
+        this._i18n = i18n
         this._template = template
         this.applyTemplates()
         this.initializeViews()
@@ -40,7 +41,7 @@ class VoiceSettingsView {
             new SliderData("voice-pitch", "voice-pitch", 0.0, 2.0, 1.0),
             new SliderData("voice-speed", "voice-speed", 0.5, 2.0, 1.0)
         )
-        this._template._i18n.translateElement(this._elemPlaceholderReaderVoices)
+        this._i18n.translateElement(this._elemPlaceholderReaderVoices)
     }
 
     initializeViews() {
