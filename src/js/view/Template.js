@@ -27,7 +27,6 @@ class Template {
         [
             "about",
             "app-bar",
-            "app-bar-action-item",
             "button-icon",
             "button-icon-text",
             "context-menu",
@@ -51,11 +50,11 @@ class Template {
             "textarea",
             "voice-selection"
         ].map((templateName) => new FileReaderInput(templateName, `../../../templates/${templateName}.template.html`))
-        ).then((templates) => {
-            this._templates = templates
-        })
+    ).then((templates) => {
+        this._templates = templates
+    })
 
-    createAboutHtml = () => this._templates.get("about")
+    createHtml = (templateId) => this._templates.get(templateId)
 
     createProgressIndicatorHtml = () => this._templates.get("progress-indicator")
 
@@ -67,6 +66,17 @@ class Template {
 
     createButtonIconHtml = (id, icon, label) =>
         this._templates.get("button-icon").replaceAll("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
+
+    createAppBarMenuHtml = (items) =>
+        this._templates.get("context-menu").replace(
+            "__ITEMS__",
+            items.map((item) =>
+                this._templates.get("context-menu-item")
+                    .replace("__ID__", item.id)
+                    .replace("__ICON__", this.createContextMenuIconHtml(item.icon))
+                    .replace("__LABEL__", this._i18n.translate(item.label))
+            ).join(""))
+            .replace("__HEADER__", "")
 
     createContextMenuHtml = (items, headerText) =>
         this._templates.get("context-menu").replace(
@@ -141,14 +151,9 @@ class Template {
             return this._templates.get("list-item-word").replace("__WORD__", text)
         }
     }
-    createAppBarActionItemHtml = (id, label, icon) =>
-        this._templates.get("app-bar-action-item").replace("__ID__", id).replace("__LABEL__", label).replace("__ICON__", icon)
 
-    createAppBarHtml = (id, title, actionItems) =>
-        this._templates.get("app-bar").replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title)).replace("__ACTION_ITEMS__",
-            actionItems.map(item =>
-                this.createAppBarActionItemHtml(item.id, this._i18n.translate(item.label), item.icon)
-            ).join(""))
+    createAppBarHtml = (id, title) =>
+        this._templates.get("app-bar").replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title))
 
     createTabBarHtml = (id, tabs) =>
         this._templates.get("tab-bar").replace("__ID__", id)

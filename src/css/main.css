@@ -193,3 +193,6 @@ a:link, a.active:link,a:hover, a:visited {
 .about-legal-list {
 	margin-left: 16px
 }
+.mdc-menu .mdc-list-item__graphic {
+	color: var(--mdc-theme-primary);
+}

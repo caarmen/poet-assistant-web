@@ -33,6 +33,10 @@ class MainViewModel {
         this._model = new MainModel()
         this.isSpeechPlaying = this._model.isSpeechPlaying
         this.contextMenuItems = this.createContextMenuItems(false)
+        this.appBarMenuItems = [
+            new MenuItem("menu-about", "action_item_label_about", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL))
+        ]
+        this.dialogInfo = new ObservableField()
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
     }
 
@@ -50,7 +54,6 @@ class MainViewModel {
         [
             "about",
             "app-bar",
-            "app-bar-action-item",
             "button-icon",
             "button-icon-text",
             "context-menu",
@@ -164,6 +167,13 @@ class MainViewModel {
     }
 
     cleanSearchTerm = (text) => text.toLowerCase().trim()
+
+    onAppMenuItemSelected(index) {
+        var selectedMenuId = this.appBarMenuItems[index].id
+        if (selectedMenuId == "menu-about") {
+            this.dialogInfo.value = new DialogInfo("about_title", "about")
+        }
+    }
 
     onContextMenuItemSelected(word, index) {
         var selectedMenuId = this.contextMenuItems[index].id

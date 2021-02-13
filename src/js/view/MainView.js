@@ -30,13 +30,16 @@ class MainView {
         this._mdcInputTextSearch
 
         this._elemProgressBarLabel
-        this._elemActionItemAbout
+        this._elemActionItemMenu
         this._elemBtnSearch
         this._elemBtnPlay
         this._elemBtnPlayIcon
 
         this._i18n = new I18n()
         this._viewModel = new MainViewModel()
+
+        this._viewAppBarMenu
+
         this._i18n.load().then(() => {
             this._viewModel.loadTemplates().then((templates) => {
                 this._template = new Template(this._i18n, templates)
@@ -62,8 +65,7 @@ class MainView {
         })
     }
     applyTemplates() {
-        this._elemPlaceholderAppBar.innerHTML = this._template.createAppBarHtml("app-bar", "app_name",
-            [new AppBarActionItem("action_item_about", "action_item_label_about", "info")])
+        this._elemPlaceholderAppBar.innerHTML = this._template.createAppBarHtml("app-bar", "app_name")
 
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
         this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-search")
@@ -77,7 +79,8 @@ class MainView {
     }
 
     initializeViews() {
-        this._elemActionItemAbout = document.querySelector("#action_item_about")
+        this._elemActionItemMenu = document.querySelector("#menu_overflow")
+        this._viewAppBarMenu = new AppBarMenuView(this._elemActionItemMenu, this._template)
 
         this._mdcLinearProgress = new MainView.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
         this._elemProgressBarLabel.innerText = this._i18n.translate("progressbar_app_label")
@@ -106,11 +109,13 @@ class MainView {
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
         this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
         this._viewModel.isReaderTabVisible.observer = (isVisible) => { this.updateReaderTabVisibility(isVisible) }
+        this._viewModel.dialogInfo.observer = (dialogInfo) => { this.showDialog(dialogInfo) }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
             if (tabIndex == MainViewModel.TabIndex.READER) this._viewVoiceSettings.layout()
         }
+        this._viewAppBarMenu.observer = (index) => { this._viewModel.onAppMenuItemSelected(index) }
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('keydown', ((evt) => {
             if (evt.keyCode == 13) this.searchAll()
         }))
@@ -118,7 +123,7 @@ class MainView {
             this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
         }))
         this._elemBtnSearch.onclick = () => { this.searchAll() }
-        this._elemActionItemAbout.onclick = () => { this.showAbout() }
+        this._elemActionItemMenu.onclick = () => { this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems) }
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
         this._viewSuggestions.observer = (word) => { this.onSuggestionSelected(word) }
 
@@ -170,10 +175,12 @@ class MainView {
         this._elemProgressBarLabel.innerText = this._i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
         this._mdcLinearProgress.progress = loadingProgress
     }
-    showAbout() {
-        var aboutHtml = this._template.createAboutHtml()
+    showMenu = () => this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems)
+
+    showDialog(dialogInfo) {
+        var contentHtml = this._template.createHtml(dialogInfo.contentTemplateId)
         this._elemPlaceholderDialog.innerHTML =
-            this._template.createDialogHtml("about_title", aboutHtml)
+            this._template.createDialogHtml(dialogInfo.title, contentHtml)
         this._i18n.translateElement(this._elemPlaceholderDialog)
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
