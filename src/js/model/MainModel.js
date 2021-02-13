@@ -54,6 +54,10 @@ class MainModel {
         return new FilesReader().loadFiles(fileReaderInputs)
     }
 
+    async getRandomWord() {
+        return this._dictionaryRepository.getRandomWord()
+    }
+
     async fetchRhymes(word) {
         return this._rhymerRepository.fetchRhymes(word)
     }

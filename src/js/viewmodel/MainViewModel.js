@@ -34,7 +34,8 @@ class MainViewModel {
         this.isSpeechPlaying = this._model.isSpeechPlaying
         this.contextMenuItems = this.createContextMenuItems(false)
         this.appBarMenuItems = [
-            new MenuItem("menu-about", "action_item_label_about", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL))
+            new MenuItem("menu-about", "app_bar_menu_about_title", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL)),
+            new MenuItem("menu-random", "app_bar_menu_random_title", new MenuItemIcon("casino", MenuItemIcon.IconSource.MATERIAL)),
         ]
         this.dialogInfo = new ObservableField()
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
@@ -172,6 +173,11 @@ class MainViewModel {
         var selectedMenuId = this.appBarMenuItems[index].id
         if (selectedMenuId == "menu-about") {
             this.dialogInfo.value = new DialogInfo("about_title", "about")
+        } else if (selectedMenuId == "menu-random") {
+            const randomWord = this._model.getRandomWord().then((word) => {
+                this.fetchAll(word)
+                this.activeTab.value = MainViewModel.TabIndex.DICTIONARY
+            })
         }
     }
 

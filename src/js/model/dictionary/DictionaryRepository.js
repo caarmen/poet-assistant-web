@@ -42,7 +42,23 @@ class DictionaryRepository {
         }
         return definitions
     }
+
+    async getRandomWord() {
+        var stmt = this._db.prepare(`
+            SELECT ${DictionaryRepository.COL_WORD}
+            FROM ${DictionaryRepository.TABLE_STEMS}
+            WHERE ${DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY} > 1500
+                AND ${DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY} < 25000
+            ORDER BY RANDOM() LIMIT 1`)
+        if (stmt.step()) {
+            var row = stmt.getAsObject();
+            return row[DictionaryRepository.COL_WORD]
+        }
+        return undefined
+    }
 }
+DictionaryRepository.TABLE_STEMS = "stems"
+DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY = "google_ngram_frequency"
 DictionaryRepository.TABLE_DICTIONARY = "dictionary"
 DictionaryRepository.COL_DEFINITION = "definition"
 DictionaryRepository.COL_PART_OF_SPEECH = "part_of_speech"
