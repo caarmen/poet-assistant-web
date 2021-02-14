@@ -16,10 +16,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
+importScripts("FileReaderOutput.js")
 onmessage = function (e) {
     const fileReaderInput = e.data
     const xhr = new XMLHttpRequest()
     xhr.open("GET", fileReaderInput.path, false)
     xhr.send()
-    postMessage({"id" : fileReaderInput.id, "content": xhr.responseText})
+    postMessage(new FileReaderOutput(fileReaderInput.id, xhr.responseText))
 }

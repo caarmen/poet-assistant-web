@@ -19,6 +19,6 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class FileReaderOutput {
     constructor(id, content) {
         this.id = id
-        this.path = content
+        this.content = content
     }
 }
