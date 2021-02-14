@@ -26,6 +26,8 @@ class TabsView {
         this._elemPlaceholderTabBar
         this._elemTabs
         this._elemContents
+
+        this._mdcTabBar
     }
     _applyTemplates() {
         this._elemPlaceholderTabBar = document.querySelector("#placeholder-tab-bar")
@@ -35,8 +37,8 @@ class TabsView {
     _initializeViews() {
         this._elemTabs = this._tabDatas.map(tabData => document.querySelector(`#${tabData.tabElemId}`))
         this._elemContents = this._tabDatas.map(tabData => document.querySelector(`#${tabData.contentElemId}`))
-        const mdcTabBar = new TabsView.MDCTabBar(document.querySelector(".mdc-tab-bar"))
-        mdcTabBar.listen("MDCTabBar:activated", (eventData) => {
+        this._mdcTabBar = new TabsView.MDCTabBar(document.querySelector(".mdc-tab-bar"))
+        this._mdcTabBar.listen("MDCTabBar:activated", (eventData) => {
             this.onTabActivated(eventData.detail.index)
         })
     }
@@ -46,7 +48,9 @@ class TabsView {
     showTab = (tabIndex) => { this._elemTabs[tabIndex].style.display = "block" }
 
     switchToTab(tabIndex) {
-        this._elemTabs[tabIndex].click()
+        if (this._mdcTabBar.foundation.adapter.getPreviousActiveTabIndex() != tabIndex) {
+            this._elemTabs[tabIndex].click()
+        }
     }
     onTabActivated(tabIndex) {
         this.observer(tabIndex)

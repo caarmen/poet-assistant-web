@@ -114,6 +114,7 @@ class MainView {
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
             if (tabIndex == MainViewModel.TabIndex.READER) this._viewVoiceSettings.layout()
+            this._viewModel.activeTab.value = tabIndex
         }
         this._viewAppBarMenu.observer = (index) => { this._viewModel.onAppMenuItemSelected(index) }
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('keydown', ((evt) => {

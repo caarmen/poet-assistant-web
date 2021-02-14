@@ -83,6 +83,9 @@ class MainViewModel {
         this.fetchRhymes(word)
         this.fetchThesaurus(word)
         this.fetchDefinitions(word)
+        if (this.activeTab.value == MainViewModel.TabIndex.READER) {
+            this.activeTab.value = MainViewModel.TabIndex.DICTIONARY
+        }
     }
 
     fetchRhymes(word) {
