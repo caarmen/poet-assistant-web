@@ -21,40 +21,31 @@ class DictionaryRepository {
         this._db = db
     }
     async fetchDefinitions(word) {
-        var stmt = this._db.prepare(`
+        var stmt = `
             SELECT ${DictionaryRepository.COL_PART_OF_SPEECH}, ${DictionaryRepository.COL_DEFINITION} 
             FROM ${DictionaryRepository.TABLE_DICTIONARY}
             WHERE ${DictionaryRepository.COL_WORD}=? 
-            ORDER BY ${DictionaryRepository.COL_PART_OF_SPEECH}`)
-        stmt.bind([word])
-        var definitions = []
+            ORDER BY ${DictionaryRepository.COL_PART_OF_SPEECH}`
 
-        while (stmt.step()) {
-            var row = stmt.getAsObject();
+        return (await this._db.query(stmt, [word])).map((row) => {
             var wordTypeStr = row[DictionaryRepository.COL_PART_OF_SPEECH]
             var wordType
             if (wordTypeStr == "a") wordType = WordType.ADJECTIVE
             else if (wordTypeStr == "r") wordType = WordType.ADVERB
             else if (wordTypeStr == "n") wordType = WordType.NOUN
             else if (wordTypeStr == "v") wordType = WordType.VERB
-            var definition = new DictionaryEntry(wordType, row[DictionaryRepository.COL_DEFINITION])
-            definitions.push(definition)
-        }
-        return definitions
+            return new DictionaryEntry(wordType, row[DictionaryRepository.COL_DEFINITION])
+        })
     }
 
     async getRandomWord() {
-        var stmt = this._db.prepare(`
+        var stmt = `
             SELECT ${DictionaryRepository.COL_WORD}
             FROM ${DictionaryRepository.TABLE_STEMS}
             WHERE ${DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY} > 1500
                 AND ${DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY} < 25000
-            ORDER BY RANDOM() LIMIT 1`)
-        if (stmt.step()) {
-            var row = stmt.getAsObject();
-            return row[DictionaryRepository.COL_WORD]
-        }
-        return undefined
+            ORDER BY RANDOM() LIMIT 1`
+        return (await this._db.query(stmt, []))[0][DictionaryRepository.COL_WORD]
     }
 }
 DictionaryRepository.TABLE_STEMS = "stems"
