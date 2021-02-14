@@ -21,10 +21,10 @@ class RhymerRepository {
         this._db = db
     }
     async fetchRhymes(word) {
-        var stressSyllableRhymes = await this.getStressSyllablesRhymes(word)
-        var lastThreeSyllableRhymes = await this.getLastThreeSyllablesRhymes(word)
-        var lastTwoSyllableRhymes = await this.getLastTwoSyllablesRhymes(word)
-        var lastSyllableRhymes = await this.getLastSyllableRhymes(word)
+        const stressSyllableRhymes = await this.getStressSyllablesRhymes(word)
+        const lastThreeSyllableRhymes = await this.getLastThreeSyllablesRhymes(word)
+        const lastTwoSyllableRhymes = await this.getLastTwoSyllablesRhymes(word)
+        const lastSyllableRhymes = await this.getLastSyllableRhymes(word)
         return new WordRhymes(stressSyllableRhymes, lastThreeSyllableRhymes, lastTwoSyllableRhymes, lastSyllableRhymes)
     }
 
@@ -52,18 +52,18 @@ class RhymerRepository {
                     completionFunc(undefined)
                     return
                 }
-                var excludeClause = excludeSyllableColumns.map(excludeColumn => {
-                    var excludeSyllables = this.getSyllables(excludeColumn, word)
+                let excludeClause = excludeSyllableColumns.map(excludeColumn => {
+                    const excludeSyllables = this.getSyllables(excludeColumn, word)
                     return excludeSyllables && `${excludeColumn} <> '${excludeSyllables}'`
                 }).filter(clause => clause != undefined)
                     .join(" AND ")
                 if (excludeClause.length > 0) excludeClause = ` AND ${excludeClause}`
 
-                var syllableRhymes = []
+                const syllableRhymes = []
 
                 Promise.all(syllablesVariants.map((syllables) => {
-                    var rhymes = []
-                    var stmt = `
+                    let rhymes = []
+                    const stmt = `
                         SELECT DISTINCT ${RhymerRepository.COL_WORD} 
                         FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
                         WHERE ${syllableColumn}=? 
@@ -84,7 +84,7 @@ class RhymerRepository {
     }
 
     async getSyllables(syllablesColumn, word) {
-        var stmt = `
+        const stmt = `
             SELECT DISTINCT ${syllablesColumn} 
             FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
             WHERE ${RhymerRepository.COL_WORD} =? 

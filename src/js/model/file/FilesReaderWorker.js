@@ -18,7 +18,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 onmessage = function (e) {
     const fileReaderInput = e.data
-    let xhr = new XMLHttpRequest()
+    const xhr = new XMLHttpRequest()
     xhr.open("GET", fileReaderInput.path, false)
     xhr.send()
     postMessage({"id" : fileReaderInput.id, "content": xhr.responseText})

@@ -26,8 +26,8 @@ class Db {
         // callback with the DbResult
         this._callbacks = new Map()
         this._worker.onmessage = (event) => {
-            var dbResult = event.data
-            var callback = this._callbacks.get(dbResult.commandId)
+            const dbResult = event.data
+            const callback = this._callbacks.get(dbResult.commandId)
             callback(dbResult)
         }
     }

@@ -67,7 +67,7 @@ class SpeechEngine {
     }
 
     playText(text, start, end) {
-        var selection = text
+        let selection = text
         if (start < end) {
             selection = text.substring(start, end)
         } else if (start == end && start < text.length) {
@@ -76,7 +76,7 @@ class SpeechEngine {
         if (this._synth.speaking) {
             this._synth.cancel()
         } else {
-            var utterance = new SpeechSynthesisUtterance(selection)
+            const utterance = new SpeechSynthesisUtterance(selection)
             utterance.voice = this._selectedVoice
             utterance.lang = this._selectedVoice.lang
             utterance.pitch = this._pitch

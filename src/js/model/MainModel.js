@@ -22,7 +22,7 @@ class MainModel {
         this.isSpeechPlaying = this._speechEngine.isPlaying
     }
     async loadDb(progressCallback) {
-        var db = new Db()
+        const db = new Db()
         await db.open(progressCallback)
         this._rhymerRepository = new RhymerRepository(db)
         this._thesaurusRepository = new ThesaurusRepository(db)

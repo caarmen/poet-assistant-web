@@ -18,7 +18,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 importScripts("DbAccess.js")
 
-var dbAccess = new DbAccess()
+const dbAccess = new DbAccess()
 
 /**
  * Receives DbCommands as input, and posts DbResults as output
@@ -30,7 +30,7 @@ onmessage = function (e) {
             .open((dbOpenProgress) => postMessage(DbResult.openProgress(dbCommand.id, dbOpenProgress)))
             .then(() => postMessage(DbResult.openComplete(dbCommand.id)))
     } else if (dbCommand.commandType == DbCommand.CommandType.QUERY) {
-        var rows = dbAccess.querySync(dbCommand.statement, dbCommand.args)
+        const rows = dbAccess.querySync(dbCommand.statement, dbCommand.args)
         postMessage(DbResult.queryResult(dbCommand.id, rows))
     }
 }

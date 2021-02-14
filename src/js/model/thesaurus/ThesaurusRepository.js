@@ -21,23 +21,23 @@ class ThesaurusRepository {
         this._db = db
     }
     async fetch(word) {
-        var stmt = `
+        const stmt = `
             SELECT ${ThesaurusRepository.COL_WORD_TYPE}, ${ThesaurusRepository.COL_SYNONYMS}, ${ThesaurusRepository.COL_ANTONYMS} 
             FROM ${ThesaurusRepository.TABLE_THESAURUS}
             WHERE ${ThesaurusRepository.COL_WORD}=? 
             ORDER BY ${ThesaurusRepository.COL_WORD_TYPE}`
 
         return (await this._db.query(stmt, [word])).map((row) => {
-            var wordTypeStr = row[ThesaurusRepository.COL_WORD_TYPE]
+            const wordTypeStr = row[ThesaurusRepository.COL_WORD_TYPE]
 
-            var wordType
+            let wordType
             if (wordTypeStr == "ADJ") wordType = WordType.ADJECTIVE
             else if (wordTypeStr == "ADV") wordType = WordType.ADVERB
             else if (wordTypeStr == "NOUN") wordType = WordType.NOUN
             else if (wordTypeStr == "VERB") wordType = WordType.VERB
 
-            var synonyms = (row[ThesaurusRepository.COL_SYNONYMS] || "").split(",").filter(item => item != "").sort()
-            var antonyms = (row[ThesaurusRepository.COL_ANTONYMS] || "").split(",").filter(item => item != "").sort()
+            const synonyms = (row[ThesaurusRepository.COL_SYNONYMS] || "").split(",").filter(item => item != "").sort()
+            const antonyms = (row[ThesaurusRepository.COL_ANTONYMS] || "").split(",").filter(item => item != "").sort()
 
             return new ThesaurusEntry(
                 wordType,

@@ -178,7 +178,7 @@ class MainView {
     showMenu = () => this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems)
 
     showDialog(dialogInfo) {
-        var contentHtml = this._template.createHtml(dialogInfo.contentTemplateId)
+        const contentHtml = this._template.createHtml(dialogInfo.contentTemplateId)
         this._elemPlaceholderDialog.innerHTML =
             this._template.createDialogHtml(dialogInfo.title, contentHtml)
         this._i18n.translateElement(this._elemPlaceholderDialog)
@@ -190,5 +190,5 @@ MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
-    var mainView = new MainView()
+    const mainView = new MainView()
 }

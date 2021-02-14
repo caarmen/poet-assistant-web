@@ -21,15 +21,15 @@ class DictionaryRepository {
         this._db = db
     }
     async fetchDefinitions(word) {
-        var stmt = `
+        const stmt = `
             SELECT ${DictionaryRepository.COL_PART_OF_SPEECH}, ${DictionaryRepository.COL_DEFINITION} 
             FROM ${DictionaryRepository.TABLE_DICTIONARY}
             WHERE ${DictionaryRepository.COL_WORD}=? 
             ORDER BY ${DictionaryRepository.COL_PART_OF_SPEECH}`
 
         return (await this._db.query(stmt, [word])).map((row) => {
-            var wordTypeStr = row[DictionaryRepository.COL_PART_OF_SPEECH]
-            var wordType
+            const wordTypeStr = row[DictionaryRepository.COL_PART_OF_SPEECH]
+            let wordType
             if (wordTypeStr == "a") wordType = WordType.ADJECTIVE
             else if (wordTypeStr == "r") wordType = WordType.ADVERB
             else if (wordTypeStr == "n") wordType = WordType.NOUN
@@ -39,7 +39,7 @@ class DictionaryRepository {
     }
 
     async getRandomWord() {
-        var stmt = `
+        const stmt = `
             SELECT ${DictionaryRepository.COL_WORD}
             FROM ${DictionaryRepository.TABLE_STEMS}
             WHERE ${DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY} > 1500

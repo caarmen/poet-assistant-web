@@ -35,7 +35,7 @@ class TabsView {
     initializeViews() {
         this._elemTabs = this._tabDatas.map(tabData => document.querySelector(`#${tabData.tabElemId}`))
         this._elemContents = this._tabDatas.map(tabData => document.querySelector(`#${tabData.contentElemId}`))
-        var mdcTabBar = new TabsView.MDCTabBar(document.querySelector(".mdc-tab-bar"))
+        const mdcTabBar = new TabsView.MDCTabBar(document.querySelector(".mdc-tab-bar"))
         mdcTabBar.listen("MDCTabBar:activated", (eventData) => {
             this.onTabActivated(eventData.detail.index)
         })

@@ -31,7 +31,7 @@ class DbAccess {
         const response = await this.loadUrl(
             '../../../../src/resources/poet_assistant.db',
             progressCallback)
-        var arrayBuffer = new Uint8Array(response)
+        const arrayBuffer = new Uint8Array(response)
         this._db = new SQL.Database(new Uint8Array(arrayBuffer))
     }
 
@@ -50,10 +50,10 @@ class DbAccess {
         })
 
     querySync(statement, args) {
-        var stmt = this._db.prepare(statement)
+        const stmt = this._db.prepare(statement)
         stmt.bind(args)
 
-        var rows = []
+        const rows = []
         while (stmt.step()) {
             rows.push(stmt.getAsObject())
         }

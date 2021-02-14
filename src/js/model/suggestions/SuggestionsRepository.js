@@ -21,7 +21,7 @@ class SuggestionsRepository {
         this._db = db
     }
     async fetchSuggestions(word) {
-        var query = `
+        const query = `
                 SELECT DISTINCT ${SuggestionsRepository.COL_WORD}
                 FROM ${SuggestionsRepository.TABLE_WORD_VARIANTS}
                 WHERE ${SuggestionsRepository.COL_WORD} LIKE ?

@@ -27,13 +27,13 @@ class I18n {
 
     translateElement(element) {
         element.querySelectorAll("[string-key]").forEach(translatableElem => {
-            var stringKey = translatableElem.getAttribute("string-key")
+            const stringKey = translatableElem.getAttribute("string-key")
             translatableElem.innerText = this.translate(stringKey)
         })
     }
 
     async load() {
-        var response = await fetch("src/i18n/en.json")
+        const response = await fetch("src/i18n/en.json")
         this._strings = JSON.parse(await response.text())
     }
 }

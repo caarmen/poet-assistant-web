@@ -87,7 +87,7 @@ class MainViewModel {
 
     fetchRhymes(word) {
         if (!this.isLoading.value) {
-            var searchTerm = this.cleanSearchTerm(word)
+            const searchTerm = this.cleanSearchTerm(word)
             this._model.fetchRhymes(searchTerm).then(wordRhymes => {
                 this.rhymes.value = new ResultList(searchTerm, [
                     this.createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables"),
@@ -110,11 +110,11 @@ class MainViewModel {
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
-            var searchTerm = this.cleanSearchTerm(word)
+            const searchTerm = this.cleanSearchTerm(word)
             this._model.fetchThesaurus(searchTerm).then(thesaurusEntries => {
-                var resultListItems = []
+                let resultListItems = []
                 thesaurusEntries.forEach(thesaurusEntry => {
-                    var wordTypeLabel = this.getWordTypeLabel(thesaurusEntry.wordType)
+                    const wordTypeLabel = this.getWordTypeLabel(thesaurusEntry.wordType)
                     resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, `part_of_speech_${wordTypeLabel}`))
                     if (thesaurusEntry.synonyms.length > 0) {
                         resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "synonyms"))
@@ -132,12 +132,12 @@ class MainViewModel {
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
-            var searchTerm = this.cleanSearchTerm(word)
+            const searchTerm = this.cleanSearchTerm(word)
             this._model.fetchDefinitions(searchTerm).then(definitions => {
                 this.definitions.value = new DictionaryResultList(
                     searchTerm,
                     definitions.map(dictionaryEntry => {
-                        var wordTypeLabel = this.getWordTypeLabel(dictionaryEntry.wordType)
+                        const wordTypeLabel = this.getWordTypeLabel(dictionaryEntry.wordType)
                         return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
                     })
                 )
@@ -151,7 +151,7 @@ class MainViewModel {
     }
     fetchSuggestions(word) {
         if (!this.isLoading.value) {
-            var searchTerm = this.cleanSearchTerm(word)
+            const searchTerm = this.cleanSearchTerm(word)
             this._model.fetchSuggestions(searchTerm).then(suggestions => {
                 this.suggestions.value = suggestions.map((suggestion) => new MenuItem(suggestion, suggestion))
             })
@@ -159,7 +159,7 @@ class MainViewModel {
     }
 
     getWordTypeLabel(wordType) {
-        var wordTypeLabel
+        let wordTypeLabel
         if (wordType == WordType.ADJECTIVE) wordTypeLabel = "adjective"
         else if (wordType == WordType.ADVERB) wordTypeLabel = "adverb"
         else if (wordType == WordType.NOUN) wordTypeLabel = "noun"
@@ -170,7 +170,7 @@ class MainViewModel {
     cleanSearchTerm = (text) => text.toLowerCase().trim()
 
     onAppMenuItemSelected(index) {
-        var selectedMenuId = this.appBarMenuItems[index].id
+        const selectedMenuId = this.appBarMenuItems[index].id
         if (selectedMenuId == "menu-about") {
             this.dialogInfo.value = new DialogInfo("about_title", "about")
         } else if (selectedMenuId == "menu-random") {
@@ -182,7 +182,7 @@ class MainViewModel {
     }
 
     onContextMenuItemSelected(word, index) {
-        var selectedMenuId = this.contextMenuItems[index].id
+        const selectedMenuId = this.contextMenuItems[index].id
         if (selectedMenuId == "menu-copy") {
             this._model.copyText(word)
         } else if (selectedMenuId == "menu-speak") {
@@ -207,8 +207,8 @@ class MainViewModel {
 
     updateVoices(newVoices) {
         this.voices.value = newVoices.sort((a, b) => {
-            var languageA = a.lang.substring(0, 2)
-            var languageB = b.lang.substring(0, 2)
+            const languageA = a.lang.substring(0, 2)
+            const languageB = b.lang.substring(0, 2)
             if (languageA == languageB) {
                 return a.name.localeCompare(b.name)
             } else if (languageA == "en") {
