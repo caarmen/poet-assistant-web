@@ -16,17 +16,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-class Db {
+importScripts("../../../../libs/sql-wasm-1.4.0.js")
+importScripts("DbCommand.js")
+importScripts("DbOpenProgress.js")
+importScripts("DbResult.js")
+class DbAccess {
     constructor() {
-        this._db
+        this._db = undefined
     }
-
-    async load(progressCallback) {
-        var config = {
-            locateFile: filename => `libs/${filename}`
-        }
-        var SQL = await initSqlJs(config)
-        var response = await this.loadUrl('src/resources/poet_assistant.db', progressCallback)
+    async open(progressCallback) {
+        const SQL = await initSqlJs({
+            locateFile: filename => `../../../../libs/${filename}`
+        })
+        const response = await this.loadUrl(
+            '../../../../src/resources/poet_assistant.db',
+            progressCallback)
         var arrayBuffer = new Uint8Array(response)
         this._db = new SQL.Database(new Uint8Array(arrayBuffer))
     }
@@ -37,7 +41,7 @@ class Db {
             xhr.open("GET", url, true)
             xhr.responseType = 'arraybuffer'
             xhr.onprogress = event => {
-                progressCallback(event.loaded, event.total)
+                progressCallback(new DbOpenProgress(event.loaded, event.total))
             }
             xhr.onload = () => {
                 completionFunc(xhr.response)
@@ -45,15 +49,14 @@ class Db {
             xhr.send()
         })
 
-    query = (queryString, args, resultCallback) =>
-        new Promise((resultCallback) => {
-            const stmt = this._db.prepare(queryString)
-            stmt.bind(args)
-            const rows = []
-            while (stmt.step()) {
-                rows.push(stmt.getAsObject())
-            }
-            resultCallback(rows)
-        })
+    querySync(statement, args) {
+        var stmt = this._db.prepare(statement)
+        stmt.bind(args)
 
+        var rows = []
+        while (stmt.step()) {
+            rows.push(stmt.getAsObject())
+        }
+        return rows
+    }
 }

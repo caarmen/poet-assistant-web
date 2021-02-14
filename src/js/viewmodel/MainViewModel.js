@@ -42,8 +42,8 @@ class MainViewModel {
     }
 
     loadDb() {
-        this._model.loadDb((loaded, total) => {
-            this.loadingProgress.value = loaded / total
+        this._model.loadDb((dbOpenProgress) => {
+            this.loadingProgress.value = dbOpenProgress.loaded / dbOpenProgress.total
         }).then(() => {
             this.isLoading.value = false
             this.searchTextDisabled.value = false

@@ -23,7 +23,7 @@ class MainModel {
     }
     async loadDb(progressCallback) {
         var db = new Db()
-        await db.load(progressCallback)
+        await db.open(progressCallback)
         this._rhymerRepository = new RhymerRepository(db)
         this._thesaurusRepository = new ThesaurusRepository(db)
         this._dictionaryRepository = new DictionaryRepository(db)
