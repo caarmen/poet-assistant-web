@@ -21,9 +21,9 @@ class SpeechEngine {
     constructor() {
         this._synth = window.speechSynthesis
         this.voices = new ObservableField([])
-        this.populateVoiceList(false)
+        this._populateVoiceList(false)
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
-            this._synth.onvoiceschanged = () => { this.populateVoiceList(true) }
+            this._synth.onvoiceschanged = () => { this._populateVoiceList(true) }
         }
         this._selectedVoice
         this.isPlaying = new ObservableField(false)
@@ -41,7 +41,7 @@ class SpeechEngine {
         this._speed = speedValue
     }
 
-    populateVoiceList(onVoiceChangeEvent) {
+    _populateVoiceList(onVoiceChangeEvent) {
         this.voices.value = this._synth.getVoices()
         const KEY_STORAGE_HAS_RELOADED = "has_reloaded"
         if (this.voices.value.length > 0) {
@@ -81,17 +81,17 @@ class SpeechEngine {
             utterance.lang = this._selectedVoice.lang
             utterance.pitch = this._pitch
             utterance.rate = this._speed
-            utterance.onboundary = (evt) => { this.updateState() }
-            utterance.onend = (evt) => { this.updateState() }
-            utterance.onerror = (evt) => { this.updateState() }
-            utterance.onpause = (evt) => { this.updateState() }
-            utterance.onresume = (evt) => { this.updateState() }
-            utterance.onstart = (evt) => { this.updateState() }
+            utterance.onboundary = (evt) => { this._updateState() }
+            utterance.onend = (evt) => { this._updateState() }
+            utterance.onerror = (evt) => { this._updateState() }
+            utterance.onpause = (evt) => { this._updateState() }
+            utterance.onresume = (evt) => { this._updateState() }
+            utterance.onstart = (evt) => { this._updateState() }
             this._synth.speak(utterance)
         }
     }
 
-    updateState() {
+    _updateState() {
         this.isPlaying.value = this._synth.speaking
     }
 }

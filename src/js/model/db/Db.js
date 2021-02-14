@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class Db {
+
     constructor() {
         this._worker = new Worker("src/js/model/db/DbWorker.js")
         this._lastCommandId = 0
@@ -32,10 +33,8 @@ class Db {
         }
     }
 
-    getNextCommandId = () => ++this._lastCommandId
-
     open = (progressCallback) => new Promise((completionFunc) => {
-        const openCommandId = this.getNextCommandId()
+        const openCommandId = this._getNextCommandId()
         this._callbacks.set(openCommandId, (dbResult) => {
             if (dbResult.resultType == DbResult.ResultType.OPEN_PROGRESS) {
                 progressCallback(dbResult.result)
@@ -48,11 +47,13 @@ class Db {
     })
 
     query = (statement, args) => new Promise((resultCallback) => {
-        const queryCommandId = this.getNextCommandId()
+        const queryCommandId = this._getNextCommandId()
         this._callbacks.set(queryCommandId, (dbResult) => {
             resultCallback(dbResult.result)
             this._callbacks.delete(queryCommandId)
         })
         this._worker.postMessage(DbCommand.query(queryCommandId, statement, args))
     })
+
+    _getNextCommandId = () => ++this._lastCommandId
 }

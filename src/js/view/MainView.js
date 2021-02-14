@@ -57,14 +57,14 @@ class MainView {
                         new TabData("tab_dictionary", "tab_dictionary_title", "placeholder-definitions"),
                         new TabData("tab_reader", "tab_reader_title", "placeholder-reader")
                     ])
-                this.applyTemplates()
-                this.initializeViews()
-                this.bindViewModel()
+                this._applyTemplates()
+                this._initializeViews()
+                this._bindViewModel()
                 this._viewModel.loadDb()
             })
         })
     }
-    applyTemplates() {
+    _applyTemplates() {
         this._elemPlaceholderAppBar.innerHTML = this._template.createAppBarHtml("app-bar", "app_name")
 
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
@@ -75,10 +75,10 @@ class MainView {
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
         this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-search", "search", "btn_search_title")
 
-        this._viewTabs.applyTemplates()
+        this._viewTabs._applyTemplates()
     }
 
-    initializeViews() {
+    _initializeViews() {
         this._elemActionItemMenu = document.querySelector("#menu_overflow")
         this._viewAppBarMenu = new AppBarMenuView(this._elemActionItemMenu, this._template)
 
@@ -92,12 +92,12 @@ class MainView {
         this._elemBtnSearch = document.querySelector("#btn-search")
         this._elemBtnSearch.disabled = true
 
-        this._viewTabs.initializeViews()
+        this._viewTabs._initializeViews()
     }
 
-    bindViewModel() {
+    _bindViewModel() {
         // viewmodel -> view bindings
-        this._viewModel.isLoading.observer = (isLoading) => { this.showLoading(isLoading && !this._template.isLoaded) }
+        this._viewModel.isLoading.observer = (isLoading) => { this._showLoading(isLoading && !this._template.isLoaded) }
         this._viewModel.searchTextDisabled.observer = (isDisabled) => this._mdcInputTextSearch.disabled = isDisabled
         this._viewModel.searchButtonDisabled.observer = (isDisabled) => this._elemBtnSearch.disabled = isDisabled
         this._viewModel.rhymes.observer = (newRhymes) => { this._viewRhymer.showRhymes(newRhymes) }
@@ -105,11 +105,11 @@ class MainView {
         this._viewModel.definitions.observer = (newDefinitions) => { this._viewDefinitions.showDefinitions(newDefinitions) }
         this._viewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
-        this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this.updateLoadingProgress(newLoadingProgress) }
+        this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this._updateLoadingProgress(newLoadingProgress) }
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
         this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
-        this._viewModel.isReaderTabVisible.observer = (isVisible) => { this.updateReaderTabVisibility(isVisible) }
-        this._viewModel.dialogInfo.observer = (dialogInfo) => { this.showDialog(dialogInfo) }
+        this._viewModel.isReaderTabVisible.observer = (isVisible) => { this._updateReaderTabVisibility(isVisible) }
+        this._viewModel.dialogInfo.observer = (dialogInfo) => { this._showDialog(dialogInfo) }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -117,19 +117,19 @@ class MainView {
         }
         this._viewAppBarMenu.observer = (index) => { this._viewModel.onAppMenuItemSelected(index) }
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('keydown', ((evt) => {
-            if (evt.keyCode == 13) this.searchAll()
+            if (evt.keyCode == 13) this._searchAll()
         }))
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
             this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
         }))
-        this._elemBtnSearch.onclick = () => { this.searchAll() }
+        this._elemBtnSearch.onclick = () => { this._searchAll() }
         this._elemActionItemMenu.onclick = () => { this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems) }
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
-        this._viewSuggestions.observer = (word) => { this.onSuggestionSelected(word) }
+        this._viewSuggestions.observer = (word) => { this._onSuggestionSelected(word) }
 
-        this._viewRhymer.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
-        this._viewThesaurus.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
-        this._viewDefinitions.wordClickedObserver = (wordElem) => { this.onWordElemClicked(wordElem) }
+        this._viewRhymer.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewThesaurus.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }
@@ -138,26 +138,26 @@ class MainView {
         this._viewVoiceSettings.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }
     }
 
-    updateReaderTabVisibility(isVisible) {
+    _updateReaderTabVisibility(isVisible) {
         if (!isVisible) this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
         else this._viewTabs.showTab(MainViewModel.TabIndex.READER)
 
     }
-    searchAll() {
+    _searchAll() {
         this._viewSuggestions.hide()
         this._viewModel.fetchAll(this._mdcInputTextSearch.value)
     }
 
-    onSuggestionSelected(word) {
+    _onSuggestionSelected(word) {
         this._mdcInputTextSearch.value = word
         this._elemBtnSearch.click()
     }
 
-    onWordElemClicked(wordElem) {
+    _onWordElemClicked(wordElem) {
         this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._viewModel.contextMenuItems)
     }
 
-    showLoading(isLoading) {
+    _showLoading(isLoading) {
         if (isLoading) {
             this._elemPlaceholderProgressIndicator.style.display = "block"
             this._mdcLinearProgress.open()
@@ -166,7 +166,7 @@ class MainView {
             this._elemPlaceholderProgressIndicator.style.display = "none"
         }
     }
-    updateLoadingProgress(loadingProgress) {
+    _updateLoadingProgress(loadingProgress) {
         if (!this._mdcLinearProgress.determinate) {
             this._mdcLinearProgress.close()
             this._mdcLinearProgress.determinate = true
@@ -175,9 +175,9 @@ class MainView {
         this._elemProgressBarLabel.innerText = this._i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
         this._mdcLinearProgress.progress = loadingProgress
     }
-    showMenu = () => this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems)
+    _showMenu = () => this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems)
 
-    showDialog(dialogInfo) {
+    _showDialog(dialogInfo) {
         const contentHtml = this._template.createHtml(dialogInfo.contentTemplateId)
         this._elemPlaceholderDialog.innerHTML =
             this._template.createDialogHtml(dialogInfo.title, contentHtml)

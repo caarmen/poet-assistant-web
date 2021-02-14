@@ -21,39 +21,39 @@ class RhymerRepository {
         this._db = db
     }
     async fetchRhymes(word) {
-        const stressSyllableRhymes = await this.getStressSyllablesRhymes(word)
-        const lastThreeSyllableRhymes = await this.getLastThreeSyllablesRhymes(word)
-        const lastTwoSyllableRhymes = await this.getLastTwoSyllablesRhymes(word)
-        const lastSyllableRhymes = await this.getLastSyllableRhymes(word)
+        const stressSyllableRhymes = await this._getStressSyllablesRhymes(word)
+        const lastThreeSyllableRhymes = await this._getLastThreeSyllablesRhymes(word)
+        const lastTwoSyllableRhymes = await this._getLastTwoSyllablesRhymes(word)
+        const lastSyllableRhymes = await this._getLastSyllableRhymes(word)
         return new WordRhymes(stressSyllableRhymes, lastThreeSyllableRhymes, lastTwoSyllableRhymes, lastSyllableRhymes)
     }
 
-    async getStressSyllablesRhymes(word) {
-        return this.getSyllableRhymes(RhymerRepository.COL_STRESS_SYLLABLES, [], word)
+    async _getStressSyllablesRhymes(word) {
+        return this._getSyllableRhymes(RhymerRepository.COL_STRESS_SYLLABLES, [], word)
     }
-    async getLastThreeSyllablesRhymes(word) {
-        return this.getSyllableRhymes(RhymerRepository.COL_LAST_THREE_SYLLABLES, [RhymerRepository.COL_STRESS_SYLLABLES], word)
+    async _getLastThreeSyllablesRhymes(word) {
+        return this._getSyllableRhymes(RhymerRepository.COL_LAST_THREE_SYLLABLES, [RhymerRepository.COL_STRESS_SYLLABLES], word)
     }
-    async getLastTwoSyllablesRhymes(word) {
-        return this.getSyllableRhymes(RhymerRepository.COL_LAST_TWO_SYLLABLES, [RhymerRepository.COL_STRESS_SYLLABLES, RhymerRepository.COL_LAST_THREE_SYLLABLES], word)
+    async _getLastTwoSyllablesRhymes(word) {
+        return this._getSyllableRhymes(RhymerRepository.COL_LAST_TWO_SYLLABLES, [RhymerRepository.COL_STRESS_SYLLABLES, RhymerRepository.COL_LAST_THREE_SYLLABLES], word)
     }
-    async getLastSyllableRhymes(word) {
-        return this.getSyllableRhymes(RhymerRepository.COL_LAST_SYLLABLE, [RhymerRepository.COL_STRESS_SYLLABLES, RhymerRepository.COL_LAST_THREE_SYLLABLES, RhymerRepository.COL_LAST_TWO_SYLLABLES], word)
+    async _getLastSyllableRhymes(word) {
+        return this._getSyllableRhymes(RhymerRepository.COL_LAST_SYLLABLE, [RhymerRepository.COL_STRESS_SYLLABLES, RhymerRepository.COL_LAST_THREE_SYLLABLES, RhymerRepository.COL_LAST_TWO_SYLLABLES], word)
     }
 
-    getSyllableRhymes(syllableColumn, excludeSyllableColumns, word) {
+    _getSyllableRhymes(syllableColumn, excludeSyllableColumns, word) {
         return new Promise((completionFunc) => {
             // A word may have multiple pronunciations. 
             // Example: "dove":
             // "dove" has two variants of "stress_syllables": "AHV" and "OWV"
-            this.getSyllables(syllableColumn, word).then((syllablesVariants) => {
+            this._getSyllables(syllableColumn, word).then((syllablesVariants) => {
 
                 if (syllablesVariants.length == 0) {
                     completionFunc(undefined)
                     return
                 }
                 let excludeClause = excludeSyllableColumns.map(excludeColumn => {
-                    const excludeSyllables = this.getSyllables(excludeColumn, word)
+                    const excludeSyllables = this._getSyllables(excludeColumn, word)
                     return excludeSyllables && `${excludeColumn} <> '${excludeSyllables}'`
                 }).filter(clause => clause != undefined)
                     .join(" AND ")
@@ -83,7 +83,7 @@ class RhymerRepository {
         })
     }
 
-    async getSyllables(syllablesColumn, word) {
+    async _getSyllables(syllablesColumn, word) {
         const stmt = `
             SELECT DISTINCT ${syllablesColumn} 
             FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 

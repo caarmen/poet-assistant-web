@@ -33,10 +33,10 @@ class VoiceSettingsView {
 
         this._i18n = i18n
         this._template = template
-        this.applyTemplates()
-        this.initializeViews()
+        this._applyTemplates()
+        this._initializeViews()
     }
-    applyTemplates() {
+    _applyTemplates() {
         this._elemPlaceholderReaderVoices.innerHTML = this._template.createVoiceSelectionHtml(
             new SliderData("voice-pitch", "voice-pitch", 0.0, 2.0, 1.0),
             new SliderData("voice-speed", "voice-speed", 0.5, 2.0, 1.0)
@@ -44,7 +44,7 @@ class VoiceSettingsView {
         this._i18n.translateElement(this._elemPlaceholderReaderVoices)
     }
 
-    initializeViews() {
+    _initializeViews() {
         this._elemReaderVoices = document.querySelector("#placeholder-reader-voices #voices-menu")
         this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader-voices #selected-voice")
         this._mdcSliderPitch = new VoiceSettingsView.MDCSlider(document.querySelector("#voice-pitch"))

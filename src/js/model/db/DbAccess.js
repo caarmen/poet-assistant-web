@@ -28,14 +28,25 @@ class DbAccess {
         const SQL = await initSqlJs({
             locateFile: filename => `../../../../libs/${filename}`
         })
-        const response = await this.loadUrl(
+        const response = await this._loadUrl(
             '../../../../src/resources/poet_assistant.db',
             progressCallback)
         const arrayBuffer = new Uint8Array(response)
         this._db = new SQL.Database(new Uint8Array(arrayBuffer))
     }
 
-    loadUrl = (url, progressCallback) =>
+    querySync(statement, args) {
+        const stmt = this._db.prepare(statement)
+        stmt.bind(args)
+
+        const rows = []
+        while (stmt.step()) {
+            rows.push(stmt.getAsObject())
+        }
+        return rows
+    }
+
+    _loadUrl = (url, progressCallback) =>
         new Promise((completionFunc) => {
             let xhr = new XMLHttpRequest()
             xhr.open("GET", url, true)
@@ -49,14 +60,4 @@ class DbAccess {
             xhr.send()
         })
 
-    querySync(statement, args) {
-        const stmt = this._db.prepare(statement)
-        stmt.bind(args)
-
-        const rows = []
-        while (stmt.step()) {
-            rows.push(stmt.getAsObject())
-        }
-        return rows
-    }
 }

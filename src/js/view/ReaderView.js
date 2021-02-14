@@ -30,17 +30,17 @@ class ReaderView {
         this._i18n = i18n
         this._template = template
 
-        this.applyTemplates()
-        this.initializeViews()
+        this._applyTemplates()
+        this._initializeViews()
 
         this.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => { }
     }
-    applyTemplates() {
+    _applyTemplates() {
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
         this._elemPlaceholderReaderPlayButton.innerHTML = this._template.createButtonIconTextHtml("btn-play", "play_circle_filled", "btn_play_title")
     }
 
-    initializeViews() {
+    _initializeViews() {
         this._mdcInputTextReader = new ReaderView.MDCTextField(document.querySelector("#input-text-reader"))
         this._elemBtnPlay = document.querySelector("#btn-play")
         this._elemBtnPlayIcon = document.querySelector("#btn-play-icon")

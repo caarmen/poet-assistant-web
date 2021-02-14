@@ -32,7 +32,7 @@ class MainViewModel {
         this.isLoading.value = true
         this._model = new MainModel()
         this.isSpeechPlaying = this._model.isSpeechPlaying
-        this.contextMenuItems = this.createContextMenuItems(false)
+        this.contextMenuItems = this._createContextMenuItems(false)
         this.appBarMenuItems = [
             new MenuItem("menu-about", "app_bar_menu_about_title", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL)),
             new MenuItem("menu-random", "app_bar_menu_random_title", new MenuItemIcon("casino", MenuItemIcon.IconSource.MATERIAL)),
@@ -87,19 +87,19 @@ class MainViewModel {
 
     fetchRhymes(word) {
         if (!this.isLoading.value) {
-            const searchTerm = this.cleanSearchTerm(word)
+            const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchRhymes(searchTerm).then(wordRhymes => {
                 this.rhymes.value = new ResultList(searchTerm, [
-                    this.createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables"),
-                    this.createRhymeListItems(wordRhymes.lastThreeSyllableRhymes, "last_three_syllables"),
-                    this.createRhymeListItems(wordRhymes.lastTwoSyllablesRhymes, "last_two_syllables"),
-                    this.createRhymeListItems(wordRhymes.lastSyllableRhymes, "last_syllable")
+                    this._createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables"),
+                    this._createRhymeListItems(wordRhymes.lastThreeSyllableRhymes, "last_three_syllables"),
+                    this._createRhymeListItems(wordRhymes.lastTwoSyllablesRhymes, "last_two_syllables"),
+                    this._createRhymeListItems(wordRhymes.lastSyllableRhymes, "last_syllable")
                 ].flat())
             })
         }
     }
 
-    createRhymeListItems = (syllableRhymes, syllableTypeLabel) =>
+    _createRhymeListItems = (syllableRhymes, syllableTypeLabel) =>
         (syllableRhymes || []).flatMap((item) =>
             [
                 new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, syllableTypeLabel, item.syllables)
@@ -110,11 +110,11 @@ class MainViewModel {
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
-            const searchTerm = this.cleanSearchTerm(word)
+            const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchThesaurus(searchTerm).then(thesaurusEntries => {
                 let resultListItems = []
                 thesaurusEntries.forEach(thesaurusEntry => {
-                    const wordTypeLabel = this.getWordTypeLabel(thesaurusEntry.wordType)
+                    const wordTypeLabel = this._getWordTypeLabel(thesaurusEntry.wordType)
                     resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, `part_of_speech_${wordTypeLabel}`))
                     if (thesaurusEntry.synonyms.length > 0) {
                         resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "synonyms"))
@@ -132,12 +132,12 @@ class MainViewModel {
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
-            const searchTerm = this.cleanSearchTerm(word)
+            const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchDefinitions(searchTerm).then(definitions => {
                 this.definitions.value = new DictionaryResultList(
                     searchTerm,
                     definitions.map(dictionaryEntry => {
-                        const wordTypeLabel = this.getWordTypeLabel(dictionaryEntry.wordType)
+                        const wordTypeLabel = this._getWordTypeLabel(dictionaryEntry.wordType)
                         return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
                     })
                 )
@@ -151,14 +151,14 @@ class MainViewModel {
     }
     fetchSuggestions(word) {
         if (!this.isLoading.value) {
-            const searchTerm = this.cleanSearchTerm(word)
+            const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchSuggestions(searchTerm).then(suggestions => {
                 this.suggestions.value = suggestions.map((suggestion) => new MenuItem(suggestion, suggestion))
             })
         }
     }
 
-    getWordTypeLabel(wordType) {
+    _getWordTypeLabel(wordType) {
         let wordTypeLabel
         if (wordType == WordType.ADJECTIVE) wordTypeLabel = "adjective"
         else if (wordType == WordType.ADVERB) wordTypeLabel = "adverb"
@@ -167,7 +167,7 @@ class MainViewModel {
         return wordTypeLabel
     }
 
-    cleanSearchTerm = (text) => text.toLowerCase().trim()
+    _cleanSearchTerm = (text) => text.toLowerCase().trim()
 
     onAppMenuItemSelected(index) {
         const selectedMenuId = this.appBarMenuItems[index].id
@@ -222,10 +222,10 @@ class MainViewModel {
 
         this.isReaderTabVisible.value = this.voices.value.length > 0
 
-        this.contextMenuItems = this.createContextMenuItems(newVoices.length > 0)
+        this.contextMenuItems = this._createContextMenuItems(newVoices.length > 0)
     }
 
-    createContextMenuItems = (isSpeechEnabled) => [
+    _createContextMenuItems = (isSpeechEnabled) => [
         new MenuItem("menu-copy", "menu_copy_title", new MenuItemIcon("content_copy", MenuItemIcon.IconSource.MATERIAL)),
         new MenuItem("menu-speak", "menu_speak_title", new MenuItemIcon("record_voice_over", MenuItemIcon.IconSource.MATERIAL)),
         new MenuItem("menu-rhymer", "tab_rhymer_title", new MenuItemIcon("ic_rhymer", MenuItemIcon.IconSource.CUSTOM)),

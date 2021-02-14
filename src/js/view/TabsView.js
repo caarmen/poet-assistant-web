@@ -27,12 +27,12 @@ class TabsView {
         this._elemTabs
         this._elemContents
     }
-    applyTemplates() {
+    _applyTemplates() {
         this._elemPlaceholderTabBar = document.querySelector("#placeholder-tab-bar")
         this._elemPlaceholderTabBar.innerHTML = this._template.createTabBarHtml("tab-bar", this._tabDatas)
     }
 
-    initializeViews() {
+    _initializeViews() {
         this._elemTabs = this._tabDatas.map(tabData => document.querySelector(`#${tabData.tabElemId}`))
         this._elemContents = this._tabDatas.map(tabData => document.querySelector(`#${tabData.contentElemId}`))
         const mdcTabBar = new TabsView.MDCTabBar(document.querySelector(".mdc-tab-bar"))
