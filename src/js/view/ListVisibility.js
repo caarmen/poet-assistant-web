@@ -21,6 +21,16 @@ class ListVisibility {
     constructor(template) {
         this._template = template
     }
+
+    setLoading(isLoading, mdcCircularProgress) {
+        if (isLoading) {
+            mdcCircularProgress.root.parentNode.style.display = "block"
+            mdcCircularProgress.open()
+        } else {
+            mdcCircularProgress.close()
+            mdcCircularProgress.root.parentNode.style.display = "none"
+        }
+    }
     setListVisibility(listData, elemList, elemEmpty, emptyText, word) {
         if (listData && listData.length > 0) {
             elemList.style.display = "block"

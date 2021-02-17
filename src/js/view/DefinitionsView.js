@@ -21,11 +21,25 @@ class DefinitionsView {
     constructor(template) {
         this._elemPlaceholderDefinitionsList = document.querySelector("#placeholder-definitions-list")
         this._elemPlaceholderDefinitionsEmpty = document.querySelector("#placeholder-definitions-empty")
+        this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-definitions .list-loading")
 
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
         this.wordClickedObserver = (wordElem) => { }
+        this._applyTemplates()
+        this._initializeViews()
     }
+
+    _applyTemplates() {
+        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createCircularProgressIndicatorHtml()
+    }
+
+    _initializeViews() {
+        this._mdcCircularProgress = new DefinitionsView.MDCCircularProgress(this._elemPlaceholderProgressIndicator.querySelector('.mdc-circular-progress'))
+        this._mdcCircularProgress.determinate = false
+    }
+
+    setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showDefinitions(definitions) {
         this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
@@ -34,5 +48,5 @@ class DefinitionsView {
             this.wordClickedObserver(e.target)
         }
     }
-
 }
+DefinitionsView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress

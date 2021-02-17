@@ -21,12 +21,26 @@ class ThesaurusView {
     constructor(template) {
         this._elemPlaceholderThesaurusList = document.querySelector("#placeholder-thesaurus-list")
         this._elemPlaceholderThesaurusEmpty = document.querySelector("#placeholder-thesaurus-empty")
+        this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-thesaurus .list-loading")
 
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
 
         this.wordClickedObserver = (wordElem) => { }
+        this._applyTemplates()
+        this._initializeViews()
     }
+
+    _applyTemplates() {
+        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createCircularProgressIndicatorHtml()
+    }
+
+    _initializeViews() {
+        this._mdcCircularProgress = new ThesaurusView.MDCCircularProgress(this._elemPlaceholderProgressIndicator.querySelector('.mdc-circular-progress'))
+        this._mdcCircularProgress.determinate = false
+    }
+
+    setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showThesaurus(thesaurusEntries) {
         this._elemPlaceholderThesaurusList.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
@@ -40,3 +54,4 @@ class ThesaurusView {
     }
 }
 ThesaurusView.MDCList = mdc.list.MDCList
+ThesaurusView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress

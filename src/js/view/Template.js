@@ -26,6 +26,7 @@ class Template {
             "about",
             "app-bar",
             "button-icon-text",
+            "circular-progress-indicator",
             "context-menu",
             "context-menu-header",
             "context-menu-item",
@@ -54,6 +55,8 @@ class Template {
     createHtml = (templateId) => this._templates.get(templateId)
 
     createLinearProgressIndicatorHtml = () => this._templates.get("linear-progress-indicator")
+
+    createCircularProgressIndicatorHtml = () => this._templates.get("circular-progress-indicator")
 
     createButtonIconTextHtml = (id, icon, label) =>
         this._templates.get("button-icon-text")

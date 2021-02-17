@@ -112,6 +112,9 @@ class MainView {
         this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
         this._viewModel.isReaderTabVisible.observer = (isVisible) => { this._updateReaderTabVisibility(isVisible) }
         this._viewModel.dialogInfo.observer = (dialogInfo) => { this._showDialog(dialogInfo) }
+        this._viewModel.isRhymerLoading.observer = (isLoading) => { this._viewRhymer.setLoading(isLoading) }
+        this._viewModel.isThesaurusLoading.observer = (isLoading) => { this._viewThesaurus.setLoading(isLoading) }
+        this._viewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -150,7 +153,7 @@ class MainView {
         if (isVisible) this._elemBtnClearSearchText.style.display = "inline-block"
         else this._elemBtnClearSearchText.style.display = "none"
     }
-    _onClearSearchTextClicked(){
+    _onClearSearchTextClicked() {
         this._mdcInputTextSearch.value = ""
         this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
     }

@@ -21,12 +21,27 @@ class RhymerView {
     constructor(template) {
         this._elemPlaceholderRhymesList = document.querySelector("#placeholder-rhymes-list")
         this._elemPlaceholderRhymesEmpty = document.querySelector("#placeholder-rhymes-empty")
+        this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-rhymes .list-loading")
 
+        this._mdcCircularProgress
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
 
         this.wordClickedObserver = (wordElem) => { }
+        this._applyTemplates()
+        this._initializeViews()
     }
+
+    _applyTemplates() {
+        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createCircularProgressIndicatorHtml()
+    }
+
+    _initializeViews() {
+        this._mdcCircularProgress = new RhymerView.MDCCircularProgress(this._elemPlaceholderProgressIndicator.querySelector('.mdc-circular-progress'))
+        this._mdcCircularProgress.determinate = false
+    }
+
+    setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     searchAll() {
         this._viewSuggestions.hide()
@@ -45,3 +60,4 @@ class RhymerView {
     }
 }
 RhymerView.MDCList = mdc.list.MDCList
+RhymerView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress
