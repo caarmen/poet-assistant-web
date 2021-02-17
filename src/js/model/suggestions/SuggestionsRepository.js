@@ -21,7 +21,10 @@ class SuggestionsRepository {
         this._db = db
     }
     async fetchSuggestions(word) {
-        const query = `
+        if (word.length == 0) {
+            return []
+        } else {
+            const query = `
                 SELECT DISTINCT ${SuggestionsRepository.COL_WORD}
                 FROM ${SuggestionsRepository.TABLE_WORD_VARIANTS}
                 WHERE ${SuggestionsRepository.COL_WORD} LIKE ?
@@ -29,9 +32,10 @@ class SuggestionsRepository {
                     AND ${SuggestionsRepository.COL_HAS_DEFINITION}=1
                 ORDER BY ${SuggestionsRepository.COL_WORD}
                 LIMIT ${SuggestionsRepository.LIMIT}`
-        return (await this._db.query(query, [`${word}%`, word])).map((row) =>
-            row[SuggestionsRepository.COL_WORD]
-        )
+            return (await this._db.query(query, [`${word}%`, word])).map((row) =>
+                row[SuggestionsRepository.COL_WORD]
+            )
+        }
     }
 }
 SuggestionsRepository.LIMIT = 10

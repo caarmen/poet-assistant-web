@@ -21,6 +21,7 @@ class MainViewModel {
         this.rhymes = new ObservableField()
         this.searchTextDisabled = new ObservableField(true)
         this.searchButtonDisabled = new ObservableField(true)
+        this.clearSearchTextButtonVisible = new ObservableField(false)
         this.thesaurusEntries = new ObservableField()
         this.definitions = new ObservableField()
         this.suggestions = new ObservableField()
@@ -55,7 +56,6 @@ class MainViewModel {
         [
             "about",
             "app-bar",
-            "button-icon",
             "button-icon-text",
             "context-menu",
             "context-menu-header",
@@ -151,6 +151,7 @@ class MainViewModel {
     onSearchTextInput(text) {
         this.fetchSuggestions(text)
         this.searchButtonDisabled.value = text.length == 0
+        this.clearSearchTextButtonVisible.value = text.length > 0
     }
     fetchSuggestions(word) {
         if (!this.isLoading.value) {

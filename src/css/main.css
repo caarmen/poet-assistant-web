@@ -71,9 +71,6 @@ a:link, a.active:link,a:hover, a:visited {
 #placeholder-input-text-search #input-text-search {
 	width: 100%;
 }
-#placeholder-btn-search {
-	display: table-cell;
-}
 #placeholder-context-menu {
 	position: absolute;
 }

@@ -27,7 +27,6 @@ class Template {
         [
             "about",
             "app-bar",
-            "button-icon",
             "button-icon-text",
             "context-menu",
             "context-menu-header",
@@ -63,9 +62,6 @@ class Template {
             .replaceAll("__ID__", id)
             .replaceAll("__ICON__", icon)
             .replaceAll("__LABEL__", this._i18n.translate(label))
-
-    createButtonIconHtml = (id, icon, label) =>
-        this._templates.get("button-icon").replaceAll("__ID__", id).replace("__ICON__", icon).replace("__LABEL__", this._i18n.translate(label))
 
     createAppBarMenuHtml = (items) =>
         this._templates.get("context-menu").replace(
