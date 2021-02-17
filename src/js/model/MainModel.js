@@ -30,6 +30,8 @@ class MainModel {
         this._suggestionsRepository = new SuggestionsRepository(db)
     }
 
+    isDesktop = () => globalThis.desktop && globalThis.desktop.desktop
+
     async loadFiles(fileReaderInputs) {
         return new FilesReader().loadFiles(fileReaderInputs)
     }

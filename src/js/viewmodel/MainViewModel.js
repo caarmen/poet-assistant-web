@@ -186,7 +186,8 @@ class MainViewModel {
     onAppMenuItemSelected(index) {
         const selectedMenuId = this.appBarMenuItems[index].id
         if (selectedMenuId == "menu-about") {
-            this.dialogInfo.value = new DialogInfo("about_title", "about")
+            let privacyPolicyFile = this._model.isDesktop() ? "PRIVACY-desktop.md" : "PRIVACY-web.md"
+            this.dialogInfo.value = new DialogInfo("about_title", "about", new Map([["__PRIVACY_POLICY_FILE__", privacyPolicyFile]]))
         } else if (selectedMenuId == "menu-random") {
             const randomWord = this._model.getRandomWord().then((word) => {
                 this.fetchAll(word)

@@ -192,7 +192,7 @@ class MainView {
     _showMenu = () => this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems)
 
     _showDialog(dialogInfo) {
-        const contentHtml = this._template.createHtml(dialogInfo.contentTemplateId)
+        const contentHtml = this._template.createHtml(dialogInfo.contentTemplateId, dialogInfo.templateParameters)
         this._elemPlaceholderDialog.innerHTML =
             this._template.createDialogHtml(dialogInfo.title, contentHtml)
         this._i18n.translateElement(this._elemPlaceholderDialog)
