@@ -68,6 +68,8 @@ a:link, a.active:link,a:hover, a:visited {
 }
 #placeholder-input-text-search {
 	width: 100%;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 #placeholder-input-text-search #input-text-search {
 	width: 100%;
