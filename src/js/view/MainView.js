@@ -32,6 +32,7 @@ class MainView {
         this._elemProgressBarLabel
         this._elemActionItemMenu
         this._elemBtnSearch
+        this._elemBtnClearSearchText
         this._elemBtnPlay
         this._elemBtnPlayIcon
 
@@ -68,12 +69,10 @@ class MainView {
         this._elemPlaceholderAppBar.innerHTML = this._template.createAppBarHtml("app-bar", "app_name")
 
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
-        this._elemPlaceholderBtnSearch = document.querySelector("#placeholder-btn-search")
 
         this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml()
         this._elemProgressBarLabel = document.querySelector("#progressbar-label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
-        this._elemPlaceholderBtnSearch.innerHTML = this._template.createButtonIconHtml("btn-search", "search", "btn_search_title")
 
         this._viewTabs._applyTemplates()
     }
@@ -91,6 +90,8 @@ class MainView {
         this._mdcInputTextSearch = new MainView.MDCTextField(document.querySelector("#input-text-search"))
         this._elemBtnSearch = document.querySelector("#btn-search")
         this._elemBtnSearch.disabled = true
+        this._elemBtnClearSearchText = document.querySelector("#btn-clear-search-text")
+        this._elemBtnClearSearchText.style.display = "none"
 
         this._viewTabs._initializeViews()
     }
@@ -100,6 +101,7 @@ class MainView {
         this._viewModel.isLoading.observer = (isLoading) => { this._showLoading(isLoading && !this._template.isLoaded) }
         this._viewModel.searchTextDisabled.observer = (isDisabled) => this._mdcInputTextSearch.disabled = isDisabled
         this._viewModel.searchButtonDisabled.observer = (isDisabled) => this._elemBtnSearch.disabled = isDisabled
+        this._viewModel.clearSearchTextButtonVisible.observer = (isVisible) => this._updateClearSearchTextButtonVisibility(isVisible)
         this._viewModel.rhymes.observer = (newRhymes) => { this._viewRhymer.showRhymes(newRhymes) }
         this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this._viewThesaurus.showThesaurus(newThesaurusEntries) }
         this._viewModel.definitions.observer = (newDefinitions) => { this._viewDefinitions.showDefinitions(newDefinitions) }
@@ -124,6 +126,7 @@ class MainView {
             this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
         }))
         this._elemBtnSearch.onclick = () => { this._searchAll() }
+        this._elemBtnClearSearchText.onclick = () => { this._onClearSearchTextClicked() }
         this._elemActionItemMenu.onclick = () => { this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems) }
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
         this._viewSuggestions.observer = (word) => { this._onSuggestionSelected(word) }
@@ -142,7 +145,14 @@ class MainView {
     _updateReaderTabVisibility(isVisible) {
         if (!isVisible) this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
         else this._viewTabs.showTab(MainViewModel.TabIndex.READER)
-
+    }
+    _updateClearSearchTextButtonVisibility(isVisible) {
+        if (isVisible) this._elemBtnClearSearchText.style.display = "inline-block"
+        else this._elemBtnClearSearchText.style.display = "none"
+    }
+    _onClearSearchTextClicked(){
+        this._mdcInputTextSearch.value = ""
+        this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
     }
     _searchAll() {
         this._viewSuggestions.hide()
