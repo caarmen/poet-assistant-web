@@ -60,12 +60,7 @@ a:link, a.active:link,a:hover, a:visited {
 	top: 50%;
 	transform: translate(10%, -50%);
 }
-#search_bar {
-	width: 100%;
-	display: table;
-}
 #placeholder-input-text-search {
-	display: table-cell;
 	width: 100%;
 }
 #placeholder-input-text-search #input-text-search {
