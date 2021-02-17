@@ -17,7 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class ObservableField {
-    constructor() {
+    constructor(intialValue) {
+        this._value = intialValue
         this._observer = (newValue) => { }
     }
     get value() {

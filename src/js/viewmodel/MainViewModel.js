@@ -28,6 +28,9 @@ class MainViewModel {
         this.voices = new ObservableField([])
         this.isReaderTabVisible = new ObservableField(false)
         this.isLoading = new ObservableField()
+        this.isRhymerLoading = new ObservableField(false)
+        this.isThesaurusLoading = new ObservableField(false)
+        this.isDefinitionsLoading = new ObservableField(false)
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
@@ -57,6 +60,7 @@ class MainViewModel {
             "about",
             "app-bar",
             "button-icon-text",
+            "circular-progress-indicator",
             "context-menu",
             "context-menu-header",
             "context-menu-item",
@@ -65,13 +69,13 @@ class MainViewModel {
             "dialog",
             "dictionary-list-item",
             "input-text",
+            "linear-progress-indicator",
             "list",
             "list-empty",
             "list-header",
             "list-item-sub-header-1",
             "list-item-sub-header-2",
             "list-item-word",
-            "progress-indicator",
             "slider",
             "tab",
             "tab-bar",
@@ -90,8 +94,10 @@ class MainViewModel {
 
     fetchRhymes(word) {
         if (!this.isLoading.value) {
+            this.isRhymerLoading.value = true
             const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchRhymes(searchTerm).then(wordRhymes => {
+                this.isRhymerLoading.value = false
                 this.rhymes.value = new ResultList(searchTerm, [
                     this._createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables"),
                     this._createRhymeListItems(wordRhymes.lastThreeSyllableRhymes, "last_three_syllables"),
@@ -113,8 +119,10 @@ class MainViewModel {
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
+            this.isThesaurusLoading.value = true
             const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchThesaurus(searchTerm).then(thesaurusEntries => {
+                this.isThesaurusLoading.value = false
                 let resultListItems = []
                 thesaurusEntries.forEach(thesaurusEntry => {
                     const wordTypeLabel = this._getWordTypeLabel(thesaurusEntry.wordType)
@@ -135,8 +143,10 @@ class MainViewModel {
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
+            this.isDefinitionsLoading.value = true
             const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchDefinitions(searchTerm).then(definitions => {
+                this.isDefinitionsLoading.value = false
                 this.definitions.value = new DictionaryResultList(
                     searchTerm,
                     definitions.map(dictionaryEntry => {

@@ -53,12 +53,18 @@ a:link, a.active:link,a:hover, a:visited {
 #placeholder-tab-bar {
 	width: 100%;
 }
-#placeholder-progress-indicator {
+#placeholder-app-progress-indicator {
 	margin: auto;
 	position: fixed;
 	width: 80%;
 	top: 50%;
 	transform: translate(10%, -50%);
+}
+.list-loading {
+	text-align: center;
+	position: fixed;
+	top: 50%;
+	width: 100%;
 }
 #placeholder-input-text-search {
 	width: 100%;

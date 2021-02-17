@@ -18,8 +18,6 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class Template {
     constructor(i18n, templates) {
-        this._progressIndicatorTemplate = undefined
-        this._buttonTemplate = undefined
         this._i18n = i18n
         this._templates = templates
     }
@@ -28,6 +26,7 @@ class Template {
             "about",
             "app-bar",
             "button-icon-text",
+            "circular-progress-indicator",
             "context-menu",
             "context-menu-header",
             "context-menu-item",
@@ -42,7 +41,7 @@ class Template {
             "list-item-sub-header-1",
             "list-item-sub-header-2",
             "list-item-word",
-            "progress-indicator",
+            "linear-progress-indicator",
             "slider",
             "tab",
             "tab-bar",
@@ -55,7 +54,9 @@ class Template {
 
     createHtml = (templateId) => this._templates.get(templateId)
 
-    createProgressIndicatorHtml = () => this._templates.get("progress-indicator")
+    createLinearProgressIndicatorHtml = () => this._templates.get("linear-progress-indicator")
+
+    createCircularProgressIndicatorHtml = () => this._templates.get("circular-progress-indicator")
 
     createButtonIconTextHtml = (id, icon, label) =>
         this._templates.get("button-icon-text")

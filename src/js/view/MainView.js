@@ -21,7 +21,7 @@ class MainView {
 
     constructor() {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
-        this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
+        this._elemPlaceholderAppProgressIndicator = document.querySelector("#placeholder-app-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
         this._elemPlacholderInputTextSearch
@@ -70,7 +70,7 @@ class MainView {
 
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
 
-        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml()
+        this._elemPlaceholderAppProgressIndicator.innerHTML = this._template.createLinearProgressIndicatorHtml()
         this._elemProgressBarLabel = document.querySelector("#progressbar-label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
 
@@ -112,6 +112,9 @@ class MainView {
         this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
         this._viewModel.isReaderTabVisible.observer = (isVisible) => { this._updateReaderTabVisibility(isVisible) }
         this._viewModel.dialogInfo.observer = (dialogInfo) => { this._showDialog(dialogInfo) }
+        this._viewModel.isRhymerLoading.observer = (isLoading) => { this._viewRhymer.setLoading(isLoading) }
+        this._viewModel.isThesaurusLoading.observer = (isLoading) => { this._viewThesaurus.setLoading(isLoading) }
+        this._viewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -150,7 +153,7 @@ class MainView {
         if (isVisible) this._elemBtnClearSearchText.style.display = "inline-block"
         else this._elemBtnClearSearchText.style.display = "none"
     }
-    _onClearSearchTextClicked(){
+    _onClearSearchTextClicked() {
         this._mdcInputTextSearch.value = ""
         this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
     }
@@ -170,11 +173,11 @@ class MainView {
 
     _showLoading(isLoading) {
         if (isLoading) {
-            this._elemPlaceholderProgressIndicator.style.display = "block"
+            this._elemPlaceholderAppProgressIndicator.style.display = "block"
             this._mdcLinearProgress.open()
         } else {
             this._mdcLinearProgress.close()
-            this._elemPlaceholderProgressIndicator.style.display = "none"
+            this._elemPlaceholderAppProgressIndicator.style.display = "none"
         }
     }
     _updateLoadingProgress(loadingProgress) {
