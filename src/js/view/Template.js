@@ -184,3 +184,14 @@ class Template {
             .replace("__SLIDER_SPEED__", this.createSliderHtml(speedSliderData))
 
 }
+
+// Workaround for Samsung Internet browser which doesn't have String.replaceAll
+if (!String.prototype.replaceAll) {
+    String.prototype.replaceAll = function(expr, replacement) {
+        let result = this.replace(expr, replacement)
+        while(result.includes(expr)) {
+            result = result.replace(expr, replacement)
+        }
+        return result
+    }
+}
