@@ -53,7 +53,7 @@ a:link, a.active:link,a:hover, a:visited {
 #placeholder-tab-bar {
 	width: 100%;
 }
-#placeholder-progress-indicator {
+#placeholder-app-progress-indicator {
 	margin: auto;
 	position: fixed;
 	width: 80%;

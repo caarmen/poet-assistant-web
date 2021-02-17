@@ -21,7 +21,7 @@ class MainView {
 
     constructor() {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
-        this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-progress-indicator")
+        this._elemPlaceholderAppProgressIndicator = document.querySelector("#placeholder-app-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
         this._elemPlacholderInputTextSearch
@@ -70,7 +70,7 @@ class MainView {
 
         this._elemPlacholderInputTextSearch = document.querySelector("#placeholder-input-text-search")
 
-        this._elemPlaceholderProgressIndicator.innerHTML = this._template.createProgressIndicatorHtml()
+        this._elemPlaceholderAppProgressIndicator.innerHTML = this._template.createLinearProgressIndicatorHtml()
         this._elemProgressBarLabel = document.querySelector("#progressbar-label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
 
@@ -170,11 +170,11 @@ class MainView {
 
     _showLoading(isLoading) {
         if (isLoading) {
-            this._elemPlaceholderProgressIndicator.style.display = "block"
+            this._elemPlaceholderAppProgressIndicator.style.display = "block"
             this._mdcLinearProgress.open()
         } else {
             this._mdcLinearProgress.close()
-            this._elemPlaceholderProgressIndicator.style.display = "none"
+            this._elemPlaceholderAppProgressIndicator.style.display = "none"
         }
     }
     _updateLoadingProgress(loadingProgress) {
