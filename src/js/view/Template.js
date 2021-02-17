@@ -52,7 +52,13 @@ class Template {
         this._templates = templates
     })
 
-    createHtml = (templateId) => this._templates.get(templateId)
+    createHtml(templateId, templateParameters) {
+        let result = this._templates.get(templateId)
+        templateParameters && templateParameters.forEach((value, key) => {
+            result = result.replaceAll(key, value)
+        })
+        return result
+    }
 
     createLinearProgressIndicatorHtml = () => this._templates.get("linear-progress-indicator")
 
