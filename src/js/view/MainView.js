@@ -134,8 +134,11 @@ class MainView {
         this._viewSuggestions.observer = (word) => { this._onSuggestionSelected(word) }
 
         this._viewRhymer.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewRhymer.shareClickedObserver = () => { this._viewModel.onShareRhymes() }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewThesaurus.shareClickedObserver = () => { this._viewModel.onShareThesaurus() }
         this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewDefinitions.shareClickedObserver = () => { this._viewModel.onShareDefinitions() }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }

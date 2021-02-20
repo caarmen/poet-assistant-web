@@ -162,6 +162,10 @@ a:link, a.active:link,a:hover, a:visited {
 	padding-inline-start: 16px;
 	font-size: 1.2em;
 }
+.list-header-copy {
+	float: right;
+	vertical-align: middle;
+}
 .list-item-sub-header-1{
 	font-weight: bold;
 	background-color: var(--sub-header-1, #dddddd);

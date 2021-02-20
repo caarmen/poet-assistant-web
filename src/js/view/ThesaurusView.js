@@ -27,6 +27,7 @@ class ThesaurusView {
         this._listVisibility = new ListVisibility(this._template)
 
         this.wordClickedObserver = (wordElem) => { }
+        this.shareClickedObserver = () => { }
         this._applyTemplates()
         this._initializeViews()
     }
@@ -48,6 +49,7 @@ class ThesaurusView {
         this._elemPlaceholderThesaurusList.querySelector(".list-header").onclick = (e) => {
             this.wordClickedObserver(e.target)
         }
+        this._elemPlaceholderThesaurusList.querySelector(".list-header-copy").onclick = (e) => { this.shareClickedObserver() }
         new ThesaurusView.MDCList(document.querySelector("#list-thesaurus")).listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) this.wordClickedObserver(e.target)
         })

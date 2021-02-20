@@ -26,6 +26,7 @@ class DefinitionsView {
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
         this.wordClickedObserver = (wordElem) => { }
+        this.shareClickedObserver = () => { }
         this._applyTemplates()
         this._initializeViews()
     }
@@ -47,6 +48,7 @@ class DefinitionsView {
         this._elemPlaceholderDefinitionsList.querySelector(".list-header").onclick = (e) => {
             this.wordClickedObserver(e.target)
         }
+        this._elemPlaceholderDefinitionsList.querySelector(".list-header-copy").onclick = (e) => { this.shareClickedObserver() }
     }
 }
 DefinitionsView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress

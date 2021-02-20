@@ -119,6 +119,17 @@ class MainViewModel {
                 item.rhymes.map(rhyme => new ListItem(ListItem.ListItemStyles.WORD, rhyme))
             )
         )
+    onShareRhymes = () => this._model.copyText(this._getRhymesShareText())
+    _getRhymesShareText = () =>
+        this.i18n.translate("share_rhymes_title", this.rhymes.value.word) +
+        this.rhymes.value.listItems.map((listItem) => {
+            if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_1) {
+                return this.i18n.translate("share_rhymes_subtitle", this.i18n.translate(listItem.text, listItem.args))
+            } else {
+                return this.i18n.translate("share_rhymes_word", listItem.text)
+            }
+        }
+        ).join("")
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
@@ -143,6 +154,19 @@ class MainViewModel {
             })
         }
     }
+    onShareThesaurus = () => this._model.copyText(this._getThesaurusShareText())
+    _getThesaurusShareText = () =>
+        this.i18n.translate("share_thesaurus_title", this.thesaurusEntries.value.word) +
+        this.thesaurusEntries.value.listItems.map((listItem) => {
+            if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_1) {
+                return this.i18n.translate("share_thesaurus_sub_header_1", this.i18n.translate(listItem.text, listItem.args))
+            } else if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_2) {
+                return this.i18n.translate("share_thesaurus_sub_header_2", this.i18n.translate(listItem.text, listItem.args))
+            } else {
+                return this.i18n.translate("share_thesaurus_word", listItem.text)
+            }
+        }
+        ).join("")
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
@@ -160,6 +184,12 @@ class MainViewModel {
             })
         }
     }
+    onShareDefinitions = () => this._model.copyText(this._getDefinitionsShareText())
+    _getDefinitionsShareText = () =>
+        this.i18n.translate("share_dictionary_title", this.definitions.value.word) +
+        this.definitions.value.listItems.map((dictionaryListItem) =>
+            this.i18n.translate("share_dictionary_definition", this.i18n.translate(dictionaryListItem.wordTypeLabel), dictionaryListItem.definition)
+        ).join("")
 
     onSearchTextInput(text) {
         this.fetchSuggestions(text)
