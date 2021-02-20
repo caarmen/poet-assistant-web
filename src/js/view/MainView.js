@@ -23,6 +23,7 @@ class MainView {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
         this._elemPlaceholderAppProgressIndicator = document.querySelector("#placeholder-app-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
+        this._elemPlaceholderSnackbar = document.querySelector("#placeholder-snackbar")
 
         this._elemPlacholderInputTextSearch
 
@@ -114,6 +115,7 @@ class MainView {
         this._viewModel.isRhymerLoading.observer = (isLoading) => { this._viewRhymer.setLoading(isLoading) }
         this._viewModel.isThesaurusLoading.observer = (isLoading) => { this._viewThesaurus.setLoading(isLoading) }
         this._viewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
+        this._viewModel.snackbarText.observer = (snackbarText) => { this._showSnackbar(snackbarText) }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -201,9 +203,15 @@ class MainView {
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
     }
+    _showSnackbar(snackbarText) {
+        this._elemPlaceholderSnackbar.innerHTML = this._template.createSnackbarHtml(snackbarText)
+        const snackbar = new MainView.MDCSnackbar(document.querySelector('.mdc-snackbar'))
+        snackbar.open()
+    }
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
+MainView.MDCSnackbar = mdc.snackbar.MDCSnackbar
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
     const mainView = new MainView()

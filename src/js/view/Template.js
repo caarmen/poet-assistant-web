@@ -43,6 +43,7 @@ class Template {
             "list-item-word",
             "linear-progress-indicator",
             "slider",
+            "snackbar",
             "tab",
             "tab-bar",
             "textarea",
@@ -183,13 +184,15 @@ class Template {
             .replace("__SLIDER_PITCH__", this.createSliderHtml(pitchSliderData))
             .replace("__SLIDER_SPEED__", this.createSliderHtml(speedSliderData))
 
+    createSnackbarHtml = (text) => this._templates.get("snackbar").replace("__TEXT__", this._i18n.translate(text))
+
 }
 
 // Workaround for Samsung Internet browser which doesn't have String.replaceAll
 if (!String.prototype.replaceAll) {
-    String.prototype.replaceAll = function(expr, replacement) {
+    String.prototype.replaceAll = function (expr, replacement) {
         let result = this.replace(expr, replacement)
-        while(result.includes(expr)) {
+        while (result.includes(expr)) {
             result = result.replace(expr, replacement)
         }
         return result
