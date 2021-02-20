@@ -18,6 +18,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class MainViewModel {
     constructor() {
+        this.i18n = new I18n()
         this.rhymes = new ObservableField()
         this.searchTextDisabled = new ObservableField(true)
         this.searchButtonDisabled = new ObservableField(true)
@@ -37,6 +38,7 @@ class MainViewModel {
         this._model = new MainModel()
         this.isSpeechPlaying = this._model.isSpeechPlaying
         this.contextMenuItems = this._createContextMenuItems(false)
+        this.snackbarText = new ObservableField()
         this.appBarMenuItems = [
             new MenuItem("menu-about", "app_bar_menu_about_title", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL)),
             new MenuItem("menu-random", "app_bar_menu_random_title", new MenuItemIcon("casino", MenuItemIcon.IconSource.MATERIAL)),
@@ -44,6 +46,8 @@ class MainViewModel {
         this.dialogInfo = new ObservableField()
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
     }
+
+    loadTranslations = () => this.i18n.load()
 
     loadDb() {
         this._model.loadDb((dbOpenProgress) => {
@@ -77,6 +81,7 @@ class MainViewModel {
             "list-item-sub-header-2",
             "list-item-word",
             "slider",
+            "snackbar",
             "tab",
             "tab-bar",
             "textarea",
@@ -116,6 +121,20 @@ class MainViewModel {
                 item.rhymes.map(rhyme => new ListItem(ListItem.ListItemStyles.WORD, rhyme))
             )
         )
+    onShareRhymes() {
+        this._model.copyText(this._getRhymesShareText())
+        this.snackbarText.value = "snackbar_copied_rhymes"
+    }
+    _getRhymesShareText = () =>
+        this.i18n.translate("share_rhymes_title", this.rhymes.value.word) +
+        this.rhymes.value.listItems.map((listItem) => {
+            if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_1) {
+                return this.i18n.translate("share_rhymes_subtitle", this.i18n.translate(listItem.text, listItem.args))
+            } else {
+                return this.i18n.translate("share_rhymes_word", listItem.text)
+            }
+        }
+        ).join("")
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
@@ -140,6 +159,22 @@ class MainViewModel {
             })
         }
     }
+    onShareThesaurus() {
+        this._model.copyText(this._getThesaurusShareText())
+        this.snackbarText.value = "snackbar_copied_thesaurus"
+    }
+    _getThesaurusShareText = () =>
+        this.i18n.translate("share_thesaurus_title", this.thesaurusEntries.value.word) +
+        this.thesaurusEntries.value.listItems.map((listItem) => {
+            if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_1) {
+                return this.i18n.translate("share_thesaurus_sub_header_1", this.i18n.translate(listItem.text, listItem.args))
+            } else if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_2) {
+                return this.i18n.translate("share_thesaurus_sub_header_2", this.i18n.translate(listItem.text, listItem.args))
+            } else {
+                return this.i18n.translate("share_thesaurus_word", listItem.text)
+            }
+        }
+        ).join("")
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
@@ -157,6 +192,15 @@ class MainViewModel {
             })
         }
     }
+    onShareDefinitions() {
+        this._model.copyText(this._getDefinitionsShareText())
+        this.snackbarText.value = "snackbar_copied_definitions"
+    }
+    _getDefinitionsShareText = () =>
+        this.i18n.translate("share_dictionary_title", this.definitions.value.word) +
+        this.definitions.value.listItems.map((dictionaryListItem) =>
+            this.i18n.translate("share_dictionary_definition", this.i18n.translate(dictionaryListItem.wordTypeLabel), dictionaryListItem.definition)
+        ).join("")
 
     onSearchTextInput(text) {
         this.fetchSuggestions(text)

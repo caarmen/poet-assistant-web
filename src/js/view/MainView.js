@@ -23,6 +23,7 @@ class MainView {
         this._elemPlaceholderAppBar = document.querySelector("#placeholder-app-bar")
         this._elemPlaceholderAppProgressIndicator = document.querySelector("#placeholder-app-progress-indicator")
         this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
+        this._elemPlaceholderSnackbar = document.querySelector("#placeholder-snackbar")
 
         this._elemPlacholderInputTextSearch
 
@@ -36,21 +37,20 @@ class MainView {
         this._elemBtnPlay
         this._elemBtnPlayIcon
 
-        this._i18n = new I18n()
         this._viewModel = new MainViewModel()
 
         this._viewAppBarMenu
 
-        this._i18n.load().then(() => {
+        this._viewModel.loadTranslations().then(() => {
             this._viewModel.loadTemplates().then((templates) => {
-                this._template = new Template(this._i18n, templates)
+                this._template = new Template(this._viewModel.i18n, templates)
                 this._viewContextMenu = new ContextMenuView(this._template)
                 this._viewSuggestions = new SuggestionsView(this._template)
                 this._viewRhymer = new RhymerView(this._template)
                 this._viewThesaurus = new ThesaurusView(this._template)
                 this._viewDefinitions = new DefinitionsView(this._template)
-                this._viewReader = new ReaderView(this._i18n, this._template)
-                this._viewVoiceSettings = new VoiceSettingsView(this._i18n, this._template)
+                this._viewReader = new ReaderView(this._viewModel.i18n, this._template)
+                this._viewVoiceSettings = new VoiceSettingsView(this._viewModel.i18n, this._template)
                 this._viewTabs = new TabsView(this._template,
                     [
                         new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
@@ -82,7 +82,7 @@ class MainView {
         this._viewAppBarMenu = new AppBarMenuView(this._elemActionItemMenu, this._template)
 
         this._mdcLinearProgress = new MainView.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
-        this._elemProgressBarLabel.innerText = this._i18n.translate("progressbar_app_label")
+        this._elemProgressBarLabel.innerText = this._viewModel.i18n.translate("progressbar_app_label")
         this._mdcLinearProgress.determinate = false
         this._mdcLinearProgress.progress = 0
         this._mdcLinearProgress.open()
@@ -115,6 +115,7 @@ class MainView {
         this._viewModel.isRhymerLoading.observer = (isLoading) => { this._viewRhymer.setLoading(isLoading) }
         this._viewModel.isThesaurusLoading.observer = (isLoading) => { this._viewThesaurus.setLoading(isLoading) }
         this._viewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
+        this._viewModel.snackbarText.observer = (snackbarText) => { this._showSnackbar(snackbarText) }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -135,8 +136,11 @@ class MainView {
         this._viewSuggestions.observer = (word) => { this._onSuggestionSelected(word) }
 
         this._viewRhymer.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewRhymer.shareClickedObserver = () => { this._viewModel.onShareRhymes() }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewThesaurus.shareClickedObserver = () => { this._viewModel.onShareThesaurus() }
         this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewDefinitions.shareClickedObserver = () => { this._viewModel.onShareDefinitions() }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }
@@ -186,7 +190,7 @@ class MainView {
             this._mdcLinearProgress.determinate = true
             this._mdcLinearProgress.open()
         }
-        this._elemProgressBarLabel.innerText = this._i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
+        this._elemProgressBarLabel.innerText = this._viewModel.i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
         this._mdcLinearProgress.progress = loadingProgress
     }
     _showMenu = () => this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems)
@@ -195,13 +199,19 @@ class MainView {
         const contentHtml = this._template.createHtml(dialogInfo.contentTemplateId, dialogInfo.templateParameters)
         this._elemPlaceholderDialog.innerHTML =
             this._template.createDialogHtml(dialogInfo.title, contentHtml)
-        this._i18n.translateElement(this._elemPlaceholderDialog)
+        this._viewModel.i18n.translateElement(this._elemPlaceholderDialog)
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
+    }
+    _showSnackbar(snackbarText) {
+        this._elemPlaceholderSnackbar.innerHTML = this._template.createSnackbarHtml(snackbarText)
+        const snackbar = new MainView.MDCSnackbar(document.querySelector('.mdc-snackbar'))
+        snackbar.open()
     }
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
+MainView.MDCSnackbar = mdc.snackbar.MDCSnackbar
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
     const mainView = new MainView()
