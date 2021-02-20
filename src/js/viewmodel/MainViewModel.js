@@ -18,6 +18,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class MainViewModel {
     constructor() {
+        this.i18n = new I18n()
         this.rhymes = new ObservableField()
         this.searchTextDisabled = new ObservableField(true)
         this.searchButtonDisabled = new ObservableField(true)
@@ -44,6 +45,8 @@ class MainViewModel {
         this.dialogInfo = new ObservableField()
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
     }
+
+    loadTranslations = () => this.i18n.load()
 
     loadDb() {
         this._model.loadDb((dbOpenProgress) => {
