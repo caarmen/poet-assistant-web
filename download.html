@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2021 - present Carmen Alvarez
+
+This file is part of Poet Assistant.
+
+Poet Assistant is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Poet Assistant is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Poet Assistant</title>
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <meta http-equiv="Content-Security-Policy"
+        content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; object-src 'self'; script-src-elem 'self'" />
+
+    <!-- Third party dependencies -->
+    <link rel="stylesheet" href="libs/material-components-web-10.0.0.min.css">
+    <link rel="stylesheet" href="libs/material-icons.css">
+    <script src="libs/material-components-web-10.0.0.min.js"></script>
+
+    <!-- Our own resources-->
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="stylesheet" href="src/css/download.css">
+</head>
+
+<body style="background: white;">
+    <header class="mdc-top-app-bar ">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <span class="mdc-top-app-bar__title">Poet Assistant</span>
+            </section>
+        </div>
+    </header>
+    <div id="download_content" class="mdc-top-app-bar--fixed-adjust">
+        <h1> Download Poet Assistant</h1>
+        <div class="download-card mdc-card">
+            <div class="card-header-section">
+                <span class="material-icons card-icon">smartphone</span>
+                <span class="card-header-text-section">
+                    <div class="card-header">Mobile devices </div>
+                    <div class="card-sub-header">Poet Assistant is available on the stores</div>
+                </span>
+            </div>
+            <div class="card-badges-section">
+                <div class="download-badge">
+                    <a href="https://apps.apple.com/us/app/poet-assistant/id1439014348?itsct=apps_box&amp;itscg=30200"
+                        target="_blank" rel="noopener noreferrer">
+                        <img class="download-badge apple-download-badge" src="src/resources/images/apple-badge.svg"
+                            alt=" Download on the App Store"></a>
+                </div>
+                <div class="download-badge">
+                    <a href='https://play.google.com/store/apps/details?id=ca.rmen.android.poetassistant&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
+                        target="_blank" rel="noopener noreferrer">
+                        <img class="download-badge" alt='Get it on Google Play'
+                            src='src/resources/images/google-play-badge.png' /></a>
+                </div>
+                <div class="download-badge">
+                    <a href='https://f-droid.org/packages/ca.rmen.android.poetassistant' target="_blank"
+                        rel="noopener noreferrer">
+                        <img class="download-badge" alt='Get it on F-droid'
+                            src='src/resources/images/fdroid-badge.png' /></a>
+                </div>
+            </div>
+        </div>
+        <div class="download-card mdc-card">
+            <div class="card-header-section">
+                <span class="material-icons card-icon">computer</span>
+                <span class="card-header-text-section">
+                    <div class="card-header">Desktop</div>
+                    <div class="card-sub-header">Binaries for macOS, Windows and Linux are available on the Github
+                        project releases page</div>
+                </span>
+            </div>
+            <div class="card-badges-section">
+                <div class="download-badge">
+                    <a href="https://github.com/caarmen/poet-assistant-web/releases" target="_blank"
+                        rel="noopener noreferrer">
+                        <img class="download-badge github-download-badge" src="src/resources/images/github-badge.png"
+                            alt=" Download on Github"></a>
+                </div>
+            </div>
+        </div>
+        <div class="disclaimer">Google Play and the Google Play logo are trademarks of Google LLC. macOS® and App
+            Store® are trademarks of Apple Inc.
+        </div>
+    </div>
+</body>
+
+</html>

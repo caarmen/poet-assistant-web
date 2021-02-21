@@ -1,0 +1,76 @@
+/**
+Copyright (c) 2021 - present Carmen Alvarez
+This file is part of Poet Assistant.
+Poet Assistant is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+Poet Assistant is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#download_content {
+	text-align: center;
+}
+.download-card {
+	width: 400px;
+	margin: 16px auto 16px auto;
+	background-color: var(--mdc-theme-surface);
+	text-align: start;
+}
+.card-header-section {
+	padding: 16px;
+	display: table-row;
+}
+.card-icon {
+	display: table-cell;
+	width: 24px;
+	height: 24px;
+	padding-right: 16px;
+	vertical-align: middle;
+}
+.card-header-text-section {
+	display: table-cell;
+}
+.card-header {
+	font-weight: bold;
+	font-size: 1.5em;
+	color: var(--mdc-theme-text-primary-on-light);
+	margin-bottom: 8px;
+}
+.card-sub-header {
+	color: var(--mdc-theme-text-secondary-on-light);
+}
+.card-badges-section {
+	padding-top: 16px;
+	padding-bottom: 16px;
+	background-color: white;
+	text-align: center;
+}
+.download-badge {
+	display: inline-block;
+    height: 50px;
+}
+.apple-download-badge {
+	border-radius: 13px; 
+	height: 34px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+.github-download-badge {
+	border-radius: 5px;
+	margin-top: 8px;
+	padding-left: 4px;
+	padding-right: 4px;
+	background-color: black;
+	height: 34px;
+}
+.disclaimer {
+	bottom: 0px;
+	font-size: 0.5em;
+	margin-top: 48px;
+}
