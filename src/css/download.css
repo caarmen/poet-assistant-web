@@ -58,8 +58,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 .apple-download-badge {
 	border-radius: 13px; 
 	height: 34px;
-	padding-top: 8px;
-	padding-bottom: 8px;
+	padding: 8px;
 }
 .github-download-badge {
 	border-radius: 5px;
