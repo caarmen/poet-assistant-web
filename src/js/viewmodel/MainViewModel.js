@@ -27,6 +27,7 @@ class MainViewModel {
         this.definitions = new ObservableField()
         this.suggestions = new ObservableField()
         this.voices = new ObservableField([])
+        this.selectedVoiceLabel = new ObservableField()
         this.isReaderTabVisible = new ObservableField(false)
         this.isLoading = new ObservableField()
         this.isRhymerLoading = new ObservableField(false)
@@ -45,6 +46,7 @@ class MainViewModel {
         ]
         this.dialogInfo = new ObservableField()
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
+        this._model._speechEngine.selectedVoice.observer = (newVoice) => this.selectedVoiceLabel.value = this._getVoiceLabel(newVoice)
     }
 
     loadTranslations = () => this.i18n.load()
@@ -277,12 +279,13 @@ class MainViewModel {
             } else {
                 return languageA.localeCompare(languageB)
             }
-        }).map((voice) => new MenuItem(voice.voiceURI, `${voice.name} - ${voice.lang}`))
+        }).map((voice) => new MenuItem(voice.voiceURI, this._getVoiceLabel(voice)))
 
         this.isReaderTabVisible.value = this.voices.value.length > 0
 
         this.contextMenuItems = this._createContextMenuItems(newVoices.length > 0)
     }
+    _getVoiceLabel = (voice) => `${voice.name} - ${voice.lang}`
 
     _createContextMenuItems = (isSpeechEnabled) => [
         new MenuItem("menu-copy", "menu_copy_title", new MenuItemIcon("content_copy", MenuItemIcon.IconSource.MATERIAL)),

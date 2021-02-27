@@ -18,20 +18,22 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 class SpeechEngine {
-    constructor() {
+    constructor(settings) {
+        this._settings = settings
         this._synth = window.speechSynthesis
         this.voices = new ObservableField([])
+        this.selectedVoice = new ObservableField()
         this._populateVoiceList(false)
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
             this._synth.onvoiceschanged = () => { this._populateVoiceList(true) }
         }
-        this._selectedVoice
         this.isPlaying = new ObservableField(false)
         this._pitch = 1
         this._speed = 1
     }
     selectVoice(id) {
-        this._selectedVoice = this.voices.value.find((voice) => voice.voiceURI == id)
+        this.selectedVoice.value = this.voices.value.find((voice) => voice.voiceURI == id)
+        this._settings.setSetting(SpeechEngine.SETTING_KEY_VOICE, id)
     }
     setVoicePitch = (pitchValue) => {
         this._pitch = pitchValue
@@ -43,16 +45,18 @@ class SpeechEngine {
 
     _populateVoiceList(onVoiceChangeEvent) {
         this.voices.value = this._synth.getVoices()
-        const KEY_STORAGE_HAS_RELOADED = "has_reloaded"
         if (this.voices.value.length > 0) {
-            this._selectedVoice = this.voices.value[0]
-            window.localStorage && window.localStorage.removeItem(KEY_STORAGE_HAS_RELOADED)
+
+            this._settings.removeSetting(SpeechEngine.SETTING_KEY_HAS_RELOADED)
+            const savedVoiceUri = this._settings.getSetting(SpeechEngine.SETTING_KEY_VOICE, this.voices.value[0].voiceURI)
+            const savedVoice = this.voices.value.find((voice) => voice.voiceURI == savedVoiceUri)
+            this.selectedVoice.value = (savedVoice != undefined) ? savedVoice : this.voices.value[0]
         } else if (onVoiceChangeEvent && window.localStorage) {
             // Unfortunate hack to work around bug in linux where
             // a reload is required for voices to be present
             // https://github.com/electron/electron/issues/22844
-            if (!window.localStorage.getItem(KEY_STORAGE_HAS_RELOADED)) {
-                window.localStorage[KEY_STORAGE_HAS_RELOADED] = true
+            if (!window.localStorage.getItem(SpeechEngine.SETTING_KEY_HAS_RELOADED)) {
+                this._settings.setSetting(SpeechEngine.SETTING_KEY_HAS_RELOADED, true)
                 if (document.readyState == "complete") {
                     location.reload()
                 } else {
@@ -61,7 +65,7 @@ class SpeechEngine {
                     })
                 }
             } else {
-                window.localStorage.removeItem(KEY_STORAGE_HAS_RELOADED)
+                this._settings.removeSetting(SpeechEngine.SETTING_KEY_HAS_RELOADED)
             }
         }
     }
@@ -77,8 +81,8 @@ class SpeechEngine {
             this._synth.cancel()
         } else {
             const utterance = new SpeechSynthesisUtterance(selection)
-            utterance.voice = this._selectedVoice
-            utterance.lang = this._selectedVoice.lang
+            utterance.voice = this.selectedVoice.value
+            utterance.lang = this.selectedVoice.value.lang
             utterance.pitch = this._pitch
             utterance.rate = this._speed
             utterance.onboundary = (evt) => { this._updateState() }
@@ -95,3 +99,5 @@ class SpeechEngine {
         this.isPlaying.value = this._synth.speaking
     }
 }
+SpeechEngine.SETTING_KEY_HAS_RELOADED = "has_reloaded"
+SpeechEngine.SETTING_KEY_VOICE = "voice"
