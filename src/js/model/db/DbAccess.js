@@ -50,6 +50,7 @@ class DbAccess {
         new Promise((completionFunc) => {
             let xhr = new XMLHttpRequest()
             xhr.open("GET", url, true)
+            xhr.setRequestHeader("Cache-Control", "max-stale")
             xhr.responseType = 'arraybuffer'
             xhr.onprogress = event => {
                 progressCallback(new DbOpenProgress(event.loaded, event.total))
