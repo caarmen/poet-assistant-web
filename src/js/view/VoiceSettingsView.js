@@ -59,6 +59,9 @@ class VoiceSettingsView {
             this._mdcSliderSpeed.layout()
         }, 1000)
     }
+    updateSelectedVoiceLabel(selectedVoiceLabel) {
+        this._elemReaderSelectedVoice.innerText = selectedVoiceLabel
+    }
     updateVoicesList(voices) {
         this._elemReaderVoices.innerHTML = this._template.createContextMenuHtml(voices)
         this._mdcMenuVoices = new VoiceSettingsView.MDCMenu(this._elemReaderVoices.querySelector(".mdc-menu"))
@@ -77,6 +80,8 @@ class VoiceSettingsView {
             this._mdcMenuVoices.open = true
         }
     }
+    updatePitch = (newPitch) => this._mdcSliderPitch.setValue(newPitch)
+    updateSpeed = (newSpeed) => this._mdcSliderSpeed.setValue(newSpeed)
 }
 VoiceSettingsView.MDCMenu = mdc.menu.MDCMenu
 VoiceSettingsView.MDCMenuCorner = mdc.menu.Corner

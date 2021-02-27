@@ -18,7 +18,8 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class MainModel {
     constructor() {
-        this._speechEngine = new SpeechEngine()
+        this._settings = new Settings()
+        this._speechEngine = new SpeechEngine(this._settings)
         this.isSpeechPlaying = this._speechEngine.isPlaying
     }
     async loadDb(progressCallback) {
