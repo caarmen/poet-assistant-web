@@ -43,6 +43,16 @@ identifiable. The purpose of the information is for analyzing trends,
 administering the site, tracking users' movement on the website, and
 security purposes.
 
+Local storage
+-------------
+The app saves some settings to local storage. This remains on your
+device and can't be read by any server.
+
+The settings are:
+* selected voice
+* voice pitch
+* voice speed
+
 Summary
 -------
 This app is a hobby app. The developer makes no income from it. There

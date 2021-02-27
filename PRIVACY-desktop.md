@@ -28,6 +28,16 @@ not send this data, and the maintainers of Poet Assistant don't have
 access to this data. Consult the manuals of your operating system or
 speech synthesis software to know how this data is used.
 
+Local storage
+-------------
+The app saves some settings to local storage. This remains on your
+device and can't be read by any server.
+
+The settings are:
+* selected voice
+* voice pitch
+* voice speed
+
 Summary
 -------
 This app is a hobby app. The developer makes no income from it. There
