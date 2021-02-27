@@ -28,6 +28,8 @@ class MainViewModel {
         this.suggestions = new ObservableField()
         this.voices = new ObservableField([])
         this.selectedVoiceLabel = new ObservableField()
+        this.voicePitch = new ObservableField()
+        this.voiceSpeed = new ObservableField()
         this.isReaderTabVisible = new ObservableField(false)
         this.isLoading = new ObservableField()
         this.isRhymerLoading = new ObservableField(false)
@@ -47,6 +49,8 @@ class MainViewModel {
         this.dialogInfo = new ObservableField()
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
         this._model._speechEngine.selectedVoice.observer = (newVoice) => this.selectedVoiceLabel.value = this._getVoiceLabel(newVoice)
+        this._model._speechEngine.speed.observer = (newSpeed) => this.voiceSpeed.value = newSpeed
+        this._model._speechEngine.pitch.observer = (newPitch) => this.voicePitch.value = newPitch
     }
 
     loadTranslations = () => this.i18n.load()

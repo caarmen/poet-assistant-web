@@ -23,24 +23,26 @@ class SpeechEngine {
         this._synth = window.speechSynthesis
         this.voices = new ObservableField([])
         this.selectedVoice = new ObservableField()
+        this.pitch = new ObservableField(1)
+        this.speed = new ObservableField(1)
         this._populateVoiceList(false)
         if (this._synth && this._synth.onvoiceschanged !== undefined) {
             this._synth.onvoiceschanged = () => { this._populateVoiceList(true) }
         }
         this.isPlaying = new ObservableField(false)
-        this._pitch = 1
-        this._speed = 1
     }
     selectVoice(id) {
         this.selectedVoice.value = this.voices.value.find((voice) => voice.voiceURI == id)
         this._settings.setSetting(SpeechEngine.SETTING_KEY_VOICE, id)
     }
     setVoicePitch = (pitchValue) => {
-        this._pitch = pitchValue
+        this.pitch.value = pitchValue
+        this._settings.setSetting(SpeechEngine.SETTING_KEY_PITCH, pitchValue)
     }
 
     setVoiceSpeed = (speedValue) => {
-        this._speed = speedValue
+        this.speed.value = speedValue
+        this._settings.setSetting(SpeechEngine.SETTING_KEY_SPEED, speedValue)
     }
 
     _populateVoiceList(onVoiceChangeEvent) {
@@ -51,6 +53,8 @@ class SpeechEngine {
             const savedVoiceUri = this._settings.getSetting(SpeechEngine.SETTING_KEY_VOICE, this.voices.value[0].voiceURI)
             const savedVoice = this.voices.value.find((voice) => voice.voiceURI == savedVoiceUri)
             this.selectedVoice.value = (savedVoice != undefined) ? savedVoice : this.voices.value[0]
+            this.speed.value = this._settings.getSetting(SpeechEngine.SETTING_KEY_SPEED, this.speed.value)
+            this.pitch.value = this._settings.getSetting(SpeechEngine.SETTING_KEY_PITCH, this.pitch.value)
         } else if (onVoiceChangeEvent && window.localStorage) {
             // Unfortunate hack to work around bug in linux where
             // a reload is required for voices to be present
@@ -83,8 +87,8 @@ class SpeechEngine {
             const utterance = new SpeechSynthesisUtterance(selection)
             utterance.voice = this.selectedVoice.value
             utterance.lang = this.selectedVoice.value.lang
-            utterance.pitch = this._pitch
-            utterance.rate = this._speed
+            utterance.pitch = this.pitch.value
+            utterance.rate = this.speed.value
             utterance.onboundary = (evt) => { this._updateState() }
             utterance.onend = (evt) => { this._updateState() }
             utterance.onerror = (evt) => { this._updateState() }
@@ -101,3 +105,5 @@ class SpeechEngine {
 }
 SpeechEngine.SETTING_KEY_HAS_RELOADED = "has_reloaded"
 SpeechEngine.SETTING_KEY_VOICE = "voice"
+SpeechEngine.SETTING_KEY_PITCH = "pitch"
+SpeechEngine.SETTING_KEY_SPEED = "speed"

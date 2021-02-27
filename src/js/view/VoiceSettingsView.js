@@ -80,6 +80,8 @@ class VoiceSettingsView {
             this._mdcMenuVoices.open = true
         }
     }
+    updatePitch = (newPitch) => this._mdcSliderPitch.setValue(newPitch)
+    updateSpeed = (newSpeed) => this._mdcSliderSpeed.setValue(newSpeed)
 }
 VoiceSettingsView.MDCMenu = mdc.menu.MDCMenu
 VoiceSettingsView.MDCMenuCorner = mdc.menu.Corner
