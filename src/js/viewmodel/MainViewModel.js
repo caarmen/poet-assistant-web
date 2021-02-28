@@ -318,5 +318,8 @@ class MainViewModel {
         new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
 
+    getPoemText = () => this._model.getPoemText()
+    setPoemText = (text) => this._model.setPoemText(text)
+
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })

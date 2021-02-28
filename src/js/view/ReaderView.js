@@ -34,6 +34,7 @@ class ReaderView {
         this._initializeViews()
 
         this.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => { }
+        this.onPoemTextObserver = (poemText) => { }
     }
     _applyTemplates() {
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
@@ -51,10 +52,15 @@ class ReaderView {
         this._elemBtnPlay.disabled = true
         this._mdcInputTextReader.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
             this._elemBtnPlay.disabled = this._mdcInputTextReader.value.length == 0
+            this.onPoemTextObserver(this._mdcInputTextReader.value)
         }))
         this._elemBtnPlay.onclick = () => {
             this.onPlayClickedObserver(this._mdcInputTextReader.value, this._elemTextInput.selectionStart, this._elemTextInput.selectionEnd)
         }
+    }
+
+    setPoemText(text) {
+        this._mdcInputTextReader.value = text
     }
 
     updateSpeechPlayingState(newIsSpeechPlaying) {

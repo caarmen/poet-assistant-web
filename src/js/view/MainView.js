@@ -93,6 +93,8 @@ class MainView {
         this._elemBtnClearSearchText = document.querySelector("#btn-clear-search-text")
         this._elemBtnClearSearchText.style.display = "none"
 
+        this._viewReader.setPoemText(this._viewModel.getPoemText())
+
         this._viewTabs._initializeViews()
     }
 
@@ -149,6 +151,7 @@ class MainView {
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }
+        this._viewReader.onPoemTextObserver = (poemText) => this._viewModel.setPoemText(poemText)
         this._viewVoiceSettings.voiceSelectonObserver = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
         this._viewVoiceSettings.pitchObserver = (pitchValue) => { this._viewModel.setVoicePitch(pitchValue) }
         this._viewVoiceSettings.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }

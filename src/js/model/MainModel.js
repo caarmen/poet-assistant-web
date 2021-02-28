@@ -20,8 +20,9 @@ class MainModel {
     constructor() {
         this._settings = new Settings()
         this._speechEngine = new SpeechEngine(this._settings)
+        this._poemRepository = new PoemRepository(this._settings)
         this.isSpeechPlaying = this._speechEngine.isPlaying
-        this.rhymerSettingsChangedObserver = () => {}
+        this.rhymerSettingsChangedObserver = () => { }
     }
     async loadDb(progressCallback) {
         const db = new Db()
@@ -85,5 +86,8 @@ class MainModel {
                 })
         }
     }
+
+    getPoemText = () => this._poemRepository.getPoemText()
+    setPoemText = (text) => this._poemRepository.setPoemText(text)
 
 }
