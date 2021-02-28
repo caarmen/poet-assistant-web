@@ -140,7 +140,8 @@ class MainView {
 
         this._viewRhymer.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewRhymer.shareClickedObserver = () => { this._viewModel.onShareRhymes() }
-        this._viewRhymer.settingsClickedObserver = () => { this._showRhymerSettings() }
+        this._viewRhymer.settingsClickedObserver = () => { this._viewRhymer.showSettings(this._viewModel.getRhymerSettingsSwitches()) }
+        this._viewRhymer.settingToggledObserver = (id, value) => { this._viewModel.onRhymerSettingToggled(id, value) }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewThesaurus.shareClickedObserver = () => { this._viewModel.onShareThesaurus() }
         this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
@@ -207,21 +208,6 @@ class MainView {
         const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
         dialog.open()
     }
-    _showRhymerSettings() {
-        const switchItems = this._viewModel.getRhymerSettingsSwitches()
-        const contentHtml = this._template.createSwitchesHtml(switchItems)
-        this._elemPlaceholderDialog.innerHTML =
-            this._template.createDialogHtml("settings_rhymer_title", contentHtml)
-        const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
-        dialog.listen('MDCDialog:opened', () => {
-            switchItems.forEach((switchItem) => {
-                const switchControl = new MainView.MDCSwitch(this._elemPlaceholderDialog.querySelector(`#${switchItem.id}mdc-switch`))
-                switchControl.checked = switchItem.value
-                switchControl.listen("change", (e) => this._viewModel.onRhymerSettingToggled(switchItem.id, switchControl.checked))
-            })
-        })
-        dialog.open()
-    }
     _showSnackbar(snackbarText) {
         this._elemPlaceholderSnackbar.innerHTML = this._template.createSnackbarHtml(snackbarText)
         const snackbar = new MainView.MDCSnackbar(document.querySelector('.mdc-snackbar'))
@@ -231,7 +217,6 @@ class MainView {
 MainView.MDCDialog = mdc.dialog.MDCDialog
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCSnackbar = mdc.snackbar.MDCSnackbar
-MainView.MDCSwitch = mdc.switchControl.MDCSwitch
 MainView.MDCTextField = mdc.textField.MDCTextField
 function main_view_init() {
     const mainView = new MainView()
