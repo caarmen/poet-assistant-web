@@ -91,7 +91,7 @@ class RhymerRepository {
                 AND ${RhymerRepository.COL_HAS_DEFINITION}=1
             ORDER BY ${RhymerRepository.COL_VARIANT_NUMBER}`
 
-        return (await this._db.query(stmt, [word])).map((row) => row[syllablesColumn])
+        return (await this._db.query(stmt, [word])).map((row) => row[syllablesColumn]).filter((syllable) => syllable != null)
     }
 }
 RhymerRepository.TABLE_WORD_VARIANTS = "word_variants"
