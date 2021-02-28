@@ -44,6 +44,7 @@ class Template {
             "linear-progress-indicator",
             "slider",
             "snackbar",
+            "switch",
             "tab",
             "tab-bar",
             "textarea",
@@ -112,6 +113,14 @@ class Template {
             return ""
         }
     }
+
+    createSwitchesHtml = (switches) => switches.map((item) => {
+        return this._templates.get("switch")
+            .replaceAll("__ID__", item.id)
+            .replaceAll("__LABEL__", this._i18n.translate(item.label))
+            .replaceAll("__DESCRIPTION__", this._i18n.translate(item.description))
+            .replace("__VALUE__", item.value)
+    }).join("")
 
     createDialogHtml = (title, content) =>
         this._templates.get("dialog").replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content)).replace("__CONTENT__", this._i18n.translate(content))

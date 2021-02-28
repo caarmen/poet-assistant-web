@@ -22,6 +22,7 @@ class RhymerView {
         this._elemPlaceholderRhymesList = document.querySelector("#placeholder-rhymes-list")
         this._elemPlaceholderRhymesEmpty = document.querySelector("#placeholder-rhymes-empty")
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-rhymes .list-loading")
+        this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
         this._mdcCircularProgress
         this._template = template
@@ -29,6 +30,8 @@ class RhymerView {
 
         this.wordClickedObserver = (wordElem) => { }
         this.shareClickedObserver = () => { }
+        this.settingsClickedObserver = () => {}
+        this.settingToggledObserver = (id, value) => { }
         this._applyTemplates()
         this._initializeViews()
     }
@@ -56,10 +59,27 @@ class RhymerView {
             this.wordClickedObserver(e.target)
         }
         this._elemPlaceholderRhymesList.querySelector(".list-header-copy").onclick = (e) => { this.shareClickedObserver() }
+        this._elemPlaceholderRhymesList.querySelector(".list-header-settings").onclick = (e) => { this.settingsClickedObserver() }
         new RhymerView.MDCList(document.querySelector("#list-rhymes")).listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) this.wordClickedObserver(e.target)
         })
     }
+    showSettings(switchItems) {
+        const contentHtml = this._template.createSwitchesHtml(switchItems)
+        this._elemPlaceholderDialog.innerHTML =
+            this._template.createDialogHtml("settings_rhymer_title", contentHtml)
+        const dialog = new RhymerView.MDCDialog(document.querySelector('.mdc-dialog'))
+        dialog.listen('MDCDialog:opened', () => {
+            switchItems.forEach((switchItem) => {
+                const switchControl = new RhymerView.MDCSwitch(this._elemPlaceholderDialog.querySelector(`#${switchItem.id}mdc-switch`))
+                switchControl.checked = switchItem.value
+                switchControl.listen("change", (e) => this.settingToggledObserver(switchItem.id, switchControl.checked))
+            })
+        })
+        dialog.open()
+    }
 }
+RhymerView.MDCDialog = mdc.dialog.MDCDialog
 RhymerView.MDCList = mdc.list.MDCList
 RhymerView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress
+RhymerView.MDCSwitch = mdc.switchControl.MDCSwitch

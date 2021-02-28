@@ -20,6 +20,12 @@ class Settings {
     constructor() {
         this._storage = window.localStorage
         this._isAvailable = this.isStorageAvailable()
+        this._observers = []
+    }
+
+    addObserver = (observer) => this._observers.push(observer)
+    removeObserver(observer) {
+        this._observers = this._observers.splice(this._observers.findIndex(observer), 1)
     }
 
     getSetting(key, defaultValue) {
@@ -32,7 +38,13 @@ class Settings {
 
     setSetting(key, value) {
         if (this._isAvailable) {
-            this._storage.setItem(key, value)
+            const oldValue = this._storage.getItem(key)
+            if (oldValue != value) {
+                this._storage.setItem(key, value)
+                this._observers.forEach((observer) => {
+                    observer(key, value)
+                })
+            }
         }
     }
 

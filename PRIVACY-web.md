@@ -52,6 +52,7 @@ The settings are:
 * selected voice
 * voice pitch
 * voice speed
+* rhymer syllable matching settings
 
 Summary
 -------
