@@ -93,6 +93,8 @@ class MainView {
         this._elemBtnClearSearchText = document.querySelector("#btn-clear-search-text")
         this._elemBtnClearSearchText.style.display = "none"
 
+        this._viewReader.setPoemText(this._viewModel.getPoemText())
+
         this._viewTabs._initializeViews()
     }
 
@@ -109,6 +111,7 @@ class MainView {
         this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this._updateLoadingProgress(newLoadingProgress) }
         this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
+        this._viewModel.poemSavedStateLabel.observer = (savedStateLabel) => { this._viewReader.updatePoemSavedState(savedStateLabel) }
         this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
         this._viewModel.selectedVoiceLabel.observer = (newSelectedVoiceLabel) => this._viewVoiceSettings.updateSelectedVoiceLabel(newSelectedVoiceLabel)
         this._viewModel.voicePitch.observer = (newVoicePitch) => this._viewVoiceSettings.updatePitch(newVoicePitch)
@@ -149,6 +152,7 @@ class MainView {
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }
+        this._viewReader.onPoemTextObserver = (poemText) => this._viewModel.setPoemText(poemText)
         this._viewVoiceSettings.voiceSelectonObserver = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
         this._viewVoiceSettings.pitchObserver = (pitchValue) => { this._viewModel.setVoicePitch(pitchValue) }
         this._viewVoiceSettings.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }

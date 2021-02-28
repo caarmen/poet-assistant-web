@@ -117,6 +117,13 @@ a:link, a.active:link,a:hover, a:visited {
 #placeholder-reader-input #input-text-reader {
 	height: 100%;
 }
+#placeholder-reader-saved-state {
+	white-space:pre;
+	float: right;
+	margin-right: 16px;
+	font-size: 0.6em;
+	color: var(--mdc-theme-text-secondary-on-light, #727272);
+}
 #placeholder-reader-voices {
 	margin-top: 16px;
 }

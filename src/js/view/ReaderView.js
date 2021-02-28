@@ -20,6 +20,7 @@ class ReaderView {
 
     constructor(i18n, template) {
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
+        this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader-saved-state")
         this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
 
         this._elemBtnPlay
@@ -34,6 +35,7 @@ class ReaderView {
         this._initializeViews()
 
         this.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => { }
+        this.onPoemTextObserver = (poemText) => { }
     }
     _applyTemplates() {
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
@@ -51,10 +53,15 @@ class ReaderView {
         this._elemBtnPlay.disabled = true
         this._mdcInputTextReader.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
             this._elemBtnPlay.disabled = this._mdcInputTextReader.value.length == 0
+            this.onPoemTextObserver(this._mdcInputTextReader.value)
         }))
         this._elemBtnPlay.onclick = () => {
             this.onPlayClickedObserver(this._mdcInputTextReader.value, this._elemTextInput.selectionStart, this._elemTextInput.selectionEnd)
         }
+    }
+
+    setPoemText(text) {
+        this._mdcInputTextReader.value = text
     }
 
     updateSpeechPlayingState(newIsSpeechPlaying) {
@@ -66,6 +73,9 @@ class ReaderView {
             this._elemBtnPlayIcon.innerText = "play_circle_filled"
             this._elemBtnPlayLabel.innerText = this._i18n.translate("btn_play_title")
         }
+    }
+    updatePoemSavedState(newSavedState) {
+        this._elemPlaceholderReaderSavedState.innerText = this._i18n.translate(newSavedState)
     }
 }
 ReaderView.MDCTextField = mdc.textField.MDCTextField

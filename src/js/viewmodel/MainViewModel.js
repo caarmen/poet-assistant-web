@@ -35,6 +35,7 @@ class MainViewModel {
         this.isRhymerLoading = new ObservableField(false)
         this.isThesaurusLoading = new ObservableField(false)
         this.isDefinitionsLoading = new ObservableField(false)
+        this.poemSavedStateLabel = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
@@ -52,6 +53,7 @@ class MainViewModel {
         this._model._speechEngine.selectedVoice.observer = (newVoice) => this.selectedVoiceLabel.value = this._getVoiceLabel(newVoice)
         this._model._speechEngine.speed.observer = (newSpeed) => this.voiceSpeed.value = newSpeed
         this._model._speechEngine.pitch.observer = (newPitch) => this.voicePitch.value = newPitch
+        this._model._poemRepository.savedState.observer = (newSavedState) => this.poemSavedStateLabel.value = this._getSavedStateLabel(newSavedState)
     }
 
     loadTranslations = () => this.i18n.load()
@@ -317,6 +319,14 @@ class MainViewModel {
         new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
         new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
+
+    getPoemText = () => this._model.getPoemText()
+    setPoemText = (text) => this._model.setPoemText(text)
+    _getSavedStateLabel(savedState) {
+        if (savedState == PoemRepository.SaveState.SAVING) return "poem_saved_state_label_saving"
+        else if (savedState == PoemRepository.SaveState.SAVED) return "poem_saved_state_label_saved"
+        else if (savedState == PoemRepository.SaveState.WAITING) return "poem_saved_state_label_waiting"
+    }
 
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })
