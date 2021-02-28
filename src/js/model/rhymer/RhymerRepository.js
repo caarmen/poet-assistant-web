@@ -20,6 +20,13 @@ class RhymerRepository {
     constructor(db, settings) {
         this._db = db
         this._settings = settings
+        this.settingsChangeObserver = () => { }
+        this._settings.addObserver((key, newValue) => this._onSettingsChanged(key))
+    }
+    _onSettingsChanged(key) {
+        if (key == RhymerRepository.SETTINGS_KEY_AOR_AO || key == RhymerRepository.SETTINGS_KEY_AO_AA) {
+            this.settingsChangeObserver()
+        }
     }
     async fetchRhymes(word) {
         const stressSyllableRhymes = await this._getStressSyllablesRhymes(word)

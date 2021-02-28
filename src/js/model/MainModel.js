@@ -21,11 +21,13 @@ class MainModel {
         this._settings = new Settings()
         this._speechEngine = new SpeechEngine(this._settings)
         this.isSpeechPlaying = this._speechEngine.isPlaying
+        this.rhymerSettingsChangedObserver = () => {}
     }
     async loadDb(progressCallback) {
         const db = new Db()
         await db.open(progressCallback)
         this._rhymerRepository = new RhymerRepository(db, this._settings)
+        this._rhymerRepository.settingsChangeObserver = () => this.rhymerSettingsChangedObserver()
         this._thesaurusRepository = new ThesaurusRepository(db)
         this._dictionaryRepository = new DictionaryRepository(db)
         this._suggestionsRepository = new SuggestionsRepository(db)

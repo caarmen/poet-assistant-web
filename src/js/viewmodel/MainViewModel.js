@@ -39,6 +39,7 @@ class MainViewModel {
         this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
         this._model = new MainModel()
+        this._model.rhymerSettingsChangedObserver = () => this._refetchRhymes()
         this.isSpeechPlaying = this._model.isSpeechPlaying
         this.contextMenuItems = this._createContextMenuItems(false)
         this.snackbarText = new ObservableField()
@@ -117,6 +118,11 @@ class MainViewModel {
                     this._createRhymeListItems(wordRhymes.lastSyllableRhymes, "last_syllable")
                 ].flat())
             })
+        }
+    }
+    _refetchRhymes() {
+        if (this.rhymes.value != undefined) {
+            this.fetchRhymes(this.rhymes.value.word)
         }
     }
 
