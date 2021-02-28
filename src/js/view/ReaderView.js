@@ -20,6 +20,7 @@ class ReaderView {
 
     constructor(i18n, template) {
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
+        this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader-saved-state")
         this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
 
         this._elemBtnPlay
@@ -72,6 +73,9 @@ class ReaderView {
             this._elemBtnPlayIcon.innerText = "play_circle_filled"
             this._elemBtnPlayLabel.innerText = this._i18n.translate("btn_play_title")
         }
+    }
+    updatePoemSavedState(newSavedState) {
+        this._elemPlaceholderReaderSavedState.innerText = this._i18n.translate(newSavedState)
     }
 }
 ReaderView.MDCTextField = mdc.textField.MDCTextField

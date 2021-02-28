@@ -20,11 +20,22 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class PoemRepository {
     constructor(settings) {
         this._settings = settings
+        this.savedState = new ObservableField(PoemRepository.SaveState.WAITING)
+        this._timeoutId
     }
 
     getPoemText = () => this._settings.getSetting(PoemRepository.SETTINGS_KEY_POEM_TEXT, "")
 
-    setPoemText = (text) => this._settings.setSetting(PoemRepository.SETTINGS_KEY_POEM_TEXT, text)
+    setPoemText(text) {
+        if (this._timeoutId != undefined) clearTimeout(this._timeoutId)
+        this.savedState.value = PoemRepository.SaveState.WAITING
+        this._timeoutId = setTimeout(() => {
+            this.savedState.value = PoemRepository.SaveState.SAVING
+            this._settings.setSetting(PoemRepository.SETTINGS_KEY_POEM_TEXT, text)
+            this.savedState.value = PoemRepository.SaveState.SAVED
+        }, 2000)
+    }
 
 }
 PoemRepository.SETTINGS_KEY_POEM_TEXT
+PoemRepository.SaveState = Object.freeze({ WAITING: 0, SAVING: 1, SAVED: 2 })
