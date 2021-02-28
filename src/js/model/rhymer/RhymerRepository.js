@@ -63,18 +63,29 @@ class RhymerRepository {
                 const syllableRhymes = []
 
                 Promise.all(syllablesVariants.map((syllables) => {
+
                     let rhymes = []
+                    let transformedSyllableColumn = syllableColumn
+                    let transformedSyllables = syllables
+                    if (this.getAorAoSetting() && (syllables.includes("AOR") || syllables.includes("AO"))) {
+                        transformedSyllables = transformedSyllables.replaceAll("AOR", "AO")
+                        transformedSyllableColumn = `REPLACE(${transformedSyllableColumn}, 'AOR', 'AO')`
+                    }
+                    if (this.getAoAaSetting() && (syllables.includes("AO") || syllables.includes("AA"))) {
+                        transformedSyllables = transformedSyllables.replaceAll("AO", "AA")
+                        transformedSyllableColumn = `REPLACE(${transformedSyllableColumn}, 'AO', 'AA')`
+                    }
                     const stmt = `
                         SELECT DISTINCT ${RhymerRepository.COL_WORD} 
                         FROM ${RhymerRepository.TABLE_WORD_VARIANTS} 
-                        WHERE ${syllableColumn}=? 
-                            AND ${RhymerRepository.COL_WORD} != ? 
+                        WHERE ${transformedSyllableColumn} =?
+                            AND ${RhymerRepository.COL_WORD} != ?
                             AND ${RhymerRepository.COL_HAS_DEFINITION}=1 ${excludeClause} 
                         ORDER BY ${RhymerRepository.COL_WORD}
                         LIMIT ${RhymerRepository.LIMIT}`
-                    return this._db.query(stmt, [syllables, word]).then((rows) => {
+                    return this._db.query(stmt, [transformedSyllables, word]).then((rows) => {
                         rhymes = rows.map((row) => row[RhymerRepository.COL_WORD])
-                        if (rhymes.length > 0) syllableRhymes.push(new SyllableRhymes(syllables, rhymes))
+                        if (rhymes.length > 0) syllableRhymes.push(new SyllableRhymes(transformedSyllables, rhymes))
                     })
                 })).then(() => {
                     if (syllableRhymes.length > 0) completionFunc(syllableRhymes)
