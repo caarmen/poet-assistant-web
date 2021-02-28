@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class RhymerRepository {
-    constructor(db) {
+    constructor(db, settings) {
         this._db = db
+        this._settings = settings
     }
     async fetchRhymes(word) {
         const stressSyllableRhymes = await this._getStressSyllablesRhymes(word)
@@ -93,6 +94,10 @@ class RhymerRepository {
 
         return (await this._db.query(stmt, [word])).map((row) => row[syllablesColumn]).filter((syllable) => syllable != null)
     }
+    getAorAoSetting = () => (this._settings.getSetting(RhymerRepository.SETTINGS_KEY_AOR_AO, false)) == "true"
+    getAoAaSetting = () => (this._settings.getSetting(RhymerRepository.SETTINGS_KEY_AO_AA, false)) == "true"
+    setAorAoSetting = (value) => this._settings.setSetting(RhymerRepository.SETTINGS_KEY_AOR_AO, value)
+    setAoAaSetting = (value) => this._settings.setSetting(RhymerRepository.SETTINGS_KEY_AO_AA, value)
 }
 RhymerRepository.TABLE_WORD_VARIANTS = "word_variants"
 RhymerRepository.LIMIT = 500
@@ -103,3 +108,5 @@ RhymerRepository.COL_LAST_TWO_SYLLABLES = "last_two_syllables"
 RhymerRepository.COL_LAST_SYLLABLE = "last_syllable"
 RhymerRepository.COL_WORD = "word"
 RhymerRepository.COL_VARIANT_NUMBER = "variant_number"
+RhymerRepository.SETTINGS_KEY_AOR_AO = "rhymer_aor_ao"
+RhymerRepository.SETTINGS_KEY_AO_AA = "rhymer_ao_aa"

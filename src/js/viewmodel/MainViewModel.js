@@ -88,6 +88,7 @@ class MainViewModel {
             "list-item-word",
             "slider",
             "snackbar",
+            "switch",
             "tab",
             "tab-bar",
             "textarea",
@@ -141,6 +142,18 @@ class MainViewModel {
             }
         }
         ).join("")
+
+    getRhymerSettingsSwitches = () => [
+        new SwitchItem("setting-rhymer-aor-ao", "setting_rhymer_aor_ao_label", "setting_rhymer_aor_ao_description", this._model.getRhymerSettingAorAo()),
+        new SwitchItem("setting-rhymer-ao-aa", "setting_rhymer_ao_aa_label", "setting_rhymer_ao_aa_description", this._model.getRhymerSettingAoAa())
+    ]
+    onRhymerSettingToggled(id, value) {
+        if (id == "setting-rhymer-aor-ao") {
+            this._model.setRhymerSettingAorAo(value)
+        } else if (id == "setting-rhymer-ao-aa") {
+            this._model.setRhymerSettingAoAa(value)
+        }
+    }
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
@@ -298,7 +311,6 @@ class MainViewModel {
         new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
         new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
-
 
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })

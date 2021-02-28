@@ -25,7 +25,7 @@ class MainModel {
     async loadDb(progressCallback) {
         const db = new Db()
         await db.open(progressCallback)
-        this._rhymerRepository = new RhymerRepository(db)
+        this._rhymerRepository = new RhymerRepository(db, this._settings)
         this._thesaurusRepository = new ThesaurusRepository(db)
         this._dictionaryRepository = new DictionaryRepository(db)
         this._suggestionsRepository = new SuggestionsRepository(db)
@@ -44,6 +44,11 @@ class MainModel {
     async fetchRhymes(word) {
         return this._rhymerRepository.fetchRhymes(word)
     }
+    getRhymerSettingAorAo = () => this._rhymerRepository.getAorAoSetting()
+    getRhymerSettingAoAa = () => this._rhymerRepository.getAoAaSetting()
+    setRhymerSettingAorAo = (value) => this._rhymerRepository.setAorAoSetting(value)
+    setRhymerSettingAoAa = (value) => this._rhymerRepository.setAoAaSetting(value)
+
     async fetchThesaurus(word) {
         return this._thesaurusRepository.fetch(word)
     }

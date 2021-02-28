@@ -104,6 +104,12 @@ a:link, a.active:link,a:hover, a:visited {
 .mdc-list-item__text{
 	white-space: normal;
 }
+#placeholder-thesaurus-list .list-header-settings {
+	display: none;
+}
+#placeholder-definitions-list .list-header-settings {
+	display: none;
+}
 #placeholder-reader-input {
 	/* screen height - (app bar height) - (voice settings top margin) - (pitch slider) - (speed slider) - (play button height) - (play button bottom margin)*/
 	height: calc(100vh - 3*(var(--app-bar-row-height)) - 16px - 48px - 48px - 36px - 16px);
@@ -182,6 +188,10 @@ a:link, a.active:link,a:hover, a:visited {
 	padding-inline-start: 16px;
 	font-size: 1.2em;
 }
+.list-header-settings {
+	float: right;
+	vertical-align: middle;
+}
 .list-header-copy {
 	float: right;
 	vertical-align: middle;
@@ -219,4 +229,27 @@ a:link, a.active:link,a:hover, a:visited {
 }
 .mdc-menu .mdc-list-item__graphic {
 	color: var(--mdc-theme-primary);
+}
+.setting-switch {
+	display: grid;
+	grid-template-columns: auto max-content;
+	align-items: center;
+}
+.switch-label {
+	font-weight: bold;
+	grid-row: 1;
+	grid-column: 1;
+	margin-top: 16px;
+}
+.switch-description {
+	font-size: 0.8em;
+	grid-row: 2;
+	grid-column: 1;
+	white-space: break-spaces;
+}
+.setting-switch .mdc-switch {
+	margin-top: 16px;
+	grid-row: 1;
+	grid-column: 2;
+	margin-inline-start: 16px;
 }

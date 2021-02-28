@@ -29,6 +29,7 @@ class RhymerView {
 
         this.wordClickedObserver = (wordElem) => { }
         this.shareClickedObserver = () => { }
+        this.settingsClickedObserver = () => { }
         this._applyTemplates()
         this._initializeViews()
     }
@@ -56,6 +57,7 @@ class RhymerView {
             this.wordClickedObserver(e.target)
         }
         this._elemPlaceholderRhymesList.querySelector(".list-header-copy").onclick = (e) => { this.shareClickedObserver() }
+        this._elemPlaceholderRhymesList.querySelector(".list-header-settings").onclick = (e) => { this.settingsClickedObserver() }
         new RhymerView.MDCList(document.querySelector("#list-rhymes")).listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) this.wordClickedObserver(e.target)
         })
