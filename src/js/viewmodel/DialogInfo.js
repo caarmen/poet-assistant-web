@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class DialogInfo{
-    constructor(title, contentTemplateId, templateParameters) {
+    constructor(title, contentTemplateId, templateParameters, positiveAction) {
         this.title = title
         this.contentTemplateId = contentTemplateId
         this.templateParameters = templateParameters
+        this.positiveAction = positiveAction
     }
 }

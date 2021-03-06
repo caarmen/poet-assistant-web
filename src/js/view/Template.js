@@ -33,6 +33,7 @@ class Template {
             "context-menu-item-custom-icon",
             "context-menu-item-material-icon",
             "dialog",
+            "dialog-simple-message",
             "dictionary-list-item",
             "input-text",
             "list",
@@ -42,6 +43,7 @@ class Template {
             "list-item-sub-header-2",
             "list-item-word",
             "linear-progress-indicator",
+            "reader-actions",
             "slider",
             "snackbar",
             "switch",
@@ -194,6 +196,7 @@ class Template {
             .replace("__SLIDER_SPEED__", this.createSliderHtml(speedSliderData))
 
     createSnackbarHtml = (text) => this._templates.get("snackbar").replace("__TEXT__", this._i18n.translate(text))
+    createReaderActionsHtml = (text) => this._templates.get("reader-actions")
 
 }
 

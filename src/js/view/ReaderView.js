@@ -19,13 +19,13 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class ReaderView {
 
     constructor(i18n, template) {
+        this._elemPlaceholderReaderActions = document.querySelector("#placeholder-reader-actions")
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
-        this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader-saved-state")
-        this._elemPlaceholderReaderPlayButton = document.querySelector("#placeholder-reader-play-button")
+        this._elemPlaceholderReaderSavedState
 
         this._elemBtnPlay
-        this._elemBtnPlayIcon
-        this._elemBtnPlayLabel
+        this._elemBtnCopy
+        this._elemBtnClear
         this._elemTextInput
 
         this._i18n = i18n
@@ -35,43 +35,58 @@ class ReaderView {
         this._initializeViews()
 
         this.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => { }
+        this.onCopyClickedObserver = (poemText, selectionStart, selectionEnd) => { }
+        this.onClearClickedObserver = () => { }
         this.onPoemTextObserver = (poemText) => { }
     }
     _applyTemplates() {
+        this._elemPlaceholderReaderActions.innerHTML = this._template.createReaderActionsHtml("input-text-actions")
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
-        this._elemPlaceholderReaderPlayButton.innerHTML = this._template.createButtonIconTextHtml("btn-play", "play_circle_filled", "btn_play_title")
+        this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader-saved-state")
+
     }
 
     _initializeViews() {
         this._mdcInputTextReader = new ReaderView.MDCTextField(document.querySelector("#input-text-reader"))
         this._elemBtnPlay = document.querySelector("#btn-play")
-        this._elemBtnPlayIcon = document.querySelector("#btn-play-icon")
-        this._elemBtnPlayLabel = document.querySelector("#btn-play-label")
+        this._elemBtnCopy = document.querySelector("#btn-copy-text")
+        this._elemBtnClear = document.querySelector("#btn-clear-text")
 
         this._elemTextInput = this._elemPlaceholderReaderInput.querySelector(".mdc-text-field__input")
 
         this._elemBtnPlay.disabled = true
+        this._elemBtnCopy.disabled = true
+        this._elemBtnClear.disabled = true
         this._mdcInputTextReader.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
-            this._elemBtnPlay.disabled = this._mdcInputTextReader.value.length == 0
+            this._updateButtonStates()
             this.onPoemTextObserver(this._mdcInputTextReader.value)
         }))
         this._elemBtnPlay.onclick = () => {
             this.onPlayClickedObserver(this._mdcInputTextReader.value, this._elemTextInput.selectionStart, this._elemTextInput.selectionEnd)
         }
+        this._elemBtnCopy.onclick = () => {
+            this.onCopyClickedObserver(this._mdcInputTextReader.value, this._elemTextInput.selectionStart, this._elemTextInput.selectionEnd)
+        }
+        this._elemBtnClear.onclick = () => {
+            this.onClearClickedObserver()
+        }
     }
 
+    _updateButtonStates() {
+        this._elemBtnPlay.disabled = this._mdcInputTextReader.value.length == 0
+        this._elemBtnCopy.disabled = this._mdcInputTextReader.value.length == 0
+        this._elemBtnClear.disabled = this._mdcInputTextReader.value.length == 0
+    }
     setPoemText(text) {
         this._mdcInputTextReader.value = text
+        this._updateButtonStates()
     }
 
     updateSpeechPlayingState(newIsSpeechPlaying) {
         if (newIsSpeechPlaying) {
-            this._elemBtnPlayIcon.innerText = "stop"
-            this._elemBtnPlayLabel.innerText = this._i18n.translate("btn_stop_title")
-
+            this._elemBtnPlay.innerText = "stop"
         } else {
-            this._elemBtnPlayIcon.innerText = "play_circle_filled"
-            this._elemBtnPlayLabel.innerText = this._i18n.translate("btn_play_title")
+            this._elemBtnPlay.innerText = "play_circle_filled"
         }
     }
     updatePoemSavedState(newSavedState) {

@@ -96,11 +96,6 @@ a:link, a.active:link,a:hover, a:visited {
 #placeholder-reader, #placeholder-reader .mdc-text-field--textarea {
 	width: 100%;
 }
-#btn-play{
-	margin-bottom: 16px;
-	left: 50%;
-	transform: translate(-50%, 0%);
-}
 .mdc-list-item__text{
 	white-space: normal;
 }
@@ -119,8 +114,9 @@ a:link, a.active:link,a:hover, a:visited {
 }
 #placeholder-reader-saved-state {
 	white-space:pre;
-	float: right;
-	margin-right: 16px;
+	align-self: flex-end;
+	width: 48px;
+	text-align: end;
 	font-size: 0.6em;
 	color: var(--mdc-theme-text-secondary-on-light, #727272);
 }
@@ -259,4 +255,13 @@ a:link, a.active:link,a:hover, a:visited {
 	grid-row: 1;
 	grid-column: 2;
 	margin-inline-start: 16px;
+}
+#placeholder-reader-actions {
+	display: flex;
+	margin-inline-end: 16px;
+	margin-inline-start: 16px;
+}
+.button-bar {
+	margin-left: auto;
+	margin-right: auto;
 }
