@@ -95,5 +95,12 @@ class MainModel {
     }
 
     setPoemText = (text, writeNow) => this._poemRepository.setPoemText(text, writeNow)
+    readFile(file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            this.setPoemText(e.target.result, true)
+        }
+        reader.readAsText(file)
+    }
 
 }
