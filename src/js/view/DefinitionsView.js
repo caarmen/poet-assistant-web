@@ -18,11 +18,12 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class DefinitionsView {
 
-    constructor(template) {
+    constructor(i18n, template) {
         this._elemPlaceholderDefinitionsList = document.querySelector("#placeholder-definitions-list")
         this._elemPlaceholderDefinitionsEmpty = document.querySelector("#placeholder-definitions-empty")
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-definitions .list-loading")
 
+        this._i18n = i18n
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
         this.wordClickedObserver = (wordElem) => { }
@@ -44,8 +45,9 @@ class DefinitionsView {
 
     showDefinitions(definitions) {
         this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
+        this._i18n.translateElement(this._elemPlaceholderDefinitionsList.querySelector(".list-header"))
         this._listVisibility.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
-        this._elemPlaceholderDefinitionsList.querySelector(".list-header").onclick = (e) => {
+        this._elemPlaceholderDefinitionsList.querySelector(".list-header-text").onclick = (e) => {
             this.wordClickedObserver(e.target)
         }
         this._elemPlaceholderDefinitionsList.querySelector(".list-header-copy").onclick = (e) => { this.shareClickedObserver() }

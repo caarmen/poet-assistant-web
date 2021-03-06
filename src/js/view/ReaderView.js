@@ -41,6 +41,7 @@ class ReaderView {
     }
     _applyTemplates() {
         this._elemPlaceholderReaderActions.innerHTML = this._template.createReaderActionsHtml("input-text-actions")
+        this._i18n.translateElement(this._elemPlaceholderReaderActions)
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
         this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader-saved-state")
 

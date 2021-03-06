@@ -30,6 +30,12 @@ class I18n {
             const stringKey = translatableElem.getAttribute("string-key")
             translatableElem.innerText = this.translate(stringKey)
         })
+        element.querySelectorAll("[label-string-key]").forEach(translatableElem => {
+            const stringKey = translatableElem.getAttribute("label-string-key")
+            const stringValue = this.translate(stringKey)
+            translatableElem.setAttribute("title", stringValue)
+            translatableElem.setAttribute("aria-label", stringValue)
+        })
     }
 
     async load() {

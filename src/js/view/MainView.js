@@ -46,9 +46,9 @@ class MainView {
                 this._template = new Template(this._viewModel.i18n, templates)
                 this._viewContextMenu = new ContextMenuView(this._template)
                 this._viewSuggestions = new SuggestionsView(this._template)
-                this._viewRhymer = new RhymerView(this._template)
-                this._viewThesaurus = new ThesaurusView(this._template)
-                this._viewDefinitions = new DefinitionsView(this._template)
+                this._viewRhymer = new RhymerView(this._viewModel.i18n, this._template)
+                this._viewThesaurus = new ThesaurusView(this._viewModel.i18n, this._template)
+                this._viewDefinitions = new DefinitionsView(this._viewModel.i18n, this._template)
                 this._viewReader = new ReaderView(this._viewModel.i18n, this._template)
                 this._viewVoiceSettings = new VoiceSettingsView(this._viewModel.i18n, this._template)
                 this._viewTabs = new TabsView(this._template,
@@ -73,6 +73,7 @@ class MainView {
         this._elemPlaceholderAppProgressIndicator.innerHTML = this._template.createLinearProgressIndicatorHtml()
         this._elemProgressBarLabel = document.querySelector("#progressbar-label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
+        this._viewModel.i18n.translateElement(this._elemPlacholderInputTextSearch)
 
         this._viewTabs._applyTemplates()
     }
