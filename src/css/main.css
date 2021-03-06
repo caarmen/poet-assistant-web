@@ -186,6 +186,9 @@ a:link, a.active:link,a:hover, a:visited {
 	overflow-y: scroll;
 	height: calc(100vh - 3*(var(--app-bar-row-height)) - 40px - 16px - 16px);
 }
+.list-header {
+	padding-inline-end: 8px;
+}
 .list-header-text {
 	font-weight: bold;
 	padding-inline-start: 16px;
