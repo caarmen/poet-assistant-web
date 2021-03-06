@@ -25,8 +25,10 @@ class ReaderView {
 
         this._elemBtnPlay
         this._elemBtnCopy
+        this._elemBtnUpload
         this._elemBtnClear
         this._elemTextInput
+        this._elemFileUploadInput
 
         this._i18n = i18n
         this._template = template
@@ -38,6 +40,7 @@ class ReaderView {
         this.onCopyClickedObserver = (poemText, selectionStart, selectionEnd) => { }
         this.onClearClickedObserver = () => { }
         this.onPoemTextObserver = (poemText) => { }
+        this.onFileUploadedObserver = (file) => { }
     }
     _applyTemplates() {
         this._elemPlaceholderReaderActions.innerHTML = this._template.createReaderActionsHtml("input-text-actions")
@@ -51,7 +54,9 @@ class ReaderView {
         this._mdcInputTextReader = new ReaderView.MDCTextField(document.querySelector("#input-text-reader"))
         this._elemBtnPlay = document.querySelector("#btn-play")
         this._elemBtnCopy = document.querySelector("#btn-copy-text")
+        this._elemBtnUpload = document.querySelector("#btn-upload-text")
         this._elemBtnClear = document.querySelector("#btn-clear-text")
+        this._elemFileUploadInput = this._elemBtnUpload.querySelector("input")
 
         this._elemTextInput = this._elemPlaceholderReaderInput.querySelector(".mdc-text-field__input")
 
@@ -71,6 +76,12 @@ class ReaderView {
         this._elemBtnClear.onclick = () => {
             this.onClearClickedObserver()
         }
+        this._elemFileUploadInput.addEventListener("change", (evt) => {
+            if (evt.target.files.length == 1) {
+                this.onFileUploadedObserver(evt.target.files[0])
+            }
+        })
+        this._elemBtnUpload.onclick = () => this._elemFileUploadInput.click()
     }
 
     _updateButtonStates() {

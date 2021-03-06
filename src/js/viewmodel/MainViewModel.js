@@ -335,6 +335,7 @@ class MainViewModel {
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
 
     setPoemText = (text, writeNow) => this._model.setPoemText(text, writeNow)
+    readFile = (file) => this._model.readFile(file)
     _getSavedStateLabel(savedState) {
         if (savedState == PoemRepository.SaveState.SAVING) return "poem_saved_state_label_saving"
         else if (savedState == PoemRepository.SaveState.SAVED) return "poem_saved_state_label_saved"

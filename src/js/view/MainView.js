@@ -159,6 +159,7 @@ class MainView {
             this._viewModel.onClearClicked()
         }
         this._viewReader.onPoemTextObserver = (poemText) => this._viewModel.setPoemText(poemText)
+        this._viewReader.onFileUploadedObserver = (file) => this._viewModel.readFile(file)
         this._viewVoiceSettings.voiceSelectonObserver = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
         this._viewVoiceSettings.pitchObserver = (pitchValue) => { this._viewModel.setVoicePitch(pitchValue) }
         this._viewVoiceSettings.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }
