@@ -102,5 +102,17 @@ class MainModel {
         }
         reader.readAsText(file)
     }
+    writeFile(text) {
+        // https://stackoverflow.com/questions/19327749/javascript-blob-filename-without-link
+        const file = new File([text], {type: "application/octet-stream"})
+        const blobUrl = URL.createObjectURL(file)
+        const tempElemA = document.createElement("a")
+        tempElemA.href = blobUrl
+        tempElemA.setAttribute("download", "poem.txt")
+        document.body.appendChild(tempElemA)
+        tempElemA.click()
+        document.body.removeChild(tempElemA)
+        URL.revokeObjectURL(blobUrl)
+    }
 
 }
