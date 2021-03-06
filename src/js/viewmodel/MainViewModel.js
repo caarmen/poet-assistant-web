@@ -40,6 +40,7 @@ class MainViewModel {
         this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
         this._model = new MainModel()
+        this.poemText = this._model.poemText
         this._model.rhymerSettingsChangedObserver = () => this._refetchRhymes()
         this.isSpeechPlaying = this._model.isSpeechPlaying
         this.contextMenuItems = this._createContextMenuItems(false)
@@ -80,6 +81,7 @@ class MainViewModel {
             "context-menu-item-custom-icon",
             "context-menu-item-material-icon",
             "dialog",
+            "dialog-simple-message",
             "dictionary-list-item",
             "input-text",
             "linear-progress-indicator",
@@ -89,6 +91,7 @@ class MainViewModel {
             "list-item-sub-header-1",
             "list-item-sub-header-2",
             "list-item-word",
+            "reader-actions",
             "slider",
             "snackbar",
             "switch",
@@ -290,6 +293,17 @@ class MainViewModel {
     setVoiceSpeed = (speedValue) => this._model.setVoiceSpeed(speedValue)
 
     playText = (text, start, end) => this._model.playText(text, start, end)
+    copyPoemText(text, start, value) {
+        this._model.copyText(text, start, value)
+        this.snackbarText.value = "snackbar_copied_poem"
+    }
+    onClearClicked() {
+        this.dialogInfo.value = new DialogInfo(
+            "reader_clear_poem_dialog_title",
+            "dialog-simple-message", new Map([["__CONTENT__", "reader_clear_poem_dialog_message"]]),
+            () => { this.setPoemText("", true) }
+        )
+    }
 
     updateVoices(newVoices) {
         this.voices.value = newVoices.sort((a, b) => {
@@ -320,8 +334,7 @@ class MainViewModel {
         new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
 
-    getPoemText = () => this._model.getPoemText()
-    setPoemText = (text) => this._model.setPoemText(text)
+    setPoemText = (text, writeNow) => this._model.setPoemText(text, writeNow)
     _getSavedStateLabel(savedState) {
         if (savedState == PoemRepository.SaveState.SAVING) return "poem_saved_state_label_saving"
         else if (savedState == PoemRepository.SaveState.SAVED) return "poem_saved_state_label_saved"
