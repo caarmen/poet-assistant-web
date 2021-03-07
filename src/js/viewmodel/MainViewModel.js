@@ -92,6 +92,7 @@ class MainViewModel {
             "list-item-sub-header-2",
             "list-item-word",
             "reader-actions",
+            "reader-play",
             "slider",
             "snackbar",
             "switch",

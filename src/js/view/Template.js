@@ -44,6 +44,7 @@ class Template {
             "list-item-word",
             "linear-progress-indicator",
             "reader-actions",
+            "reader-play",
             "slider",
             "snackbar",
             "switch",
@@ -196,7 +197,8 @@ class Template {
             .replace("__SLIDER_SPEED__", this.createSliderHtml(speedSliderData))
 
     createSnackbarHtml = (text) => this._templates.get("snackbar").replace("__TEXT__", this._i18n.translate(text))
-    createReaderActionsHtml = (text) => this._templates.get("reader-actions")
+    createReaderPlayHtml = () => this._templates.get("reader-play")
+    createReaderActionsHtml = () => this._templates.get("reader-actions")
 
 }
 

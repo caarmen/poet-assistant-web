@@ -19,6 +19,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class ReaderView {
 
     constructor(i18n, template) {
+        this._elemPlaceholderReaderPlay = document.querySelector("#placeholder-reader-play")
         this._elemPlaceholderReaderActions = document.querySelector("#placeholder-reader-actions")
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
         this._elemPlaceholderReaderSavedState
@@ -45,7 +46,8 @@ class ReaderView {
         this.onFileDownloadObserver = (poemText) => { }
     }
     _applyTemplates() {
-        this._elemPlaceholderReaderActions.innerHTML = this._template.createReaderActionsHtml("input-text-actions")
+        this._elemPlaceholderReaderPlay.innerHTML = this._template.createReaderPlayHtml()
+        this._elemPlaceholderReaderActions.innerHTML = this._template.createReaderActionsHtml()
         this._i18n.translateElement(this._elemPlaceholderReaderActions)
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
         this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader-saved-state")

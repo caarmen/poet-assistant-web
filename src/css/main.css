@@ -106,25 +106,36 @@ a:link, a.active:link,a:hover, a:visited {
 	display: none;
 }
 #placeholder-reader-input {
-	/* screen height - (app bar height) - (voice settings top margin) - (pitch slider) - (speed slider) - (play button height) - (play button bottom margin)*/
-	height: calc(100vh - 3*(var(--app-bar-row-height)) - 16px - 48px - 48px - 36px - 16px);
+	/* screen height - (app bar height) - (voice settings) - (saved status) */
+	height: calc(100vh - 3*(var(--app-bar-row-height)) - (3*48px) - 16px);
 }
 #placeholder-reader-input #input-text-reader {
 	height: 100%;
 }
 #placeholder-reader-saved-state {
 	white-space:pre;
-	align-self: flex-end;
-	width: 48px;
-	text-align: end;
 	font-size: 0.6em;
 	color: var(--mdc-theme-text-secondary-on-light, #727272);
+	text-align: end;
+	margin-inline-end: 8px;
+	height: 16px;
 }
 #placeholder-reader-voices {
-	margin-top: 16px;
+	grid-row: 1;
+	grid-column: 1;
+	width: calc((100vw - 96px)/2);
 }
-#voice-label, #selected-voice {
-	display: inline-block;
+#voice-label {
+	grid-row: 1;
+	grid-column: 1;
+}
+#setting-selected-voice {
+	grid-row: 1;
+	grid-column: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 48px;
 }
 #voices-menu .mdc-list {
 	padding-right: 48px;
@@ -135,40 +146,27 @@ a:link, a.active:link,a:hover, a:visited {
 .voice-settings-grid{
 	display: grid;
 	align-items: center;
-	width: 100%;
-	grid-template-columns: max-content auto max-content max-content;
-}
-.voice-settings-grid-filler {
-	grid-column: 2;
-	grid-row: 1/3;
-}
-#setting-selected-voice {
-	grid-column: 1;
-	grid-row: 1/3;
+	width: 40%;
 	padding-inline-start: 16px;
 }
 #voice-pitch-label {
-	grid-column: 3;
-	grid-row: 1;
+	grid-column: 1;
+	grid-row: 2;
 }
 #voice-pitch-slider {
-	grid-column: 4;
-	grid-row: 1;
-}
-#voice-speed-label {
-	grid-column: 3;
-	grid-row: 2;
-}
-#voice-speed-slider{
-	grid-column: 4;
-	grid-row: 2;
-}
-#setting-voice-speed {
 	grid-column: 2;
 	grid-row: 2;
 }
+#voice-speed-label {
+	grid-column: 1;
+	grid-row: 3;
+}
+#voice-speed-slider{
+	grid-column: 2;
+	grid-row: 3;
+}
 .mdc-slider {
-	min-width: 192px;
+	min-width: 128px;
 }
 #selected-voice::after {
 	font-family: 'Material Icons';
@@ -259,12 +257,30 @@ a:link, a.active:link,a:hover, a:visited {
 	grid-column: 2;
 	margin-inline-start: 16px;
 }
+#placeholder-reader-controls {
+	display: grid;
+}
+#placeholder-reader-play {
+	grid-row: 1;
+	grid-column: 2;
+	width: 96px;
+	align-self: center;
+}
 #placeholder-reader-actions {
-	display: flex;
-	margin-inline-end: 16px;
-	margin-inline-start: 16px;
+	grid-row: 1;
+	grid-column: 3;
+	width: calc((100vw - 96px)/2);
+	align-self: end;
+}
+#btn-play {
+	display: block;
+	font-size: 48px;
+	width: 96px;
+	height: 96px;
+	padding: 24px;
 }
 .button-bar {
 	margin-left: auto;
-	margin-right: auto;
+	margin-right: 0;
+	width: max-content;
 }
