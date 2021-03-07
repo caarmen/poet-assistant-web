@@ -238,11 +238,19 @@ class MainViewModel {
         this.searchButtonDisabled.value = text.length == 0
         this.clearSearchTextButtonVisible.value = text.length > 0
     }
-    fetchSuggestions(word) {
+    onSuggestionSelected(word) {
+        this.clearSearchTextButtonVisible.value = word.length > 0
+    }
+    fetchSuggestions(word, includeResultsForEmptyWord) {
         if (!this.isLoading.value) {
             const searchTerm = this._cleanSearchTerm(word)
-            this._model.fetchSuggestions(searchTerm).then(suggestions => {
-                this.suggestions.value = suggestions.map((suggestion) => new MenuItem(suggestion, suggestion))
+            this._model.fetchSuggestions(searchTerm, includeResultsForEmptyWord).then(suggestions => {
+                this.suggestions.value = suggestions.map((suggestion) =>
+                    new MenuItem(suggestion.word, suggestion.word, new MenuItemIcon(
+                        suggestion.type == Suggestion.SuggestionType.HISTORY ? "history" : "search",
+                        MenuItemIcon.IconSource.MATERIAL
+                    ))
+                )
             })
         }
     }

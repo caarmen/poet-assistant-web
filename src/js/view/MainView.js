@@ -135,6 +135,10 @@ class MainView {
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
             this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
         }))
+
+        this._mdcInputTextSearch.foundation.adapter.registerInputInteractionHandler('click', ((evt) => {
+            this._viewModel.fetchSuggestions(this._mdcInputTextSearch.value, true)
+        }))
         this._elemBtnSearch.onclick = () => { this._searchAll() }
         this._elemBtnClearSearchText.onclick = () => { this._onClearSearchTextClicked() }
         this._elemActionItemMenu.onclick = () => { this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems) }
@@ -186,6 +190,7 @@ class MainView {
     _onSuggestionSelected(word) {
         this._mdcInputTextSearch.value = word
         this._elemBtnSearch.click()
+        this._viewModel.onSuggestionSelected(word)
     }
 
     _onWordElemClicked(wordElem) {
