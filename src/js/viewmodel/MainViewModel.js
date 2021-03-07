@@ -244,9 +244,9 @@ class MainViewModel {
      */
     onSuggestionSelected(word) {
         if (word == "clear_search_history") {
-            this.dialogInfo.value = new DialogInfo(
+            this.dialogInfo.value = DialogInfo.prompt(
                 "clear_search_history_dialog_title",
-                "dialog-simple-message", new Map([["__CONTENT__", "clear_search_history_dialog_message"]]),
+                "clear_search_history_dialog_message",
                 () => { this._model.clearSearchHistory() }
             )
             return false
@@ -292,7 +292,7 @@ class MainViewModel {
         const selectedMenuId = this.appBarMenuItems[index].id
         if (selectedMenuId == "menu-about") {
             let privacyPolicyFile = this._model.isDesktop() ? "PRIVACY-desktop.md" : "PRIVACY-web.md"
-            this.dialogInfo.value = new DialogInfo("about_title", "about", new Map([["__PRIVACY_POLICY_FILE__", privacyPolicyFile]]))
+            this.dialogInfo.value = DialogInfo.custom("about_title", "about", new Map([["__PRIVACY_POLICY_FILE__", privacyPolicyFile]]))
         } else if (selectedMenuId == "menu-random") {
             const randomWord = this._model.getRandomWord().then((word) => {
                 this.fetchAll(word)
@@ -329,9 +329,9 @@ class MainViewModel {
         this.snackbarText.value = "snackbar_copied_poem"
     }
     onClearClicked() {
-        this.dialogInfo.value = new DialogInfo(
+        this.dialogInfo.value = DialogInfo.prompt(
             "reader_clear_poem_dialog_title",
-            "dialog-simple-message", new Map([["__CONTENT__", "reader_clear_poem_dialog_message"]]),
+            "reader_clear_poem_dialog_message",
             () => { this.setPoemText("", true) }
         )
     }
