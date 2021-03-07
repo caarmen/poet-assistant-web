@@ -62,12 +62,11 @@ class SuggestionsRepository {
                 SELECT DISTINCT ${SuggestionsRepository.COL_WORD}
                 FROM ${SuggestionsRepository.TABLE_WORD_VARIANTS}
                 WHERE ${SuggestionsRepository.COL_WORD} LIKE ?
-                    AND ${SuggestionsRepository.COL_WORD} != ?
                     AND ${SuggestionsRepository.COL_HAS_DEFINITION}=1
                 ORDER BY ${SuggestionsRepository.COL_WORD}
                 LIMIT ${SuggestionsRepository.LIMIT}`
 
-        return (await this._db.query(query, [`${word}%`, word]))
+        return (await this._db.query(query, [`${word}%`]))
             .map((row) => row[SuggestionsRepository.COL_WORD])
     }
 }
