@@ -188,9 +188,10 @@ class MainView {
     }
 
     _onSuggestionSelected(word) {
-        this._mdcInputTextSearch.value = word
-        this._elemBtnSearch.click()
-        this._viewModel.onSuggestionSelected(word)
+        if (this._viewModel.onSuggestionSelected(word)) {
+            this._mdcInputTextSearch.value = word
+            this._elemBtnSearch.click()
+        }
     }
 
     _onWordElemClicked(wordElem) {

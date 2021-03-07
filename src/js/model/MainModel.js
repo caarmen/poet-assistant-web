@@ -66,6 +66,8 @@ class MainModel {
         return this._suggestionsRepository.fetchSuggestions(word, includeResultsForEmptyWord)
     }
 
+    clearSearchHistory = () => this._suggestionsRepository.clearSearchHisotry()
+
     selectVoice = (id) => this._speechEngine.selectVoice(id)
     setVoicePitch = (pitchValue) => this._speechEngine.setVoicePitch(pitchValue)
     setVoiceSpeed = (speedValue) => this._speechEngine.setVoiceSpeed(speedValue)
