@@ -39,6 +39,7 @@ The settings are:
 * voice speed
 * rhymer syllable matching settings
 * poem text
+* searched words
 
 Summary
 -------
