@@ -20,6 +20,7 @@ class SuggestionsRepository {
     constructor(db, settings) {
         this._db = db
         this._settings = settings
+        this._timeoutId
     }
     addSearchedWord(word) {
         this._settings.setSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS,
@@ -40,17 +41,23 @@ class SuggestionsRepository {
             return Promise.resolve([])
         }
         return new Promise((completionFunc) => {
-            const promiseHistory = this._fetchSuggestionsFromHistory(word)
-                .then((searchedWords) =>
-                    searchedWords.map((searchedWord) =>
-                        new Suggestion(Suggestion.SuggestionType.HISTORY, searchedWord)))
-            const promiseDictionary = this._fetchSuggestionsFromDictionary(word)
-                .then((dictionaryWords) =>
-                    dictionaryWords.map((dictionaryWord) =>
-                        new Suggestion(Suggestion.SuggestionType.DICTIONARY, dictionaryWord)))
-            Promise.all([promiseHistory, promiseDictionary]).then((suggestions) => {
-                completionFunc(suggestions.flat())
-            })
+            if (this._timeoutId != undefined) clearTimeout(this._timeoutId)
+            // In the case where the user clicked on the search input text, search immediately
+            // Otherwise if the user is typing, don't search too often to not hang the ui thread
+            let timeout = includeResultsForEmptyWord ? 0: 200
+            this._timeoutId = setTimeout(() => {
+                const promiseHistory = this._fetchSuggestionsFromHistory(word)
+                    .then((searchedWords) =>
+                        searchedWords.map((searchedWord) =>
+                            new Suggestion(Suggestion.SuggestionType.HISTORY, searchedWord)))
+                const promiseDictionary = this._fetchSuggestionsFromDictionary(word)
+                    .then((dictionaryWords) =>
+                        dictionaryWords.map((dictionaryWord) =>
+                            new Suggestion(Suggestion.SuggestionType.DICTIONARY, dictionaryWord)))
+                Promise.all([promiseHistory, promiseDictionary]).then((suggestions) => {
+                    completionFunc(suggestions.flat())
+                })
+            }, timeout)
         })
     }
 
