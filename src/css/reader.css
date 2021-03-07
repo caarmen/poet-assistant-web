@@ -1,0 +1,137 @@
+/**
+Copyright (c) 2021 - present Carmen Alvarez
+This file is part of Poet Assistant.
+Poet Assistant is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+Poet Assistant is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#placeholder-reader {
+	display: none;
+}
+#placeholder-reader, #placeholder-reader .mdc-text-field--textarea {
+	width: 100%;
+}
+#placeholder-reader-input {
+	/* screen height - (app bar height) - (voice settings) - (saved status) */
+	height: calc(100vh - 3*(var(--app-bar-row-height)) - (3*48px) - 16px);
+}
+#placeholder-reader-input #input-text-reader {
+	height: 100%;
+}
+#placeholder-reader-saved-state {
+	white-space:pre;
+	font-size: 0.6em;
+	color: var(--mdc-theme-text-secondary-on-light, #727272);
+	text-align: end;
+	margin-inline-end: 8px;
+	height: 16px;
+}
+#placeholder-reader-voices {
+	grid-row: 1;
+	grid-column: 1;
+	width: calc((100vw - 96px)/2);
+}
+#voice-label {
+	grid-row: 1;
+	grid-column: 1;
+}
+#setting-selected-voice {
+	grid-row: 1;
+	grid-column: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 48px;
+}
+#voices-menu .mdc-list {
+	padding-right: 48px;
+}
+#voices-menu .mdc-list-item {
+	width: 100%;
+}
+.voice-settings-grid{
+	display: grid;
+	align-items: center;
+	width: 40%;
+	padding-inline-start: 16px;
+}
+#voice-pitch-label {
+	grid-column: 1;
+	grid-row: 2;
+}
+#voice-pitch-slider {
+	grid-column: 2;
+	grid-row: 2;
+}
+#voice-speed-label {
+	grid-column: 1;
+	grid-row: 3;
+}
+#voice-speed-slider{
+	grid-column: 2;
+	grid-row: 3;
+}
+.mdc-slider {
+	min-width: 128px;
+}
+#selected-voice::after {
+	font-family: 'Material Icons';
+	content: "keyboard_arrow_down";
+}
+.setting-switch {
+	display: grid;
+	grid-template-columns: auto max-content;
+	align-items: center;
+}
+.switch-label {
+	font-weight: bold;
+	grid-row: 1;
+	grid-column: 1;
+	margin-top: 16px;
+}
+.switch-description {
+	font-size: 0.8em;
+	grid-row: 2;
+	grid-column: 1;
+	white-space: break-spaces;
+}
+.setting-switch .mdc-switch {
+	margin-top: 16px;
+	grid-row: 1;
+	grid-column: 2;
+	margin-inline-start: 16px;
+}
+#placeholder-reader-controls {
+	display: grid;
+}
+#placeholder-reader-play {
+	grid-row: 1;
+	grid-column: 2;
+	width: 96px;
+	align-self: center;
+}
+#placeholder-reader-actions {
+	grid-row: 1;
+	grid-column: 3;
+	width: calc((100vw - 96px)/2);
+	align-self: end;
+}
+#btn-play {
+	display: block;
+	font-size: 48px;
+	width: 96px;
+	height: 96px;
+	padding: 24px;
+}
+.button-bar {
+	margin-left: auto;
+	margin-right: 0;
+	width: max-content;
+}

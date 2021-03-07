@@ -1,0 +1,79 @@
+/**
+Copyright (c) 2021 - present Carmen Alvarez
+This file is part of Poet Assistant.
+Poet Assistant is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+Poet Assistant is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
+*/
+.list-loading {
+	text-align: center;
+	position: fixed;
+	top: 50%;
+	width: 100%;
+}
+.dictionary-list-item-word-type {
+	font-weight: bold;
+	display: table-cell;
+	width: 3em;
+	padding-inline-end: 1em;
+	text-align: end;
+}
+.dictionary-list-item-definition {
+	display: table-cell;
+}
+#placeholder-definitions-list .mdc-list-item {
+	height: auto;
+}
+.mdc-list-item__text{
+	white-space: normal;
+}
+#placeholder-thesaurus-list .list-header-settings {
+	display: none;
+}
+#placeholder-definitions-list .list-header-settings {
+	display: none;
+}
+.empty-list {
+	text-align: center;
+	position: fixed;
+	top: 50%;
+	width: 100%;
+}
+.search-results-list {
+	display: block;
+	width: 100%;
+	overflow-y: scroll;
+	height: calc(100vh - 3*(var(--app-bar-row-height)) - 40px - 16px - 16px);
+}
+.list-header {
+	padding-inline-end: 8px;
+}
+.list-header-text {
+	font-weight: bold;
+	padding-inline-start: 16px;
+	font-size: 1.2em;
+}
+.list-header-settings {
+	float: right;
+	vertical-align: middle;
+}
+.list-header-copy {
+	float: right;
+	vertical-align: middle;
+}
+.list-item-sub-header-1{
+	font-weight: bold;
+	background-color: var(--sub-header-1, #dddddd);
+}
+.list-item-sub-header-2{
+	font-style: italic;
+	padding-right: 1em;
+	color: var(--mdc-theme-text-secondary-on-light, #727272);
+}
