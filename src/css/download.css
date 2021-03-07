@@ -22,30 +22,30 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 	background-color: var(--mdc-theme-surface);
 	text-align: start;
 }
-.card-header-section {
+.download-card__header{
 	padding: 16px;
 	display: table-row;
 }
-.card-icon {
+.download-card__header__icon {
 	display: table-cell;
 	width: 24px;
 	height: 24px;
 	padding-right: 16px;
 	vertical-align: middle;
 }
-.card-header-text-section {
+.download-card__header__text{
 	display: table-cell;
 }
-.card-header {
+.download-card__header__text__title {
 	font-weight: bold;
 	font-size: 1.5em;
 	color: var(--mdc-theme-text-primary-on-light);
 	margin-bottom: 8px;
 }
-.card-sub-header {
+.download-card__header__text__subtitle {
 	color: var(--mdc-theme-text-secondary-on-light);
 }
-.card-badges-section {
+.download-card__badges{
 	padding-top: 16px;
 	padding-bottom: 16px;
 	background-color: white;

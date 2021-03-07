@@ -12,25 +12,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-.about-version {
+.about__version {
 	font-weight: bold;
 	width: 100%;
 	text-align: center;
 }
-.about-copyright {
+.about__copyright {
 	font-size: 0.8em;
 	width: 100%;
 	text-align: center;
 }
-.about-contact {
+.about__contact {
 	font-size: 0.8em;
 	width: 100%;
 	text-align: center;
 	margin-bottom: 16px;
 }
-.about-list .material-icons{
+.about__list .material-icons{
 	margin-inline-end: 16px;
 }
-.about-legal-list {
+.about__legal-list {
 	margin-left: 16px
 }

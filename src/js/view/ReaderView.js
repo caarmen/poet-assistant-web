@@ -19,10 +19,10 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class ReaderView {
 
     constructor(i18n, template) {
-        this._elemPlaceholderReaderPlay = document.querySelector("#placeholder-reader-play")
-        this._elemPlaceholderReaderActions = document.querySelector("#placeholder-reader-actions")
-        this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader-input")
-        this._elemPlaceholderReaderSavedState
+        this._elemPlaceholderReaderPlay = document.querySelector("#placeholder-reader__controls__play")
+        this._elemPlaceholderReaderActions = document.querySelector("#placeholder-reader__controls__actions")
+        this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader__input")
+        this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader__saved-state")
 
         this._elemBtnPlay
         this._elemBtnCopy
@@ -50,7 +50,6 @@ class ReaderView {
         this._elemPlaceholderReaderActions.innerHTML = this._template.createReaderActionsHtml()
         this._i18n.translateElement(this._elemPlaceholderReaderActions)
         this._elemPlaceholderReaderInput.innerHTML = this._template.createTextareaHtml("input-text-reader", "reader_hint")
-        this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader-saved-state")
 
     }
 

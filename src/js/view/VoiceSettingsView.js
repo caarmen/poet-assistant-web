@@ -22,7 +22,7 @@ class VoiceSettingsView {
         this.voiceSelectonObserver = (selectedVoiceIndex) => { }
         this.pitchObserver = (pitchValue) => { }
         this.speedObserver = (speedValue) => { }
-        this._elemPlaceholderReaderVoices = document.querySelector("#placeholder-reader-voices")
+        this._elemPlaceholderReaderVoices = document.querySelector("#placeholder-reader__controls__voices")
 
         this._mdcMenuVoices
         this._mdcSliderPitch
@@ -45,8 +45,8 @@ class VoiceSettingsView {
     }
 
     _initializeViews() {
-        this._elemReaderVoices = document.querySelector("#placeholder-reader-voices #voices-menu")
-        this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader-voices #selected-voice")
+        this._elemReaderVoices = document.querySelector("#placeholder-reader__controls__voices #voice-settings__voice__voices-menu")
+        this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader__controls__voices #voice-settings__voice__name")
         this._mdcSliderPitch = new VoiceSettingsView.MDCSlider(document.querySelector("#voice-pitch"))
         this._mdcSliderSpeed = new VoiceSettingsView.MDCSlider(document.querySelector("#voice-speed"))
         this._mdcSliderPitch.listen('MDCSlider:change', (e) => this.pitchObserver(e.detail.value))

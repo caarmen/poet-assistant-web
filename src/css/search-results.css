@@ -18,26 +18,26 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 	top: 50%;
 	width: 100%;
 }
-.dictionary-list-item-word-type {
+.dictionary-list-item__word-type {
 	font-weight: bold;
 	display: table-cell;
 	width: 3em;
 	padding-inline-end: 1em;
 	text-align: end;
 }
-.dictionary-list-item-definition {
+.dictionary-list-item__definition {
 	display: table-cell;
 }
-#placeholder-definitions-list .mdc-list-item {
+#placeholder-definitions__list .mdc-list-item {
 	height: auto;
 }
 .mdc-list-item__text{
 	white-space: normal;
 }
-#placeholder-thesaurus-list .list-header-settings {
+#placeholder-thesaurus__list .list-header__settings {
 	display: none;
 }
-#placeholder-definitions-list .list-header-settings {
+#placeholder-definitions__list .list-header__settings {
 	display: none;
 }
 .empty-list {
@@ -55,24 +55,24 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 .list-header {
 	padding-inline-end: 8px;
 }
-.list-header-text {
+.list-header__text {
 	font-weight: bold;
 	padding-inline-start: 16px;
 	font-size: 1.2em;
 }
-.list-header-settings {
+.list-header__settings {
 	float: right;
 	vertical-align: middle;
 }
-.list-header-copy {
+.list-header__copy {
 	float: right;
 	vertical-align: middle;
 }
-.list-item-sub-header-1{
+.list-item--sub-header-1{
 	font-weight: bold;
 	background-color: var(--sub-header-1, #dddddd);
 }
-.list-item-sub-header-2{
+.list-item--sub-header-2{
 	font-style: italic;
 	padding-right: 1em;
 	color: var(--mdc-theme-text-secondary-on-light, #727272);
