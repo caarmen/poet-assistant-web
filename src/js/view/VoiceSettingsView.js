@@ -72,10 +72,6 @@ class VoiceSettingsView {
             this.voiceSelectonObserver(e.detail.index)
             this._elemReaderSelectedVoice.innerText = voices[e.detail.index].label
         })
-        if (voices.length > 0) {
-            this.voiceSelectonObserver(0)
-            this._elemReaderSelectedVoice.innerText = voices[0].label
-        }
         this._elemReaderSelectedVoice.onclick = () => {
             this._mdcMenuVoices.open = true
         }
