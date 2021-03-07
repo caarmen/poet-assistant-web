@@ -33,6 +33,7 @@ class SuggestionsRepository {
         )
     }
 
+    clearSearchHisotry = () => this._settings.setSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS, "[]")
 
     async fetchSuggestions(word, includeResultsForEmptyWord) {
         if (word.length == 0 && !includeResultsForEmptyWord) {
