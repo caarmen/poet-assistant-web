@@ -21,6 +21,17 @@ class Settings {
         this._storage = window.localStorage
         this._isAvailable = this.isStorageAvailable()
         this._observers = []
+        this._lastCommandId = 0
+        this._worker = new Worker("src/js/model/SettingsWorker.js")
+        // Maintain a map of callbacks per settings command id.
+        // When we receive a message from the worker, invoke the
+        // callback with the SettingsResult
+        this._callbacks = new Map()
+        this._worker.onmessage = (event) => {
+            const settingsResult = event.data
+            const callback = this._callbacks.get(settingsResult.commandId)
+            callback(settingsResult)
+        }
     }
 
     addObserver = (observer) => this._observers.push(observer)
@@ -30,27 +41,31 @@ class Settings {
 
     getSetting(key, defaultValue) {
         if (this._isAvailable) {
-            const value = this._storage.getItem(key)
-            return (value != undefined) ? value : defaultValue
+            return new Promise((completionFunc) => {
+                const readCommandId = this._getNextCommandId()
+                this._callbacks.set(readCommandId, (settingsResult) => {
+                    completionFunc(settingsResult.settingsValue)
+                    this._callbacks.delete(readCommandId)
+
+                })
+                this._worker.postMessage(SettingsCommand.read(readCommandId, key, defaultValue))
+            })
+        } else {
+            return undefined
         }
-        return undefined
     }
 
     setSetting(key, value) {
         if (this._isAvailable) {
-            const oldValue = this._storage.getItem(key)
-            if (oldValue != value) {
-                this._storage.setItem(key, value)
-                this._observers.forEach((observer) => {
-                    observer(key, value)
-                })
-            }
+            const writeCommandId = this._getNextCommandId()
+            this._worker.postMessage(SettingsCommand.write(writeCommandId, key, value))
         }
     }
 
     removeSetting(key) {
         if (this._isAvailable) {
-            this._storage.removeItem(key)
+            const deleteCommandId = this._getNextCommandId()
+            this._worker.postMessage(SettingsCommand.remove(deleteCommandId, key))
         }
     }
 
@@ -77,4 +92,5 @@ class Settings {
                 (this._storage && this._storage.length !== 0)
         }
     }
+    _getNextCommandId = () => ++this._lastCommandId
 }
