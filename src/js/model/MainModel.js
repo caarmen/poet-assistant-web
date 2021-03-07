@@ -32,7 +32,7 @@ class MainModel {
         this._rhymerRepository.settingsChangeObserver = () => this.rhymerSettingsChangedObserver()
         this._thesaurusRepository = new ThesaurusRepository(db)
         this._dictionaryRepository = new DictionaryRepository(db)
-        this._suggestionsRepository = new SuggestionsRepository(db)
+        this._suggestionsRepository = new SuggestionsRepository(db, this._settings)
     }
 
     isDesktop = () => globalThis.desktop && globalThis.desktop.desktop
@@ -46,6 +46,7 @@ class MainModel {
     }
 
     async fetchRhymes(word) {
+        this._suggestionsRepository.addSearchedWord(word)
         return this._rhymerRepository.fetchRhymes(word)
     }
     getRhymerSettingAorAo = () => this._rhymerRepository.getAorAoSetting()
@@ -54,14 +55,18 @@ class MainModel {
     setRhymerSettingAoAa = (value) => this._rhymerRepository.setAoAaSetting(value)
 
     async fetchThesaurus(word) {
+        this._suggestionsRepository.addSearchedWord(word)
         return this._thesaurusRepository.fetch(word)
     }
     async fetchDefinitions(word) {
+        this._suggestionsRepository.addSearchedWord(word)
         return this._dictionaryRepository.fetchDefinitions(word)
     }
-    async fetchSuggestions(word) {
-        return this._suggestionsRepository.fetchSuggestions(word)
+    async fetchSuggestions(word, includeResultsForEmptyWord) {
+        return this._suggestionsRepository.fetchSuggestions(word, includeResultsForEmptyWord)
     }
+
+    clearSearchHistory = () => this._suggestionsRepository.clearSearchHisotry()
 
     selectVoice = (id) => this._speechEngine.selectVoice(id)
     setVoicePitch = (pitchValue) => this._speechEngine.setVoicePitch(pitchValue)

@@ -17,10 +17,63 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class SuggestionsRepository {
-    constructor(db) {
+    constructor(db, settings) {
         this._db = db
+        this._settings = settings
+        this._timeoutId
     }
-    async fetchSuggestions(word) {
+    addSearchedWord(word) {
+        this._settings.setSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS,
+            JSON.stringify(
+                Array.from(
+                    this._fetchSearchedWords()
+                        .add(word)
+                        .values()
+                )
+            )
+        )
+    }
+
+    clearSearchHisotry = () => this._settings.removeSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS)
+
+    fetchSuggestions(word, includeResultsForEmptyWord) {
+        if (word.length == 0 && !includeResultsForEmptyWord) {
+            return Promise.resolve([])
+        }
+        return new Promise((completionFunc) => {
+            if (this._timeoutId != undefined) clearTimeout(this._timeoutId)
+            // In the case where the user clicked on the search input text, search immediately
+            // Otherwise if the user is typing, don't search too often to not hang the ui thread
+            let timeout = includeResultsForEmptyWord ? 0: 200
+            this._timeoutId = setTimeout(() => {
+                const promiseHistory = this._fetchSuggestionsFromHistory(word)
+                    .then((historyWords) =>
+                        historyWords.map((historyWord) =>
+                            new Suggestion(Suggestion.SuggestionType.HISTORY, historyWord)))
+                const promiseDictionary = this._fetchSuggestionsFromDictionary(word)
+                    .then((dictionaryWords) =>
+                        dictionaryWords.map((dictionaryWord) =>
+                            new Suggestion(Suggestion.SuggestionType.DICTIONARY, dictionaryWord)))
+                Promise.all([promiseHistory, promiseDictionary]).then((suggestions) => {
+                    completionFunc(suggestions.flat())
+                })
+            }, timeout)
+        })
+    }
+
+    _fetchSearchedWords = () => new Set(
+        JSON.parse(
+            this._settings.getSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS, "[]")
+        )
+    )
+
+    _fetchSuggestionsFromHistory = (word) => Promise.resolve(
+        Array.from(this._fetchSearchedWords().values())
+            .filter((searchedWord) => searchedWord.startsWith(word))
+            .sort()
+    )
+
+    async _fetchSuggestionsFromDictionary(word) {
         if (word.length == 0) {
             return []
         } else {
@@ -41,3 +94,4 @@ SuggestionsRepository.LIMIT = 10
 SuggestionsRepository.TABLE_WORD_VARIANTS = "word_variants"
 SuggestionsRepository.COL_HAS_DEFINITION = "has_definition"
 SuggestionsRepository.COL_WORD = "word"
+SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS = "searched_words"

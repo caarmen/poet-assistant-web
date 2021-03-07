@@ -238,11 +238,42 @@ class MainViewModel {
         this.searchButtonDisabled.value = text.length == 0
         this.clearSearchTextButtonVisible.value = text.length > 0
     }
-    fetchSuggestions(word) {
+
+    /**
+     * @return true if the suggestion is a "real" suggestion (not the item "clear search history")
+     */
+    onSuggestionSelected(word) {
+        if (word == "clear_search_history") {
+            this.dialogInfo.value = DialogInfo.prompt(
+                "clear_search_history_dialog_title",
+                "clear_search_history_dialog_message",
+                () => { this._model.clearSearchHistory() }
+            )
+            return false
+        } else {
+            this.clearSearchTextButtonVisible.value = word.length > 0
+            return true
+        }
+    }
+    fetchSuggestions(word, includeResultsForEmptyWord) {
         if (!this.isLoading.value) {
             const searchTerm = this._cleanSearchTerm(word)
-            this._model.fetchSuggestions(searchTerm).then(suggestions => {
-                this.suggestions.value = suggestions.map((suggestion) => new MenuItem(suggestion, suggestion))
+            this._model.fetchSuggestions(searchTerm, includeResultsForEmptyWord).then(suggestions => {
+                let suggestionsMenuItems = suggestions.map((suggestion) =>
+                    new MenuItem(suggestion.word, suggestion.word, new MenuItemIcon(
+                        suggestion.type == Suggestion.SuggestionType.HISTORY ? "history" : "search",
+                        MenuItemIcon.IconSource.MATERIAL
+                    ))
+                )
+                // If the suggestions contain any search history, also include an option to clear search history
+                if (suggestions.find((suggestion) => suggestion.type == Suggestion.SuggestionType.HISTORY)) {
+                    suggestionsMenuItems.unshift(
+                        new MenuItem("clear_search_history", "clear_search_history",
+                            new MenuItemIcon("delete", MenuItemIcon.IconSource.MATERIAL)
+                        )
+                    )
+                }
+                this.suggestions.value = suggestionsMenuItems
             })
         }
     }
