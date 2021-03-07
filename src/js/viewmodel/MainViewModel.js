@@ -265,6 +265,7 @@ class MainViewModel {
                         MenuItemIcon.IconSource.MATERIAL
                     ))
                 )
+                // If the suggestions contain any search history, also include an option to clear search history
                 if (suggestions.find((suggestion) => suggestion.type == Suggestion.SuggestionType.HISTORY)) {
                     suggestionsMenuItems.unshift(
                         new MenuItem("clear_search_history", "clear_search_history",

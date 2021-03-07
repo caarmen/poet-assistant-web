@@ -47,9 +47,9 @@ class SuggestionsRepository {
             let timeout = includeResultsForEmptyWord ? 0: 200
             this._timeoutId = setTimeout(() => {
                 const promiseHistory = this._fetchSuggestionsFromHistory(word)
-                    .then((searchedWords) =>
-                        searchedWords.map((searchedWord) =>
-                            new Suggestion(Suggestion.SuggestionType.HISTORY, searchedWord)))
+                    .then((historyWords) =>
+                        historyWords.map((historyWord) =>
+                            new Suggestion(Suggestion.SuggestionType.HISTORY, historyWord)))
                 const promiseDictionary = this._fetchSuggestionsFromDictionary(word)
                     .then((dictionaryWords) =>
                         dictionaryWords.map((dictionaryWord) =>
@@ -67,25 +67,27 @@ class SuggestionsRepository {
         )
     )
 
-    _fetchSuggestionsFromHistory = (word) => new Promise((completionFunc) => {
-        completionFunc(Array.from(this._fetchSearchedWords().values())
-            .filter((searchedWord) => searchedWord.startsWith(word)).sort())
-    })
+    _fetchSuggestionsFromHistory = (word) => Promise.resolve(
+        Array.from(this._fetchSearchedWords().values())
+            .filter((searchedWord) => searchedWord.startsWith(word))
+            .sort()
+    )
 
     async _fetchSuggestionsFromDictionary(word) {
         if (word.length == 0) {
             return []
-        }
-        const query = `
+        } else {
+            const query = `
                 SELECT DISTINCT ${SuggestionsRepository.COL_WORD}
                 FROM ${SuggestionsRepository.TABLE_WORD_VARIANTS}
                 WHERE ${SuggestionsRepository.COL_WORD} LIKE ?
                     AND ${SuggestionsRepository.COL_HAS_DEFINITION}=1
                 ORDER BY ${SuggestionsRepository.COL_WORD}
                 LIMIT ${SuggestionsRepository.LIMIT}`
-        return (await this._db.query(query, [`${word}%`])).map((row) =>
-            row[SuggestionsRepository.COL_WORD]
-        )
+            return (await this._db.query(query, [`${word}%`])).map((row) =>
+                row[SuggestionsRepository.COL_WORD]
+            )
+        }
     }
 }
 SuggestionsRepository.LIMIT = 10
