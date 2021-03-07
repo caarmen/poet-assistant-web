@@ -49,7 +49,7 @@
     "poem_saved_state_label_waiting": " ",
     "progressbar_app_label": "Loading app",
     "progressbar_db_label": "Loading dictionaries {0}%",
-    "reader_hint": "Paste your poem text here",
+    "reader_hint": "Compose your poem text here",
     "reader_clear_poem_dialog_title": "Delete poem?",
     "reader_clear_poem_dialog_message": "Are you sure you want to delete the poem?",
     "settings_rhymer_title": "Rhymer Settings",
