@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-class DialogInfo{
+class DialogInfo {
     constructor(title, contentTemplateId, templateParameters, positiveAction) {
         this.title = title
         this.contentTemplateId = contentTemplateId
@@ -24,3 +24,9 @@ class DialogInfo{
         this.positiveAction = positiveAction
     }
 }
+DialogInfo.custom = (title, contentTemplateId, templateParameters) => new DialogInfo(title, contentTemplateId, templateParameters)
+DialogInfo.prompt = (title, message, positiveAction) => new DialogInfo(
+    title,
+    "dialog-simple-message",
+    new Map([["__CONTENT__", message]]),
+    positiveAction)
