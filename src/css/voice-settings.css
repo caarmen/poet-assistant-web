@@ -15,7 +15,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 .voice-settings{
 	display: grid;
 	align-items: center;
-	width: 40%;
+	grid-template-columns: max-content auto;
 	padding-inline-start: 16px;
 }
 #voice-settings__voice-label {
@@ -27,8 +27,8 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 	grid-column: 2;
 	display: flex;
 	align-items: center;
-	justify-content: center;
 	height: 48px;
+	padding-inline-start: 24px;
 }
 #voice-settings__voice__name::after {
 	font-family: 'Material Icons';
@@ -58,4 +58,5 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 }
 .mdc-slider {
 	min-width: 128px;
+	max-width: 200px;
 }
