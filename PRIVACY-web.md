@@ -53,6 +53,7 @@ The settings are:
 * voice pitch
 * voice speed
 * rhymer syllable matching settings
+* poem text
 
 Summary
 -------
