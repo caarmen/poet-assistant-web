@@ -35,14 +35,23 @@ class SuggestionsRepository {
 
     clearSearchHisotry = () => this._settings.removeSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS)
 
-    async fetchSuggestions(word, includeResultsForEmptyWord) {
+    fetchSuggestions(word, includeResultsForEmptyWord) {
         if (word.length == 0 && !includeResultsForEmptyWord) {
-            return []
+            return Promise.resolve([])
         }
-        return [
-            this._fetchSuggestionsFromHistory(word).map((searchedWord) => new Suggestion(Suggestion.SuggestionType.HISTORY, searchedWord)),
-            (await this._fetchSuggestionsFromDictionary(word)).map((dictionaryWord) => new Suggestion(Suggestion.SuggestionType.DICTIONARY, dictionaryWord))
-        ].flat()
+        return new Promise((completionFunc) => {
+            const promiseHistory = this._fetchSuggestionsFromHistory(word)
+                .then((searchedWords) =>
+                    searchedWords.map((searchedWord) =>
+                        new Suggestion(Suggestion.SuggestionType.HISTORY, searchedWord)))
+            const promiseDictionary = this._fetchSuggestionsFromDictionary(word)
+                .then((dictionaryWords) =>
+                    dictionaryWords.map((dictionaryWord) =>
+                        new Suggestion(Suggestion.SuggestionType.DICTIONARY, dictionaryWord)))
+            Promise.all([promiseHistory, promiseDictionary]).then((suggestions) => {
+                completionFunc(suggestions.flat())
+            })
+        })
     }
 
     _fetchSearchedWords = () => new Set(
@@ -51,8 +60,10 @@ class SuggestionsRepository {
         )
     )
 
-    _fetchSuggestionsFromHistory = (word) => Array.from(this._fetchSearchedWords().values())
-        .filter((searchedWord) => searchedWord.startsWith(word)).sort()
+    _fetchSuggestionsFromHistory = (word) => new Promise((completionFunc) => {
+        completionFunc(Array.from(this._fetchSearchedWords().values())
+            .filter((searchedWord) => searchedWord.startsWith(word)).sort())
+    })
 
     async _fetchSuggestionsFromDictionary(word) {
         if (word.length == 0) {
