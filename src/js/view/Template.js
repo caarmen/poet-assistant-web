@@ -21,41 +21,6 @@ class Template {
         this._i18n = i18n
         this._templates = templates
     }
-    loadTemplates = () => new FilesReader().loadFiles(
-        [
-            "about",
-            "app-bar",
-            "button-icon-text",
-            "circular-progress-indicator",
-            "context-menu",
-            "context-menu-header",
-            "context-menu-item",
-            "context-menu-item-custom-icon",
-            "context-menu-item-material-icon",
-            "dialog",
-            "dialog-simple-message",
-            "dictionary-list-item",
-            "input-text",
-            "list",
-            "list-empty",
-            "list-header",
-            "list-item-sub-header-1",
-            "list-item-sub-header-2",
-            "list-item-word",
-            "linear-progress-indicator",
-            "reader-actions",
-            "reader-play",
-            "slider",
-            "snackbar",
-            "switch",
-            "tab",
-            "tab-bar",
-            "textarea",
-            "voice-selection"
-        ].map((templateName) => new FileReaderInput(templateName, `../../../templates/${templateName}.template.html`))
-    ).then((templates) => {
-        this._templates = templates
-    })
 
     createHtml(templateId, templateParameters) {
         let result = this._templates.get(templateId)
