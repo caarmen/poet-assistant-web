@@ -47,6 +47,17 @@ class MainModel {
         return this._dictionaryRepository.getRandomWord()
     }
 
+    cleanSearchTerm = (text) => text.toLowerCase().trim()
+
+    getWordTypeLabel(wordType) {
+        let wordTypeLabel
+        if (wordType == WordType.ADJECTIVE) wordTypeLabel = "adjective"
+        else if (wordType == WordType.ADVERB) wordTypeLabel = "adverb"
+        else if (wordType == WordType.NOUN) wordTypeLabel = "noun"
+        else if (wordType == WordType.VERB) wordTypeLabel = "verb"
+        return wordTypeLabel
+    }
+
     async fetchRhymes(word) {
         this._suggestionsRepository.addSearchedWord(word)
         return this._rhymerRepository.fetchRhymes(word)

@@ -19,43 +19,57 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class MainViewModel {
     constructor() {
         this.i18n = new I18n()
-        this.rhymes = new ObservableField()
+
         this.searchTextDisabled = new ObservableField(true)
         this.searchButtonDisabled = new ObservableField(true)
         this.clearSearchTextButtonVisible = new ObservableField(false)
-        this.thesaurusEntries = new ObservableField()
-        this.definitions = new ObservableField()
-        this.suggestions = new ObservableField()
-        this.voices = new ObservableField([])
-        this.selectedVoiceLabel = new ObservableField()
-        this.voicePitch = new ObservableField()
-        this.voiceSpeed = new ObservableField()
         this.isReaderTabVisible = new ObservableField(false)
         this.isLoading = new ObservableField()
-        this.isRhymerLoading = new ObservableField(false)
-        this.isThesaurusLoading = new ObservableField(false)
-        this.isDefinitionsLoading = new ObservableField(false)
-        this.poemSavedStateLabel = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
         this.isLoading.value = true
-        this._model = new MainModel()
-        this.poemText = this._model.poemText
-        this._model.rhymerSettingsChangedObserver = () => this._refetchRhymes()
-        this._model.thesaurusSettingsChangedObserver = () => this._refetchThesaurus()
-        this.isSpeechPlaying = this._model.isSpeechPlaying
-        this.contextMenuItems = this._createContextMenuItems(false)
+
+        this.dialogInfo = new ObservableField()
         this.snackbarText = new ObservableField()
+        this.contextMenuItems = this._createContextMenuItems(false)
+
         this.appBarMenuItems = [
             new MenuItem("menu-about", "app_bar_menu_about_title", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL)),
             new MenuItem("menu-random", "app_bar_menu_random_title", new MenuItemIcon("casino", MenuItemIcon.IconSource.MATERIAL)),
         ]
-        this.dialogInfo = new ObservableField()
-        this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
-        this._model._speechEngine.selectedVoice.observer = (newVoice) => this.selectedVoiceLabel.value = this._getVoiceLabel(newVoice)
-        this._model._speechEngine.speed.observer = (newSpeed) => this.voiceSpeed.value = newSpeed
-        this._model._speechEngine.pitch.observer = (newPitch) => this.voicePitch.value = newPitch
-        this._model._poemRepository.savedState.observer = (newSavedState) => this.poemSavedStateLabel.value = this._getSavedStateLabel(newSavedState)
+
+        this._model = new MainModel()
+
+        this._rhymerViewModel = new RhymerViewModel(this.i18n, this._model)
+        this.rhymes = this._rhymerViewModel.rhymes
+        this.isRhymerLoading = this._rhymerViewModel.isRhymerLoading
+        this._rhymerViewModel.snackbarText.observer = (text) => this.snackbarText.value = text
+
+        this._thesaurusViewModel = new ThesaurusViewModel(this.i18n, this._model)
+        this.thesaurusEntries = this._thesaurusViewModel.thesaurusEntries
+        this.isThesaurusLoading = this._thesaurusViewModel.isThesaurusLoading
+        this._thesaurusViewModel.snackbarText.observer = (text) => this.snackbarText.value = text
+
+        this._definitionsViewModel = new DefinitionsViewModel(this.i18n, this._model)
+        this.definitions = this._definitionsViewModel.definitions
+        this.isDefinitionsLoading = this._definitionsViewModel.isDefinitionsLoading
+        this._definitionsViewModel.snackbarText.observer = (text) => this.snackbarText.value = text
+
+        this._suggestionsViewModel = new SuggestionsViewModel(this._model)
+        this.suggestions = this._suggestionsViewModel.suggestions
+        this._suggestionsViewModel.dialogInfo.observer = (value) => this.dialogInfo.value = value 
+
+        this._readerViewModel = new ReaderViewModel(this._model)
+        this.voices = new ObservableField()
+        this.poemText = this._readerViewModel.poemText
+        this.isSpeechPlaying = this._readerViewModel.isSpeechPlaying
+        this._readerViewModel.snackbarText.observer = (text) => this.snackbarText.value = text
+        this._readerViewModel.voices.observer = (newVoices) => this.updateVoices(newVoices)
+        this.poemSavedStateLabel = this._readerViewModel.poemSavedStateLabel
+        this.voicePitch = this._readerViewModel.voicePitch
+        this.voiceSpeed = this._readerViewModel.voiceSpeed
+        this.selectedVoiceLabel = this._readerViewModel.selectedVoiceLabel
+        this._readerViewModel.dialogInfo.observer = (value) => this.dialogInfo.value = value 
     }
 
     loadTranslations = () => this.i18n.load()
@@ -114,139 +128,28 @@ class MainViewModel {
 
     fetchRhymes(word) {
         if (!this.isLoading.value) {
-            this.isRhymerLoading.value = true
-            const searchTerm = this._cleanSearchTerm(word)
-            this._model.fetchRhymes(searchTerm).then(wordRhymes => {
-                this.isRhymerLoading.value = false
-                this.rhymes.value = new ResultList(searchTerm, [
-                    this._createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables"),
-                    this._createRhymeListItems(wordRhymes.lastThreeSyllableRhymes, "last_three_syllables"),
-                    this._createRhymeListItems(wordRhymes.lastTwoSyllablesRhymes, "last_two_syllables"),
-                    this._createRhymeListItems(wordRhymes.lastSyllableRhymes, "last_syllable")
-                ].flat())
-            })
+            this._rhymerViewModel.fetchRhymes(word)
         }
     }
-    _refetchRhymes() {
-        if (this.rhymes.value != undefined) {
-            this.fetchRhymes(this.rhymes.value.word)
-        }
-    }
-
-    _createRhymeListItems = (syllableRhymes, syllableTypeLabel) =>
-        (syllableRhymes || []).flatMap((item) =>
-            [
-                new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, syllableTypeLabel, item.syllables)
-            ].concat(
-                item.rhymes.map(rhyme => new ListItem(ListItem.ListItemStyles.WORD, rhyme))
-            )
-        )
-    onShareRhymes() {
-        this._model.copyText(this._getRhymesShareText())
-        this.snackbarText.value = "snackbar_copied_rhymes"
-    }
-    _getRhymesShareText = () =>
-        this.i18n.translate("share_rhymes_title", this.rhymes.value.word) +
-        this.rhymes.value.listItems.map((listItem) => {
-            if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_1) {
-                return this.i18n.translate("share_rhymes_subtitle", this.i18n.translate(listItem.text, listItem.args))
-            } else {
-                return this.i18n.translate("share_rhymes_word", listItem.text)
-            }
-        }
-        ).join("")
-
-    getRhymerSettingsSwitches = () => [
-        new SwitchItem("setting-rhymer-aor-ao", "setting_rhymer_aor_ao_label", "setting_rhymer_aor_ao_description", this._model.getRhymerSettingAorAo()),
-        new SwitchItem("setting-rhymer-ao-aa", "setting_rhymer_ao_aa_label", "setting_rhymer_ao_aa_description", this._model.getRhymerSettingAoAa())
-    ]
-    onRhymerSettingToggled(id, value) {
-        if (id == "setting-rhymer-aor-ao") {
-            this._model.setRhymerSettingAorAo(value)
-        } else if (id == "setting-rhymer-ao-aa") {
-            this._model.setRhymerSettingAoAa(value)
-        }
-    }
+    onShareRhymes = () => this._rhymerViewModel.onShareRhymes()
+    getRhymerSettingsSwitches = () => this._rhymerViewModel.getRhymerSettingsSwitches()
+    onRhymerSettingToggled = (id, value) => this._rhymerViewModel.onRhymerSettingToggled(id, value)
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
-            this.isThesaurusLoading.value = true
-            const searchTerm = this._cleanSearchTerm(word)
-            this._model.fetchThesaurus(searchTerm).then(thesaurusEntries => {
-                this.isThesaurusLoading.value = false
-                let resultListItems = []
-                thesaurusEntries.forEach(thesaurusEntry => {
-                    const wordTypeLabel = this._getWordTypeLabel(thesaurusEntry.wordType)
-                    resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, `part_of_speech_${wordTypeLabel}`))
-                    if (thesaurusEntry.synonyms.length > 0) {
-                        resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "synonyms"))
-                        resultListItems = resultListItems.concat(thesaurusEntry.synonyms.map(synonym => new ListItem(ListItem.ListItemStyles.WORD, synonym)))
-                    }
-                    if (thesaurusEntry.antonyms.length > 0) {
-                        resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "antonyms"))
-                        resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(ListItem.ListItemStyles.WORD, antonym)))
-                    }
-                })
-                this.thesaurusEntries.value = new ResultList(searchTerm, resultListItems)
-            })
+            this._thesaurusViewModel.fetchThesaurus(word)
         }
     }
-    _refetchThesaurus() {
-        if (this.thesaurusEntries.value != undefined) {
-            this.fetchThesaurus(this.thesaurusEntries.value.word)
-        }
-    }
-    getThesaurusSettingsSwitches = () => [
-        new SwitchItem("setting-thesaurus-reverse-lookup", "setting_thesaurus_reverse_lookup_label", "setting_thesaurus_reverse_lookup_description", this._model.getThesaurusSettingReverseLookup())
-    ]
-    onThesaurusSettingToggled(id, value) {
-        if (id == "setting-thesaurus-reverse-lookup") {
-            this._model.setThesaurusSettingReverseLookup(value)
-        }
-    }
-
-    onShareThesaurus() {
-        this._model.copyText(this._getThesaurusShareText())
-        this.snackbarText.value = "snackbar_copied_thesaurus"
-    }
-    _getThesaurusShareText = () =>
-        this.i18n.translate("share_thesaurus_title", this.thesaurusEntries.value.word) +
-        this.thesaurusEntries.value.listItems.map((listItem) => {
-            if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_1) {
-                return this.i18n.translate("share_thesaurus_sub_header_1", this.i18n.translate(listItem.text, listItem.args))
-            } else if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_2) {
-                return this.i18n.translate("share_thesaurus_sub_header_2", this.i18n.translate(listItem.text, listItem.args))
-            } else {
-                return this.i18n.translate("share_thesaurus_word", listItem.text)
-            }
-        }
-        ).join("")
+    onShareThesaurus = () => this._thesaurusViewModel.onShareThesaurus()
+    getThesaurusSettingsSwitches = () => this._thesaurusViewModel.getThesaurusSettingsSwitches()
+    onThesaurusSettingToggled = (id, value) => this._thesaurusViewModel.onThesaurusSettingToggled(id, value)
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
-            this.isDefinitionsLoading.value = true
-            const searchTerm = this._cleanSearchTerm(word)
-            this._model.fetchDefinitions(searchTerm).then(definitions => {
-                this.isDefinitionsLoading.value = false
-                this.definitions.value = new DictionaryResultList(
-                    searchTerm,
-                    definitions.map(dictionaryEntry => {
-                        const wordTypeLabel = this._getWordTypeLabel(dictionaryEntry.wordType)
-                        return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
-                    })
-                )
-            })
+            this._definitionsViewModel.fetchDefinitions(word)
         }
     }
-    onShareDefinitions() {
-        this._model.copyText(this._getDefinitionsShareText())
-        this.snackbarText.value = "snackbar_copied_definitions"
-    }
-    _getDefinitionsShareText = () =>
-        this.i18n.translate("share_dictionary_title", this.definitions.value.word) +
-        this.definitions.value.listItems.map((dictionaryListItem) =>
-            this.i18n.translate("share_dictionary_definition", this.i18n.translate(dictionaryListItem.wordTypeLabel), dictionaryListItem.definition)
-        ).join("")
+    onShareDefinitions = () => this._definitionsViewModel.onShareDefinitions()
 
     onSearchTextInput(text) {
         this.fetchSuggestions(text)
@@ -258,51 +161,15 @@ class MainViewModel {
      * @return true if the suggestion is a "real" suggestion (not the item "clear search history")
      */
     onSuggestionSelected(word) {
-        if (word == "clear_search_history") {
-            this.dialogInfo.value = DialogInfo.prompt(
-                "clear_search_history_dialog_title",
-                "clear_search_history_dialog_message",
-                () => { this._model.clearSearchHistory() }
-            )
-            return false
-        } else {
-            this.clearSearchTextButtonVisible.value = word.length > 0
-            return true
-        }
+        const isWordSuggestion = this._suggestionsViewModel.onSuggestionSelected(word)
+        if(isWordSuggestion) this.clearSearchTextButtonVisible.value = word.length > 0 
+        return isWordSuggestion
     }
     fetchSuggestions(word, includeResultsForEmptyWord) {
         if (!this.isLoading.value) {
-            const searchTerm = this._cleanSearchTerm(word)
-            this._model.fetchSuggestions(searchTerm, includeResultsForEmptyWord).then(suggestions => {
-                let suggestionsMenuItems = suggestions.map((suggestion) =>
-                    new MenuItem(suggestion.word, suggestion.word, new MenuItemIcon(
-                        suggestion.type == Suggestion.SuggestionType.HISTORY ? "history" : "search",
-                        MenuItemIcon.IconSource.MATERIAL
-                    ))
-                )
-                // If the suggestions contain any search history, also include an option to clear search history
-                if (suggestions.find((suggestion) => suggestion.type == Suggestion.SuggestionType.HISTORY)) {
-                    suggestionsMenuItems.push(
-                        new MenuItem("clear_search_history", "clear_search_history",
-                            new MenuItemIcon("delete", MenuItemIcon.IconSource.MATERIAL)
-                        )
-                    )
-                }
-                this.suggestions.value = suggestionsMenuItems
-            })
+            this._suggestionsViewModel.fetchSuggestions(word, includeResultsForEmptyWord)
         }
     }
-
-    _getWordTypeLabel(wordType) {
-        let wordTypeLabel
-        if (wordType == WordType.ADJECTIVE) wordTypeLabel = "adjective"
-        else if (wordType == WordType.ADVERB) wordTypeLabel = "adverb"
-        else if (wordType == WordType.NOUN) wordTypeLabel = "noun"
-        else if (wordType == WordType.VERB) wordTypeLabel = "verb"
-        return wordTypeLabel
-    }
-
-    _cleanSearchTerm = (text) => text.toLowerCase().trim()
 
     onAppMenuItemSelected(index) {
         const selectedMenuId = this.appBarMenuItems[index].id
@@ -324,7 +191,7 @@ class MainViewModel {
         } else if (selectedMenuId == "menu-speak") {
             this.playText(word, 0, word.length)
         } else if (selectedMenuId == "menu-rhymer") {
-            this.fetchRhymes(word)
+            this._rhymerViewModel.fetchRhymes(word)
             this.activeTab.value = MainViewModel.TabIndex.RHYMER
         } else if (selectedMenuId == "menu-thesaurus") {
             this.fetchThesaurus(word)
@@ -335,43 +202,22 @@ class MainViewModel {
         }
     }
 
-    selectVoice = (index) => this._model.selectVoice(this.voices.value[index].id)
-    setVoicePitch = (pitchValue) => this._model.setVoicePitch(pitchValue)
-    setVoiceSpeed = (speedValue) => this._model.setVoiceSpeed(speedValue)
+    selectVoice = (index) => this._readerViewModel.selectVoice(index)
+    setVoicePitch = (pitchValue) => this._readerViewModel.setVoicePitch(pitchValue)
+    setVoiceSpeed = (speedValue) => this._readerViewModel.setVoiceSpeed(speedValue)
 
-    playText = (text, start, end) => this._model.playText(text, start, end)
-    copyPoemText(text, start, value) {
-        this._model.copyText(text, start, value)
-        this.snackbarText.value = "snackbar_copied_poem"
-    }
-    onClearClicked() {
-        this.dialogInfo.value = DialogInfo.prompt(
-            "reader_clear_poem_dialog_title",
-            "reader_clear_poem_dialog_message",
-            () => { this.setPoemText("", true) }
-        )
-    }
+    playText = (text, start, end) => this._readerViewModel.playText(text, start, end)
+    copyPoemText = (text, start, value) => this._readerViewModel.copyPoemText(text, start, value)
+    onClearClicked = () => this._readerViewModel.onClearClicked()
+    setPoemText = (text, writeNow) => this._readerViewModel.setPoemText(text, writeNow)
+    readFile = (file) => this._readerViewModel.readFile(file)
+    writeFile = (text) => this._readerViewModel.writeFile(text)
 
     updateVoices(newVoices) {
-        this.voices.value = newVoices.sort((a, b) => {
-            const languageA = a.lang.substring(0, 2)
-            const languageB = b.lang.substring(0, 2)
-            if (languageA == languageB) {
-                return a.name.localeCompare(b.name)
-            } else if (languageA == "en") {
-                return -1
-            } else if (languageB == "en") {
-                return 1
-            } else {
-                return languageA.localeCompare(languageB)
-            }
-        }).map((voice) => new MenuItem(voice.voiceURI, this._getVoiceLabel(voice)))
-
-        this.isReaderTabVisible.value = this.voices.value.length > 0
-
+        this.isReaderTabVisible.value = newVoices.length > 0
         this.contextMenuItems = this._createContextMenuItems(newVoices.length > 0)
+        this.voices.value = newVoices
     }
-    _getVoiceLabel = (voice) => `${voice.name} - ${voice.lang}`
 
     _createContextMenuItems = (isSpeechEnabled) => [
         new MenuItem("menu-copy", "menu_copy_title", new MenuItemIcon("content_copy", MenuItemIcon.IconSource.MATERIAL)),
@@ -380,15 +226,5 @@ class MainViewModel {
         new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
         new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
-
-    setPoemText = (text, writeNow) => this._model.setPoemText(text, writeNow)
-    readFile = (file) => this._model.readFile(file)
-    writeFile = (text) => this._model.writeFile(text)
-    _getSavedStateLabel(savedState) {
-        if (savedState == PoemRepository.SaveState.SAVING) return "poem_saved_state_label_saving"
-        else if (savedState == PoemRepository.SaveState.SAVED) return "poem_saved_state_label_saved"
-        else if (savedState == PoemRepository.SaveState.WAITING) return "poem_saved_state_label_waiting"
-    }
-
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })
