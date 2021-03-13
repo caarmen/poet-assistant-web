@@ -24,13 +24,15 @@ class MainModel {
         this.isSpeechPlaying = this._speechEngine.isPlaying
         this.poemText = this._poemRepository.poemText
         this.rhymerSettingsChangedObserver = () => { }
+        this.thesaurusSettingsChangedObserver = () => { }
     }
     async loadDb(progressCallback) {
         const db = new Db()
         await db.open(progressCallback)
         this._rhymerRepository = new RhymerRepository(db, this._settings)
         this._rhymerRepository.settingsChangeObserver = () => this.rhymerSettingsChangedObserver()
-        this._thesaurusRepository = new ThesaurusRepository(db)
+        this._thesaurusRepository = new ThesaurusRepository(db, this._settings)
+        this._thesaurusRepository.settingsChangeObserver = () => this.thesaurusSettingsChangedObserver()
         this._dictionaryRepository = new DictionaryRepository(db)
         this._suggestionsRepository = new SuggestionsRepository(db, this._settings)
     }
@@ -58,6 +60,9 @@ class MainModel {
         this._suggestionsRepository.addSearchedWord(word)
         return this._thesaurusRepository.fetch(word)
     }
+    getThesaurusSettingReverseLookup = () => this._thesaurusRepository.getReverseLookupSetting()
+    setThesaurusSettingReverseLookup = (value) => this._thesaurusRepository.setReverseLookupSetting(value)
+
     async fetchDefinitions(word) {
         this._suggestionsRepository.addSearchedWord(word)
         return this._dictionaryRepository.fetchDefinitions(word)
@@ -109,7 +114,7 @@ class MainModel {
     }
     writeFile(text) {
         // https://stackoverflow.com/questions/19327749/javascript-blob-filename-without-link
-        const file = new File([text], {type: "application/octet-stream"})
+        const file = new File([text], { type: "application/octet-stream" })
         const blobUrl = URL.createObjectURL(file)
         const tempElemA = document.createElement("a")
         tempElemA.href = blobUrl

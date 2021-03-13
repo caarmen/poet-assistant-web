@@ -150,7 +150,9 @@ class MainView {
         this._viewRhymer.settingsClickedObserver = () => { this._viewRhymer.showSettings(this._viewModel.getRhymerSettingsSwitches()) }
         this._viewRhymer.settingToggledObserver = (id, value) => { this._viewModel.onRhymerSettingToggled(id, value) }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewThesaurus.settingsClickedObserver = () => { this._viewThesaurus.showSettings(this._viewModel.getThesaurusSettingsSwitches()) }
         this._viewThesaurus.shareClickedObserver = () => { this._viewModel.onShareThesaurus() }
+        this._viewThesaurus.settingToggledObserver = (id, value) => { this._viewModel.onThesaurusSettingToggled(id, value) }
         this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewDefinitions.shareClickedObserver = () => { this._viewModel.onShareDefinitions() }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {

@@ -42,6 +42,7 @@ class MainViewModel {
         this._model = new MainModel()
         this.poemText = this._model.poemText
         this._model.rhymerSettingsChangedObserver = () => this._refetchRhymes()
+        this._model.thesaurusSettingsChangedObserver = () => this._refetchThesaurus()
         this.isSpeechPlaying = this._model.isSpeechPlaying
         this.contextMenuItems = this._createContextMenuItems(false)
         this.snackbarText = new ObservableField()
@@ -190,6 +191,20 @@ class MainViewModel {
             })
         }
     }
+    _refetchThesaurus() {
+        if (this.thesaurusEntries.value != undefined) {
+            this.fetchThesaurus(this.thesaurusEntries.value.word)
+        }
+    }
+    getThesaurusSettingsSwitches = () => [
+        new SwitchItem("setting-thesaurus-reverse-lookup", "setting_thesaurus_reverse_lookup_label", "setting_thesaurus_reverse_lookup_description", this._model.getThesaurusSettingReverseLookup())
+    ]
+    onThesaurusSettingToggled(id, value) {
+        if (id == "setting-thesaurus-reverse-lookup") {
+            this._model.setThesaurusSettingReverseLookup(value)
+        }
+    }
+
     onShareThesaurus() {
         this._model.copyText(this._getThesaurusShareText())
         this.snackbarText.value = "snackbar_copied_thesaurus"

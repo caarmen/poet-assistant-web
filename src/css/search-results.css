@@ -34,9 +34,6 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 .mdc-list-item__text{
 	white-space: normal;
 }
-#placeholder-thesaurus__list .list-header__settings {
-	display: none;
-}
 #placeholder-definitions__list .list-header__settings {
 	display: none;
 }
