@@ -162,15 +162,9 @@ class MainView {
         this._viewThesaurus.settingToggledObserver = (id, value) => { this._mainViewModel.onThesaurusSettingToggled(id, value) }
         this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewDefinitions.shareClickedObserver = () => { this._mainViewModel.onShareDefinitions() }
-        this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
-            this._readerViewModel.playText(poemText, selectionStart, selectionEnd)
-        }
-        this._viewReader.onCopyClickedObserver = (poemText, selectionStart, selectionEnd) => {
-            this._mainViewModel.copyPoemText(poemText, selectionStart, selectionEnd)
-        }
-        this._viewReader.onClearClickedObserver = (poemText, selectionStart, selectionEnd) => {
-            this._readerViewModel.onClearClicked()
-        }
+        this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => this._readerViewModel.playText(poemText, selectionStart, selectionEnd)
+        this._viewReader.onCopyClickedObserver = (poemText, selectionStart, selectionEnd) => this._mainViewModel.copyPoemText(poemText, selectionStart, selectionEnd)
+        this._viewReader.onClearClickedObserver = () => this._readerViewModel.onClearClicked()
         this._viewReader.onPoemTextObserver = (poemText) => this._readerViewModel.setPoemText(poemText)
         this._viewReader.onFileUploadedObserver = (file) => this._readerViewModel.readFile(file)
         this._viewReader.onFileDownloadObserver = (poemText) => this._readerViewModel.writeFile(poemText)
