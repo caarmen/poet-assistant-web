@@ -70,38 +70,8 @@ class MainViewModel {
         })
     }
 
-    loadTemplates = () => this._model.loadFiles(
-        [
-            "about",
-            "app-bar",
-            "button-icon-text",
-            "circular-progress-indicator",
-            "context-menu",
-            "context-menu-header",
-            "context-menu-item",
-            "context-menu-item-custom-icon",
-            "context-menu-item-material-icon",
-            "dialog",
-            "dialog-simple-message",
-            "dictionary-list-item",
-            "input-text",
-            "linear-progress-indicator",
-            "list",
-            "list-empty",
-            "list-header",
-            "list-item-sub-header-1",
-            "list-item-sub-header-2",
-            "list-item-word",
-            "reader-actions",
-            "reader-play",
-            "slider",
-            "snackbar",
-            "switch",
-            "tab",
-            "tab-bar",
-            "textarea",
-            "voice-selection"
-        ].map((templateName) => new FileReaderInput(templateName, `../../../templates/${templateName}.template.html`)))
+    loadTemplates = (templateNames) => this._model.loadFiles(
+        templateNames.map((templateName) => new FileReaderInput(templateName, `../../../templates/${templateName}.template.html`)))
 
     fetchAll(word) {
         this.fetchRhymes(word)

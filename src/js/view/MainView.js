@@ -42,7 +42,7 @@ class MainView {
         this._viewAppBarMenu
 
         this._viewModel.loadTranslations().then(() => {
-            this._viewModel.loadTemplates().then((templates) => {
+            this._viewModel.loadTemplates(Template.TEMPLATE_NAMES).then((templates) => {
                 this._template = new Template(this._viewModel.i18n, templates)
                 this._viewContextMenu = new ContextMenuView(this._template)
                 this._viewSuggestions = new SuggestionsView(this._template)
