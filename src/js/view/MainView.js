@@ -185,8 +185,10 @@ class MainView {
         this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
     }
     _searchAll() {
-        this._viewSuggestions.hide()
-        this._viewModel.fetchAll(this._mdcInputTextSearch.value)
+        if (this._mdcInputTextSearch.value.length > 0) {
+            this._viewSuggestions.hide()
+            this._viewModel.fetchAll(this._mdcInputTextSearch.value)
+        }
     }
 
     _onSuggestionSelected(word) {
