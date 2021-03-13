@@ -48,11 +48,6 @@ class RhymerView {
 
     setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
-    searchAll() {
-        this._viewSuggestions.hide()
-        this._viewModel.fetchAll(this._mdcInputTextSearch.value)
-    }
-
     showRhymes(rhymes) {
         this._elemPlaceholderRhymesList.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
         this._i18n.translateElement(this._elemPlaceholderRhymesList.querySelector(".list-header"))
