@@ -37,20 +37,20 @@ class MainView {
         this._elemBtnPlay
         this._elemBtnPlayIcon
 
-        this._viewModel = new MainViewModel()
+        this._mainViewModel = new MainViewModel()
 
         this._viewAppBarMenu
 
-        this._viewModel.loadTranslations().then(() => {
-            this._viewModel.loadTemplates().then((templates) => {
-                this._template = new Template(this._viewModel.i18n, templates)
+        this._mainViewModel.loadTranslations().then(() => {
+            this._mainViewModel.loadTemplates().then((templates) => {
+                this._template = new Template(this._mainViewModel.i18n, templates)
                 this._viewContextMenu = new ContextMenuView(this._template)
                 this._viewSuggestions = new SuggestionsView(this._template)
-                this._viewRhymer = new RhymerView(this._viewModel.i18n, this._template)
-                this._viewThesaurus = new ThesaurusView(this._viewModel.i18n, this._template)
-                this._viewDefinitions = new DefinitionsView(this._viewModel.i18n, this._template)
-                this._viewReader = new ReaderView(this._viewModel.i18n, this._template)
-                this._viewVoiceSettings = new VoiceSettingsView(this._viewModel.i18n, this._template)
+                this._viewRhymer = new RhymerView(this._mainViewModel.i18n, this._template)
+                this._viewThesaurus = new ThesaurusView(this._mainViewModel.i18n, this._template)
+                this._viewDefinitions = new DefinitionsView(this._mainViewModel.i18n, this._template)
+                this._viewReader = new ReaderView(this._mainViewModel.i18n, this._template)
+                this._viewVoiceSettings = new VoiceSettingsView(this._mainViewModel.i18n, this._template)
                 this._viewTabs = new TabsView(this._template,
                     [
                         new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
@@ -60,8 +60,8 @@ class MainView {
                     ])
                 this._applyTemplates()
                 this._initializeViews()
-                this._viewModel.loadDb().then(() => {
-                    this._readerViewModel = new ReaderViewModel(this._viewModel.settings)
+                this._mainViewModel.loadDb().then(() => {
+                    this._readerViewModel = new ReaderViewModel(this._mainViewModel.settings)
                     this._bindViewModel()
                 })
             })
@@ -75,7 +75,7 @@ class MainView {
         this._elemPlaceholderAppProgressIndicator.innerHTML = this._template.createLinearProgressIndicatorHtml()
         this._elemProgressBarLabel = document.querySelector("#progressbar-label")
         this._elemPlacholderInputTextSearch.innerHTML = this._template.createInputTextHtml("input-text-search", "btn_search_title")
-        this._viewModel.i18n.translateElement(this._elemPlacholderInputTextSearch)
+        this._mainViewModel.i18n.translateElement(this._elemPlacholderInputTextSearch)
 
         this._viewTabs._applyTemplates()
     }
@@ -85,7 +85,7 @@ class MainView {
         this._viewAppBarMenu = new AppBarMenuView(this._elemActionItemMenu, this._template)
 
         this._mdcLinearProgress = new MainView.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
-        this._elemProgressBarLabel.innerText = this._viewModel.i18n.translate("progressbar_app_label")
+        this._elemProgressBarLabel.innerText = this._mainViewModel.i18n.translate("progressbar_app_label")
         this._mdcLinearProgress.determinate = false
         this._mdcLinearProgress.progress = 0
         this._mdcLinearProgress.open()
@@ -101,29 +101,29 @@ class MainView {
 
     _bindViewModel() {
         // viewmodel -> view bindings
-        this._viewModel.isLoading.observer = (isLoading) => { this._showLoading(isLoading && !this._template.isLoaded) }
-        this._viewModel.searchTextDisabled.observer = (isDisabled) => this._mdcInputTextSearch.disabled = isDisabled
-        this._viewModel.searchButtonDisabled.observer = (isDisabled) => this._elemBtnSearch.disabled = isDisabled
-        this._viewModel.clearSearchTextButtonVisible.observer = (isVisible) => this._updateClearSearchTextButtonVisibility(isVisible)
-        this._viewModel.rhymes.observer = (newRhymes) => { this._viewRhymer.showRhymes(newRhymes) }
-        this._viewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this._viewThesaurus.showThesaurus(newThesaurusEntries) }
-        this._viewModel.definitions.observer = (newDefinitions) => { this._viewDefinitions.showDefinitions(newDefinitions) }
-        this._viewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
-        this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
-        this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this._updateLoadingProgress(newLoadingProgress) }
-        this._viewModel.isReaderTabVisible.observer = (isVisible) => { this._updateReaderTabVisibility(isVisible) }
-        this._viewModel.dialogInfo.observer = (dialogInfo) => { this._showDialog(dialogInfo) }
-        this._viewModel.isRhymerLoading.observer = (isLoading) => { this._viewRhymer.setLoading(isLoading) }
-        this._viewModel.isThesaurusLoading.observer = (isLoading) => { this._viewThesaurus.setLoading(isLoading) }
-        this._viewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
-        this._viewModel.snackbarText.observer = (snackbarText) => { this._showSnackbar(snackbarText) }
+        this._mainViewModel.isLoading.observer = (isLoading) => { this._showLoading(isLoading && !this._template.isLoaded) }
+        this._mainViewModel.searchTextDisabled.observer = (isDisabled) => this._mdcInputTextSearch.disabled = isDisabled
+        this._mainViewModel.searchButtonDisabled.observer = (isDisabled) => this._elemBtnSearch.disabled = isDisabled
+        this._mainViewModel.clearSearchTextButtonVisible.observer = (isVisible) => this._updateClearSearchTextButtonVisibility(isVisible)
+        this._mainViewModel.rhymes.observer = (newRhymes) => { this._viewRhymer.showRhymes(newRhymes) }
+        this._mainViewModel.thesaurusEntries.observer = (newThesaurusEntries) => { this._viewThesaurus.showThesaurus(newThesaurusEntries) }
+        this._mainViewModel.definitions.observer = (newDefinitions) => { this._viewDefinitions.showDefinitions(newDefinitions) }
+        this._mainViewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
+        this._mainViewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
+        this._mainViewModel.loadingProgress.observer = (newLoadingProgress) => { this._updateLoadingProgress(newLoadingProgress) }
+        this._mainViewModel.isReaderTabVisible.observer = (isVisible) => { this._updateReaderTabVisibility(isVisible) }
+        this._mainViewModel.dialogInfo.observer = (dialogInfo) => { this._showDialog(dialogInfo) }
+        this._mainViewModel.isRhymerLoading.observer = (isLoading) => { this._viewRhymer.setLoading(isLoading) }
+        this._mainViewModel.isThesaurusLoading.observer = (isLoading) => { this._viewThesaurus.setLoading(isLoading) }
+        this._mainViewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
+        this._mainViewModel.snackbarText.observer = (snackbarText) => { this._showSnackbar(snackbarText) }
 
         this._readerViewModel.dialogInfo.observer = (dialogInfo) => { this._showDialog(dialogInfo) }
         this._readerViewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
         this._readerViewModel.poemSavedStateLabel.observer = (savedStateLabel) => { this._viewReader.updatePoemSavedState(savedStateLabel) }
         this._readerViewModel.poemText.observer = (newPoemText) => { this._viewReader.setPoemText(newPoemText) }
         this._readerViewModel.voices.observer = (newVoices) => {
-            this._viewModel.updateVoices(newVoices)
+            this._mainViewModel.updateVoices(newVoices)
             this._viewVoiceSettings.updateVoicesList(newVoices)
         }
         this._readerViewModel.selectedVoiceLabel.observer = (newSelectedVoiceLabel) => this._viewVoiceSettings.updateSelectedVoiceLabel(newSelectedVoiceLabel)
@@ -133,40 +133,40 @@ class MainView {
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
             if (tabIndex == MainViewModel.TabIndex.READER) this._viewVoiceSettings.layout()
-            this._viewModel.activeTab.value = tabIndex
+            this._mainViewModel.activeTab.value = tabIndex
         }
-        this._viewAppBarMenu.observer = (index) => { this._viewModel.onAppMenuItemSelected(index) }
+        this._viewAppBarMenu.observer = (index) => { this._mainViewModel.onAppMenuItemSelected(index) }
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('keydown', ((evt) => {
             if (evt.keyCode == 13) this._searchAll()
         }))
         this._mdcInputTextSearch.foundation.adapter.registerTextFieldInteractionHandler('input', ((evt) => {
-            this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
+            this._mainViewModel.onSearchTextInput(this._mdcInputTextSearch.value)
         }))
 
         this._mdcInputTextSearch.foundation.adapter.registerInputInteractionHandler('click', ((evt) => {
-            this._viewModel.fetchSuggestions(this._mdcInputTextSearch.value, true)
+            this._mainViewModel.fetchSuggestions(this._mdcInputTextSearch.value, true)
         }))
         this._elemBtnSearch.onclick = () => { this._searchAll() }
         this._elemBtnClearSearchText.onclick = () => { this._onClearSearchTextClicked() }
-        this._elemActionItemMenu.onclick = () => { this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems) }
-        this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
+        this._elemActionItemMenu.onclick = () => { this._viewAppBarMenu.showAppBarMenu(this._mainViewModel.appBarMenuItems) }
+        this._viewContextMenu.observer = (word, index) => { this._mainViewModel.onContextMenuItemSelected(word, index) }
         this._viewSuggestions.observer = (word) => { this._onSuggestionSelected(word) }
 
         this._viewRhymer.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
-        this._viewRhymer.shareClickedObserver = () => { this._viewModel.onShareRhymes() }
-        this._viewRhymer.settingsClickedObserver = () => { this._viewRhymer.showSettings(this._viewModel.getRhymerSettingsSwitches()) }
-        this._viewRhymer.settingToggledObserver = (id, value) => { this._viewModel.onRhymerSettingToggled(id, value) }
+        this._viewRhymer.shareClickedObserver = () => { this._mainViewModel.onShareRhymes() }
+        this._viewRhymer.settingsClickedObserver = () => { this._viewRhymer.showSettings(this._mainViewModel.getRhymerSettingsSwitches()) }
+        this._viewRhymer.settingToggledObserver = (id, value) => { this._mainViewModel.onRhymerSettingToggled(id, value) }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
-        this._viewThesaurus.settingsClickedObserver = () => { this._viewThesaurus.showSettings(this._viewModel.getThesaurusSettingsSwitches()) }
-        this._viewThesaurus.shareClickedObserver = () => { this._viewModel.onShareThesaurus() }
-        this._viewThesaurus.settingToggledObserver = (id, value) => { this._viewModel.onThesaurusSettingToggled(id, value) }
+        this._viewThesaurus.settingsClickedObserver = () => { this._viewThesaurus.showSettings(this._mainViewModel.getThesaurusSettingsSwitches()) }
+        this._viewThesaurus.shareClickedObserver = () => { this._mainViewModel.onShareThesaurus() }
+        this._viewThesaurus.settingToggledObserver = (id, value) => { this._mainViewModel.onThesaurusSettingToggled(id, value) }
         this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
-        this._viewDefinitions.shareClickedObserver = () => { this._viewModel.onShareDefinitions() }
+        this._viewDefinitions.shareClickedObserver = () => { this._mainViewModel.onShareDefinitions() }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._readerViewModel.playText(poemText, selectionStart, selectionEnd)
         }
         this._viewReader.onCopyClickedObserver = (poemText, selectionStart, selectionEnd) => {
-            this._viewModel.copyPoemText(poemText, selectionStart, selectionEnd)
+            this._mainViewModel.copyPoemText(poemText, selectionStart, selectionEnd)
         }
         this._viewReader.onClearClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._readerViewModel.onClearClicked()
@@ -189,24 +189,24 @@ class MainView {
     }
     _onClearSearchTextClicked() {
         this._mdcInputTextSearch.value = ""
-        this._viewModel.onSearchTextInput(this._mdcInputTextSearch.value)
+        this._mainViewModel.onSearchTextInput(this._mdcInputTextSearch.value)
     }
     _searchAll() {
         if (this._mdcInputTextSearch.value.length > 0) {
             this._viewSuggestions.hide()
-            this._viewModel.fetchAll(this._mdcInputTextSearch.value)
+            this._mainViewModel.fetchAll(this._mdcInputTextSearch.value)
         }
     }
 
     _onSuggestionSelected(word) {
-        if (this._viewModel.onSuggestionSelected(word)) {
+        if (this._mainViewModel.onSuggestionSelected(word)) {
             this._mdcInputTextSearch.value = word
             this._elemBtnSearch.click()
         }
     }
 
     _onWordElemClicked(wordElem) {
-        this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._viewModel.contextMenuItems)
+        this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._mainViewModel.contextMenuItems)
     }
 
     _showLoading(isLoading) {
@@ -224,16 +224,16 @@ class MainView {
             this._mdcLinearProgress.determinate = true
             this._mdcLinearProgress.open()
         }
-        this._elemProgressBarLabel.innerText = this._viewModel.i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
+        this._elemProgressBarLabel.innerText = this._mainViewModel.i18n.translate("progressbar_db_label", Math.round(loadingProgress * 100))
         this._mdcLinearProgress.progress = loadingProgress
     }
-    _showMenu = () => this._viewAppBarMenu.showAppBarMenu(this._viewModel.appBarMenuItems)
+    _showMenu = () => this._viewAppBarMenu.showAppBarMenu(this._mainViewModel.appBarMenuItems)
 
     _showDialog(dialogInfo) {
         const contentHtml = this._template.createHtml(dialogInfo.contentTemplateId, dialogInfo.templateParameters)
         this._elemPlaceholderDialog.innerHTML =
             this._template.createDialogHtml(dialogInfo.title, contentHtml)
-        this._viewModel.i18n.translateElement(this._elemPlaceholderDialog)
+        this._mainViewModel.i18n.translateElement(this._elemPlaceholderDialog)
         if (dialogInfo.positiveAction == undefined) {
             this._elemPlaceholderDialog.querySelector(".mdc-dialog__actions").style.display = "none"
         }
