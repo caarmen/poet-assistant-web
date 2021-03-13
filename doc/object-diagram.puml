@@ -26,6 +26,7 @@ object SpeechEngine
 
 
 object Db
+object Settings
 
 TabsView <.. MainView
 ContextMenuView <.. MainView
@@ -36,12 +37,12 @@ ReaderView <.. MainView
 VoiceSettingsView <.. MainView
 SuggestionsView <.. MainView
 MainView ..> MainViewModel
+MainView ..> ReaderViewModel
 
 MainViewModel ..> MainModel
 MainViewModel ..> RhymerViewModel
 MainViewModel ..> ThesaurusViewModel
 MainViewModel ..> DefinitionsViewModel
-MainViewModel ..> ReaderViewModel
 MainViewModel ..> SuggestionsViewModel
 
 RhymerViewModel ..> RhymerRepository
@@ -56,5 +57,10 @@ RhymerRepository ..> Db
 ThesaurusRepository ..> Db
 DictionaryRepository ..> Db
 SuggestionsRepository ..> Db
+'RhymerRepository ..> Settings
+'ThesaurusRepository ..> Settings
+'PoemRepository ..> Settings
+'SuggestionsRepository ..> Settings
+'SpeechEngine ..> Settings
 
 @enduml

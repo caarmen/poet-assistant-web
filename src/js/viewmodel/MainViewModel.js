@@ -33,7 +33,7 @@ class MainViewModel {
         this.snackbarText = new ObservableField()
         this.contextMenuItems = this._createContextMenuItems(false)
 
-        this.voices = new ObservableField()
+        this.settings = new Settings()
 
         this.appBarMenuItems = [
             new MenuItem("menu-about", "app_bar_menu_about_title", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL)),
@@ -58,12 +58,11 @@ class MainViewModel {
     }
 
     _loadViewModels(db) {
-        const settings = new Settings()
-        this._rhymerViewModel = new RhymerViewModel(this.i18n, db, settings)
+        this._rhymerViewModel = new RhymerViewModel(this.i18n, db, this.settings)
         this.rhymes = this._rhymerViewModel.rhymes
         this.isRhymerLoading = this._rhymerViewModel.isRhymerLoading
 
-        this._thesaurusViewModel = new ThesaurusViewModel(this.i18n, db, settings)
+        this._thesaurusViewModel = new ThesaurusViewModel(this.i18n, db, this.settings)
         this.thesaurusEntries = this._thesaurusViewModel.thesaurusEntries
         this.isThesaurusLoading = this._thesaurusViewModel.isThesaurusLoading
 
@@ -71,19 +70,10 @@ class MainViewModel {
         this.definitions = this._definitionsViewModel.definitions
         this.isDefinitionsLoading = this._definitionsViewModel.isDefinitionsLoading
 
-        this._suggestionsViewModel = new SuggestionsViewModel(db, settings)
+        this._suggestionsViewModel = new SuggestionsViewModel(db, this.settings)
         this._suggestionsViewModel.dialogInfo.observer = (value) => this.dialogInfo.value = value
         this.suggestions = this._suggestionsViewModel.suggestions
 
-        this._readerViewModel = new ReaderViewModel(settings)
-        this._readerViewModel.voices.observer = (newVoices) => this.updateVoices(newVoices)
-        this.poemText = this._readerViewModel.poemText
-        this.isSpeechPlaying = this._readerViewModel.isSpeechPlaying
-        this.poemSavedStateLabel = this._readerViewModel.poemSavedStateLabel
-        this.voicePitch = this._readerViewModel.voicePitch
-        this.voiceSpeed = this._readerViewModel.voiceSpeed
-        this.selectedVoiceLabel = this._readerViewModel.selectedVoiceLabel
-        this._readerViewModel.dialogInfo.observer = (value) => this.dialogInfo.value = value
     }
 
     loadTemplates = () => this._model.loadFiles(
@@ -216,24 +206,14 @@ class MainViewModel {
         }
     }
 
-    selectVoice = (index) => this._readerViewModel.selectVoice(index)
-    setVoicePitch = (pitchValue) => this._readerViewModel.setVoicePitch(pitchValue)
-    setVoiceSpeed = (speedValue) => this._readerViewModel.setVoiceSpeed(speedValue)
-
-    playText = (text, start, end) => this._readerViewModel.playText(text, start, end)
     copyPoemText(text, start, value) {
         this._model.copyText(text, start, value)
         this.snackbarText.value = "snackbar_copied_poem"
     }
-    onClearClicked = () => this._readerViewModel.onClearClicked()
-    setPoemText = (text, writeNow) => this._readerViewModel.setPoemText(text, writeNow)
-    readFile = (file) => this._readerViewModel.readFile(file)
-    writeFile = (text) => this._readerViewModel.writeFile(text)
 
     updateVoices(newVoices) {
         this.isReaderTabVisible.value = newVoices.length > 0
         this.contextMenuItems = this._createContextMenuItems(newVoices.length > 0)
-        this.voices.value = newVoices
     }
 
     _createContextMenuItems = (isSpeechEnabled) => [

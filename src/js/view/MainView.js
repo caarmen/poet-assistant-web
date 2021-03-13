@@ -61,6 +61,7 @@ class MainView {
                 this._applyTemplates()
                 this._initializeViews()
                 this._viewModel.loadDb().then(() => {
+                    this._readerViewModel = new ReaderViewModel(this._viewModel.settings)
                     this._bindViewModel()
                 })
             })
@@ -110,19 +111,24 @@ class MainView {
         this._viewModel.suggestions.observer = (newSuggestions) => { this._viewSuggestions.showSuggestions(this._elemPlacholderInputTextSearch, newSuggestions) }
         this._viewModel.activeTab.observer = (newActiveTab) => { this._viewTabs.switchToTab(newActiveTab) }
         this._viewModel.loadingProgress.observer = (newLoadingProgress) => { this._updateLoadingProgress(newLoadingProgress) }
-        this._viewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
-        this._viewModel.poemSavedStateLabel.observer = (savedStateLabel) => { this._viewReader.updatePoemSavedState(savedStateLabel) }
-        this._viewModel.poemText.observer = (newPoemText) => { this._viewReader.setPoemText(newPoemText) }
-        this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
-        this._viewModel.selectedVoiceLabel.observer = (newSelectedVoiceLabel) => this._viewVoiceSettings.updateSelectedVoiceLabel(newSelectedVoiceLabel)
-        this._viewModel.voicePitch.observer = (newVoicePitch) => this._viewVoiceSettings.updatePitch(newVoicePitch)
-        this._viewModel.voiceSpeed.observer = (newVoiceSpeed) => this._viewVoiceSettings.updateSpeed(newVoiceSpeed)
         this._viewModel.isReaderTabVisible.observer = (isVisible) => { this._updateReaderTabVisibility(isVisible) }
         this._viewModel.dialogInfo.observer = (dialogInfo) => { this._showDialog(dialogInfo) }
         this._viewModel.isRhymerLoading.observer = (isLoading) => { this._viewRhymer.setLoading(isLoading) }
         this._viewModel.isThesaurusLoading.observer = (isLoading) => { this._viewThesaurus.setLoading(isLoading) }
         this._viewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
         this._viewModel.snackbarText.observer = (snackbarText) => { this._showSnackbar(snackbarText) }
+
+        this._readerViewModel.dialogInfo.observer = (dialogInfo) => { this._showDialog(dialogInfo) }
+        this._readerViewModel.isSpeechPlaying.observer = (newIsSpeechPlaying) => { this._viewReader.updateSpeechPlayingState(newIsSpeechPlaying) }
+        this._readerViewModel.poemSavedStateLabel.observer = (savedStateLabel) => { this._viewReader.updatePoemSavedState(savedStateLabel) }
+        this._readerViewModel.poemText.observer = (newPoemText) => { this._viewReader.setPoemText(newPoemText) }
+        this._readerViewModel.voices.observer = (newVoices) => {
+            this._viewModel.updateVoices(newVoices)
+            this._viewVoiceSettings.updateVoicesList(newVoices)
+        }
+        this._readerViewModel.selectedVoiceLabel.observer = (newSelectedVoiceLabel) => this._viewVoiceSettings.updateSelectedVoiceLabel(newSelectedVoiceLabel)
+        this._readerViewModel.voicePitch.observer = (newVoicePitch) => this._viewVoiceSettings.updatePitch(newVoicePitch)
+        this._readerViewModel.voiceSpeed.observer = (newVoiceSpeed) => this._viewVoiceSettings.updateSpeed(newVoiceSpeed)
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -157,20 +163,20 @@ class MainView {
         this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewDefinitions.shareClickedObserver = () => { this._viewModel.onShareDefinitions() }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
-            this._viewModel.playText(poemText, selectionStart, selectionEnd)
+            this._readerViewModel.playText(poemText, selectionStart, selectionEnd)
         }
         this._viewReader.onCopyClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.copyPoemText(poemText, selectionStart, selectionEnd)
         }
         this._viewReader.onClearClickedObserver = (poemText, selectionStart, selectionEnd) => {
-            this._viewModel.onClearClicked()
+            this._readerViewModel.onClearClicked()
         }
-        this._viewReader.onPoemTextObserver = (poemText) => this._viewModel.setPoemText(poemText)
-        this._viewReader.onFileUploadedObserver = (file) => this._viewModel.readFile(file)
-        this._viewReader.onFileDownloadObserver = (poemText) => this._viewModel.writeFile(poemText)
-        this._viewVoiceSettings.voiceSelectonObserver = (selectedVoiceIndex) => { this._viewModel.selectVoice(selectedVoiceIndex) }
-        this._viewVoiceSettings.pitchObserver = (pitchValue) => { this._viewModel.setVoicePitch(pitchValue) }
-        this._viewVoiceSettings.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }
+        this._viewReader.onPoemTextObserver = (poemText) => this._readerViewModel.setPoemText(poemText)
+        this._viewReader.onFileUploadedObserver = (file) => this._readerViewModel.readFile(file)
+        this._viewReader.onFileDownloadObserver = (poemText) => this._readerViewModel.writeFile(poemText)
+        this._viewVoiceSettings.voiceSelectonObserver = (selectedVoiceIndex) => { this._readerViewModel.selectVoice(selectedVoiceIndex) }
+        this._viewVoiceSettings.pitchObserver = (pitchValue) => { this._readerViewModel.setVoicePitch(pitchValue) }
+        this._viewVoiceSettings.speedObserver = (speedValue) => { this._readerViewModel.setVoiceSpeed(speedValue) }
     }
 
     _updateReaderTabVisibility(isVisible) {
