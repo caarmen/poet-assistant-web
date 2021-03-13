@@ -310,7 +310,7 @@ class MainViewModel {
             let privacyPolicyFile = this._model.isDesktop() ? "PRIVACY-desktop.md" : "PRIVACY-web.md"
             this.dialogInfo.value = DialogInfo.custom("about_title", "about", new Map([["__PRIVACY_POLICY_FILE__", privacyPolicyFile]]))
         } else if (selectedMenuId == "menu-random") {
-            const randomWord = this._model.getRandomWord().then((word) => {
+            this._model.getRandomWord().then((word) => {
                 this.fetchAll(word)
                 this.activeTab.value = MainViewModel.TabIndex.DICTIONARY
             })
