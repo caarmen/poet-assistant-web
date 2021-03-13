@@ -22,6 +22,7 @@ class ThesaurusView {
         this._elemPlaceholderThesaurusList = document.querySelector("#placeholder-thesaurus__list")
         this._elemPlaceholderThesaurusEmpty = document.querySelector("#placeholder-thesaurus__empty")
         this._elemPlaceholderProgressIndicator = document.querySelector("#placeholder-thesaurus .list-loading")
+        this._elemPlaceholderDialog = document.querySelector("#placeholder-dialog")
 
         this._i18n = i18n
         this._template = template
@@ -29,6 +30,8 @@ class ThesaurusView {
 
         this.wordClickedObserver = (wordElem) => { }
         this.shareClickedObserver = () => { }
+        this.settingsClickedObserver = () => {}
+        this.settingToggledObserver = (id, value) => { }
         this._applyTemplates()
         this._initializeViews()
     }
@@ -52,10 +55,27 @@ class ThesaurusView {
             this.wordClickedObserver(e.target)
         }
         this._elemPlaceholderThesaurusList.querySelector(".list-header__copy").onclick = (e) => { this.shareClickedObserver() }
+        this._elemPlaceholderThesaurusList.querySelector(".list-header__settings").onclick = (e) => { this.settingsClickedObserver() }
         new ThesaurusView.MDCList(document.querySelector("#list-thesaurus")).listen('click', (e) => {
             if (e.target.classList.contains("word-list-item")) this.wordClickedObserver(e.target)
         })
     }
+    showSettings(switchItems) {
+        const contentHtml = this._template.createSwitchesHtml(switchItems)
+        this._elemPlaceholderDialog.innerHTML =
+            this._template.createDialogHtml("settings_thesaurus_title", contentHtml)
+        const dialog = new ThesaurusView.MDCDialog(document.querySelector('.mdc-dialog'))
+        dialog.listen('MDCDialog:opened', () => {
+            switchItems.forEach((switchItem) => {
+                const switchControl = new ThesaurusView.MDCSwitch(this._elemPlaceholderDialog.querySelector(`#${switchItem.id}mdc-switch`))
+                switchControl.checked = switchItem.value
+                switchControl.listen("change", (e) => this.settingToggledObserver(switchItem.id, switchControl.checked))
+            })
+        })
+        dialog.open()
+    }
 }
+ThesaurusView.MDCDialog = mdc.dialog.MDCDialog
 ThesaurusView.MDCList = mdc.list.MDCList
 ThesaurusView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress
+ThesaurusView.MDCSwitch = mdc.switchControl.MDCSwitch

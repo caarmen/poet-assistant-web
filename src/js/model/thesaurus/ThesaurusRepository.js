@@ -17,8 +17,16 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class ThesaurusRepository {
-    constructor(db) {
+    constructor(db, settings) {
         this._db = db
+        this._settings = settings
+        this.settingsChangeObserver = () => { }
+        this._settings.addObserver((key, newValue) => this._onSettingsChanged(key))
+    }
+    _onSettingsChanged(key) {
+        if (key == ThesaurusRepository.SETTINGS_KEY_REVERSE_LOOKUP) {
+            this.settingsChangeObserver()
+        }
     }
     async fetch(word) {
         const stmt = `
@@ -39,23 +47,27 @@ class ThesaurusRepository {
                 antonyms
             )
         })
-        const reverseSynonyms = (await this._lookupReverseRelatedWords(
-            word,
-            ThesaurusRepository.COL_SYNONYMS,
-            forwardMatches.map((result) => result.synonyms).flat()
-        ))
-        const reverseAntonyms = (await this._lookupReverseRelatedWords(
-            word,
-            ThesaurusRepository.COL_ANTONYMS,
-            forwardMatches.map((result) => result.antonyms).flat()
-        ))
 
-        const reverseMatches = Object.values(WordType).map((wordType) =>
-            new ThesaurusEntry(wordType,
-                Array.from(reverseSynonyms.get(wordType) || new Set()),
-                Array.from(reverseAntonyms.get(wordType) || new Set())
-            )
-        ).filter((entry) => entry.synonyms.length > 0 || entry.antonyms.length > 0)
+        let reverseMatches = []
+        if (this.getReverseLookupSetting()) {
+            const reverseSynonyms = (await this._lookupReverseRelatedWords(
+                word,
+                ThesaurusRepository.COL_SYNONYMS,
+                forwardMatches.map((result) => result.synonyms).flat()
+            ))
+            const reverseAntonyms = (await this._lookupReverseRelatedWords(
+                word,
+                ThesaurusRepository.COL_ANTONYMS,
+                forwardMatches.map((result) => result.antonyms).flat()
+            ))
+
+            reverseMatches = Object.values(WordType).map((wordType) =>
+                new ThesaurusEntry(wordType,
+                    Array.from(reverseSynonyms.get(wordType) || new Set()),
+                    Array.from(reverseAntonyms.get(wordType) || new Set())
+                )
+            ).filter((entry) => entry.synonyms.length > 0 || entry.antonyms.length > 0)
+        }
         return [forwardMatches, reverseMatches].flat()
     }
 
@@ -100,9 +112,12 @@ class ThesaurusRepository {
         else if (wordTypeStr == "NOUN") return WordType.NOUN
         else if (wordTypeStr == "VERB") return WordType.VERB
     }
+    getReverseLookupSetting = () => (this._settings.getSetting(ThesaurusRepository.SETTINGS_KEY_REVERSE_LOOKUP, false)) == "true"
+    setReverseLookupSetting = (value) => this._settings.setSetting(ThesaurusRepository.SETTINGS_KEY_REVERSE_LOOKUP, value)
 }
 ThesaurusRepository.TABLE_THESAURUS = "thesaurus"
 ThesaurusRepository.COL_SYNONYMS = "synonyms"
 ThesaurusRepository.COL_ANTONYMS = "antonyms"
 ThesaurusRepository.COL_WORD = "word"
 ThesaurusRepository.COL_WORD_TYPE = "word_type"
+ThesaurusRepository.SETTINGS_KEY_REVERSE_LOOKUP = "thesaurus_reverse_lookup"
