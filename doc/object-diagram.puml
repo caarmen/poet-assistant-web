@@ -20,6 +20,7 @@ object MainModel
 object RhymerRepository
 object ThesaurusRepository
 object DictionaryRepository
+object PoemRepository
 object SuggestionsRepository
 object SpeechEngine
 
@@ -43,17 +44,13 @@ MainViewModel ..> DefinitionsViewModel
 MainViewModel ..> ReaderViewModel
 MainViewModel ..> SuggestionsViewModel
 
-RhymerViewModel ..> MainModel
-ThesaurusViewModel ..> MainModel
-DefinitionsViewModel ..> MainModel
-ReaderViewModel ..> MainModel
-SuggestionsViewModel ..> MainModel
+RhymerViewModel ..> RhymerRepository
+ThesaurusViewModel ..> ThesaurusRepository 
+DefinitionsViewModel ..> DictionaryRepository
+ReaderViewModel ..> PoemRepository
+ReaderViewModel ..> SpeechEngine
+SuggestionsViewModel ..> SuggestionsRepository
 
-MainModel ..> SpeechEngine
-MainModel ..> RhymerRepository
-MainModel ..> ThesaurusRepository 
-MainModel ..> DictionaryRepository
-MainModel ..> SuggestionsRepository
 
 RhymerRepository ..> Db
 ThesaurusRepository ..> Db

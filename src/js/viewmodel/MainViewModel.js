@@ -33,6 +33,8 @@ class MainViewModel {
         this.snackbarText = new ObservableField()
         this.contextMenuItems = this._createContextMenuItems(false)
 
+        this.voices = new ObservableField()
+
         this.appBarMenuItems = [
             new MenuItem("menu-about", "app_bar_menu_about_title", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL)),
             new MenuItem("menu-random", "app_bar_menu_random_title", new MenuItemIcon("casino", MenuItemIcon.IconSource.MATERIAL)),
@@ -40,48 +42,48 @@ class MainViewModel {
 
         this._model = new MainModel()
 
-        this._rhymerViewModel = new RhymerViewModel(this.i18n, this._model)
-        this.rhymes = this._rhymerViewModel.rhymes
-        this.isRhymerLoading = this._rhymerViewModel.isRhymerLoading
-        this._rhymerViewModel.snackbarText.observer = (text) => this.snackbarText.value = text
-
-        this._thesaurusViewModel = new ThesaurusViewModel(this.i18n, this._model)
-        this.thesaurusEntries = this._thesaurusViewModel.thesaurusEntries
-        this.isThesaurusLoading = this._thesaurusViewModel.isThesaurusLoading
-        this._thesaurusViewModel.snackbarText.observer = (text) => this.snackbarText.value = text
-
-        this._definitionsViewModel = new DefinitionsViewModel(this.i18n, this._model)
-        this.definitions = this._definitionsViewModel.definitions
-        this.isDefinitionsLoading = this._definitionsViewModel.isDefinitionsLoading
-        this._definitionsViewModel.snackbarText.observer = (text) => this.snackbarText.value = text
-
-        this._suggestionsViewModel = new SuggestionsViewModel(this._model)
-        this.suggestions = this._suggestionsViewModel.suggestions
-        this._suggestionsViewModel.dialogInfo.observer = (value) => this.dialogInfo.value = value 
-
-        this._readerViewModel = new ReaderViewModel(this._model)
-        this.voices = new ObservableField()
-        this.poemText = this._readerViewModel.poemText
-        this.isSpeechPlaying = this._readerViewModel.isSpeechPlaying
-        this._readerViewModel.snackbarText.observer = (text) => this.snackbarText.value = text
-        this._readerViewModel.voices.observer = (newVoices) => this.updateVoices(newVoices)
-        this.poemSavedStateLabel = this._readerViewModel.poemSavedStateLabel
-        this.voicePitch = this._readerViewModel.voicePitch
-        this.voiceSpeed = this._readerViewModel.voiceSpeed
-        this.selectedVoiceLabel = this._readerViewModel.selectedVoiceLabel
-        this._readerViewModel.dialogInfo.observer = (value) => this.dialogInfo.value = value 
     }
 
     loadTranslations = () => this.i18n.load()
 
-    loadDb() {
-        this._model.loadDb((dbOpenProgress) => {
+    async loadDb() {
+        const db = await this._model.loadDb((dbOpenProgress) => {
             this.loadingProgress.value = dbOpenProgress.loaded / dbOpenProgress.total
-        }).then(() => {
-            this.isLoading.value = false
-            this.searchTextDisabled.value = false
-            this.activeTab.value = MainViewModel.TabIndex.RHYMER
         })
+        this.isLoading.value = false
+        this.searchTextDisabled.value = false
+        this.activeTab.value = MainViewModel.TabIndex.RHYMER
+        this._loadViewModels(db)
+
+    }
+
+    _loadViewModels(db) {
+        const settings = new Settings()
+        this._rhymerViewModel = new RhymerViewModel(this.i18n, db, settings)
+        this.rhymes = this._rhymerViewModel.rhymes
+        this.isRhymerLoading = this._rhymerViewModel.isRhymerLoading
+
+        this._thesaurusViewModel = new ThesaurusViewModel(this.i18n, db, settings)
+        this.thesaurusEntries = this._thesaurusViewModel.thesaurusEntries
+        this.isThesaurusLoading = this._thesaurusViewModel.isThesaurusLoading
+
+        this._definitionsViewModel = new DefinitionsViewModel(this.i18n, db)
+        this.definitions = this._definitionsViewModel.definitions
+        this.isDefinitionsLoading = this._definitionsViewModel.isDefinitionsLoading
+
+        this._suggestionsViewModel = new SuggestionsViewModel(db, settings)
+        this._suggestionsViewModel.dialogInfo.observer = (value) => this.dialogInfo.value = value
+        this.suggestions = this._suggestionsViewModel.suggestions
+
+        this._readerViewModel = new ReaderViewModel(settings)
+        this._readerViewModel.voices.observer = (newVoices) => this.updateVoices(newVoices)
+        this.poemText = this._readerViewModel.poemText
+        this.isSpeechPlaying = this._readerViewModel.isSpeechPlaying
+        this.poemSavedStateLabel = this._readerViewModel.poemSavedStateLabel
+        this.voicePitch = this._readerViewModel.voicePitch
+        this.voiceSpeed = this._readerViewModel.voiceSpeed
+        this.selectedVoiceLabel = this._readerViewModel.selectedVoiceLabel
+        this._readerViewModel.dialogInfo.observer = (value) => this.dialogInfo.value = value
     }
 
     loadTemplates = () => this._model.loadFiles(
@@ -128,31 +130,43 @@ class MainViewModel {
 
     fetchRhymes(word) {
         if (!this.isLoading.value) {
-            this._rhymerViewModel.fetchRhymes(word)
+            this._suggestionsViewModel.addSearchedWord(word)
+            this._rhymerViewModel.fetchRhymes(this._model.cleanSearchTerm(word))
         }
     }
-    onShareRhymes = () => this._rhymerViewModel.onShareRhymes()
+    onShareRhymes() {
+        this._model.copyText(this._rhymerViewModel.getRhymesShareText())
+        this.snackbarText.value = "snackbar_copied_rhymes"
+    }
     getRhymerSettingsSwitches = () => this._rhymerViewModel.getRhymerSettingsSwitches()
     onRhymerSettingToggled = (id, value) => this._rhymerViewModel.onRhymerSettingToggled(id, value)
 
     fetchThesaurus(word) {
         if (!this.isLoading.value) {
-            this._thesaurusViewModel.fetchThesaurus(word)
+            this._suggestionsViewModel.addSearchedWord(word)
+            this._thesaurusViewModel.fetchThesaurus(this._model.cleanSearchTerm(word))
         }
     }
-    onShareThesaurus = () => this._thesaurusViewModel.onShareThesaurus()
+    onShareThesaurus() {
+        this._model.copyText(this._thesaurusViewModel.getThesaurusShareText())
+        this.snackbarText.value = "snackbar_copied_thesaurus"
+    }
     getThesaurusSettingsSwitches = () => this._thesaurusViewModel.getThesaurusSettingsSwitches()
     onThesaurusSettingToggled = (id, value) => this._thesaurusViewModel.onThesaurusSettingToggled(id, value)
 
     fetchDefinitions(word) {
         if (!this.isLoading.value) {
-            this._definitionsViewModel.fetchDefinitions(word)
+            this._suggestionsViewModel.addSearchedWord(word)
+            this._definitionsViewModel.fetchDefinitions(this._model.cleanSearchTerm(word))
         }
     }
-    onShareDefinitions = () => this._definitionsViewModel.onShareDefinitions()
+    onShareDefinitions() {
+        this._model.copyText(this._definitionsViewModel.getDefinitionsShareText())
+        this.snackbarText.value = "snackbar_copied_definitions"
+    }
 
     onSearchTextInput(text) {
-        this.fetchSuggestions(text)
+        this.fetchSuggestions(this._model.cleanSearchTerm(text))
         this.searchButtonDisabled.value = text.length == 0
         this.clearSearchTextButtonVisible.value = text.length > 0
     }
@@ -162,12 +176,12 @@ class MainViewModel {
      */
     onSuggestionSelected(word) {
         const isWordSuggestion = this._suggestionsViewModel.onSuggestionSelected(word)
-        if(isWordSuggestion) this.clearSearchTextButtonVisible.value = word.length > 0 
+        if (isWordSuggestion) this.clearSearchTextButtonVisible.value = word.length > 0
         return isWordSuggestion
     }
     fetchSuggestions(word, includeResultsForEmptyWord) {
         if (!this.isLoading.value) {
-            this._suggestionsViewModel.fetchSuggestions(word, includeResultsForEmptyWord)
+            this._suggestionsViewModel.fetchSuggestions(this._model.cleanSearchTerm(word), includeResultsForEmptyWord)
         }
     }
 
@@ -177,7 +191,7 @@ class MainViewModel {
             let privacyPolicyFile = this._model.isDesktop() ? "PRIVACY-desktop.md" : "PRIVACY-web.md"
             this.dialogInfo.value = DialogInfo.custom("about_title", "about", new Map([["__PRIVACY_POLICY_FILE__", privacyPolicyFile]]))
         } else if (selectedMenuId == "menu-random") {
-            const randomWord = this._model.getRandomWord().then((word) => {
+            const randomWord = this._definitionsViewModel.getRandomWord().then((word) => {
                 this.fetchAll(word)
                 this.activeTab.value = MainViewModel.TabIndex.DICTIONARY
             })
@@ -207,7 +221,10 @@ class MainViewModel {
     setVoiceSpeed = (speedValue) => this._readerViewModel.setVoiceSpeed(speedValue)
 
     playText = (text, start, end) => this._readerViewModel.playText(text, start, end)
-    copyPoemText = (text, start, value) => this._readerViewModel.copyPoemText(text, start, value)
+    copyPoemText(text, start, value) {
+        this._model.copyText(text, start, value)
+        this.snackbarText.value = "snackbar_copied_poem"
+    }
     onClearClicked = () => this._readerViewModel.onClearClicked()
     setPoemText = (text, writeNow) => this._readerViewModel.setPoemText(text, writeNow)
     readFile = (file) => this._readerViewModel.readFile(file)

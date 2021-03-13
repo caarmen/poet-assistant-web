@@ -34,7 +34,7 @@ class SuggestionsRepository {
         )
     }
 
-    clearSearchHisotry = () => this._settings.removeSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS)
+    clearSearchHistory = () => this._settings.removeSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS)
 
     fetchSuggestions(word, includeResultsForEmptyWord) {
         if (word.length == 0 && !includeResultsForEmptyWord) {

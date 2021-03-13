@@ -17,23 +17,21 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class ThesaurusViewModel {
-    constructor(i18n, model) {
+    constructor(i18n, db, settings) {
         this._i18n = i18n
-        this._model = model
+        this._thesaurusRepository = new ThesaurusRepository(db, settings)
+        this._thesaurusRepository.settingsChangeObserver = () => this._refetchThesaurus()
         this.thesaurusEntries = new ObservableField()
         this.isThesaurusLoading = new ObservableField(false)
-        this.snackbarText = new ObservableField()
-        this._model.thesaurusSettingsChangedObserver = () => this._refetchThesaurus()
     }
 
     fetchThesaurus(word) {
         this.isThesaurusLoading.value = true
-        const searchTerm = this._model.cleanSearchTerm(word)
-        this._model.fetchThesaurus(searchTerm).then(thesaurusEntries => {
+        this._thesaurusRepository.fetch(word).then(thesaurusEntries => {
             this.isThesaurusLoading.value = false
             let resultListItems = []
             thesaurusEntries.forEach(thesaurusEntry => {
-                const wordTypeLabel = this._model.getWordTypeLabel(thesaurusEntry.wordType)
+                const wordTypeLabel = WordType.name(thesaurusEntry.wordType)
                 resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, `part_of_speech_${wordTypeLabel}`))
                 if (thesaurusEntry.synonyms.length > 0) {
                     resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "synonyms"))
@@ -44,7 +42,7 @@ class ThesaurusViewModel {
                     resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(ListItem.ListItemStyles.WORD, antonym)))
                 }
             })
-            this.thesaurusEntries.value = new ResultList(searchTerm, resultListItems)
+            this.thesaurusEntries.value = new ResultList(word, resultListItems)
         })
     }
     _refetchThesaurus() {
@@ -53,19 +51,15 @@ class ThesaurusViewModel {
         }
     }
     getThesaurusSettingsSwitches = () => [
-        new SwitchItem("setting-thesaurus-reverse-lookup", "setting_thesaurus_reverse_lookup_label", "setting_thesaurus_reverse_lookup_description", this._model.getThesaurusSettingReverseLookup())
+        new SwitchItem("setting-thesaurus-reverse-lookup", "setting_thesaurus_reverse_lookup_label", "setting_thesaurus_reverse_lookup_description", this._thesaurusRepository.getReverseLookupSetting())
     ]
     onThesaurusSettingToggled(id, value) {
         if (id == "setting-thesaurus-reverse-lookup") {
-            this._model.setThesaurusSettingReverseLookup(value)
+            this._thesaurusRepository.setReverseLookupSetting(value)
         }
     }
 
-    onShareThesaurus() {
-        this._model.copyText(this._getThesaurusShareText())
-        this.snackbarText.value = "snackbar_copied_thesaurus"
-    }
-    _getThesaurusShareText = () =>
+    getThesaurusShareText = () =>
         this._i18n.translate("share_thesaurus_title", this.thesaurusEntries.value.word) +
         this.thesaurusEntries.value.listItems.map((listItem) => {
             if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_1) {

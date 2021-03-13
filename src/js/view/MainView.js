@@ -60,8 +60,9 @@ class MainView {
                     ])
                 this._applyTemplates()
                 this._initializeViews()
-                this._bindViewModel()
-                this._viewModel.loadDb()
+                this._viewModel.loadDb().then(() => {
+                    this._bindViewModel()
+                })
             })
         })
     }

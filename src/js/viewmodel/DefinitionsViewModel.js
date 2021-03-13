@@ -17,37 +17,35 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class DefinitionsViewModel {
-    constructor(i18n, model) {
+    constructor(i18n, db) {
         this._i18n = i18n
-        this._model = model
+        this._dictionaryRepository = new DictionaryRepository(db)
         this.definitions = new ObservableField()
         this.isDefinitionsLoading = new ObservableField(false)
-        this.snackbarText = new ObservableField()
     }
 
     fetchDefinitions(word) {
         this.isDefinitionsLoading.value = true
-        const searchTerm = this._model.cleanSearchTerm(word)
-        this._model.fetchDefinitions(searchTerm).then(definitions => {
+        this._dictionaryRepository.fetchDefinitions(word).then(definitions => {
             this.isDefinitionsLoading.value = false
             this.definitions.value = new DictionaryResultList(
-                searchTerm,
+                word,
                 definitions.map(dictionaryEntry => {
-                    const wordTypeLabel = this._model.getWordTypeLabel(dictionaryEntry.wordType)
+                    const wordTypeLabel = WordType.name(dictionaryEntry.wordType)
                     return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
                 })
             )
         })
     }
-    onShareDefinitions() {
-        this._model.copyText(this._getDefinitionsShareText())
-        this.snackbarText.value = "snackbar_copied_definitions"
-    }
-    _getDefinitionsShareText = () =>
+    getDefinitionsShareText = () =>
         this._i18n.translate("share_dictionary_title", this.definitions.value.word) +
         this.definitions.value.listItems.map((dictionaryListItem) =>
             this._i18n.translate("share_dictionary_definition", this._i18n.translate(dictionaryListItem.wordTypeLabel), dictionaryListItem.definition)
         ).join("")
+
+    async getRandomWord() {
+        return this._dictionaryRepository.getRandomWord()
+    }
 
 
 }

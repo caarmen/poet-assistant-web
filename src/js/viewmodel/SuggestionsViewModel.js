@@ -17,12 +17,13 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class SuggestionsViewModel {
-    constructor(model) {
-        this._model = model
+    constructor(db, settings) {
         this.suggestions = new ObservableField()
         this.dialogInfo = new ObservableField()
+        this._suggestionsRepository = new SuggestionsRepository(db, settings)
     }
 
+    addSearchedWord = (word) => this._suggestionsRepository.addSearchedWord(word)
     /**
      * @return true if the suggestion is a "real" suggestion (not the item "clear search history")
      */
@@ -31,7 +32,9 @@ class SuggestionsViewModel {
             this.dialogInfo.value = DialogInfo.prompt(
                 "clear_search_history_dialog_title",
                 "clear_search_history_dialog_message",
-                () => { this._model.clearSearchHistory() }
+                () => {
+                    this._suggestionsRepository.clearSearchHistory()
+                }
             )
             return false
         } else {
@@ -39,8 +42,7 @@ class SuggestionsViewModel {
         }
     }
     fetchSuggestions(word, includeResultsForEmptyWord) {
-        const searchTerm = this._model.cleanSearchTerm(word)
-        this._model.fetchSuggestions(searchTerm, includeResultsForEmptyWord).then(suggestions => {
+        this._suggestionsRepository.fetchSuggestions(word, includeResultsForEmptyWord).then(suggestions => {
             let suggestionsMenuItems = suggestions.map((suggestion) =>
                 new MenuItem(suggestion.word, suggestion.word, new MenuItemIcon(
                     suggestion.type == Suggestion.SuggestionType.HISTORY ? "history" : "search",

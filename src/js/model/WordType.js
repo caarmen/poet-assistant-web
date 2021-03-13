@@ -16,4 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-WordType = Object.freeze({ ADJECTIVE: 0, ADVERB: 1, NOUN: 2, VERB: 3 })
+WordType = Object.freeze(
+    {
+        ADJECTIVE: 0, ADVERB: 1, NOUN: 2, VERB: 3,
+        name: (fromValue) => Object.entries(WordType).find((key, value) => value == fromValue)[0].toLowerCase()
+    })

@@ -17,21 +17,19 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class RhymerViewModel {
-    constructor(i18n, model) {
+    constructor(i18n, db, settings) {
         this._i18n = i18n
-        this._model = model
+        this._rhymerRepository = new RhymerRepository(db, settings)
+        this._rhymerRepository.settingsChangeObserver = () => this._refetchRhymes()
         this.rhymes = new ObservableField()
         this.isRhymerLoading = new ObservableField(false)
-        this.snackbarText = new ObservableField()
-        this._model.rhymerSettingsChangedObserver = () => this._refetchRhymes()
     }
 
     fetchRhymes(word) {
         this.isRhymerLoading.value = true
-        const searchTerm = this._model.cleanSearchTerm(word)
-        this._model.fetchRhymes(searchTerm).then(wordRhymes => {
+        this._rhymerRepository.fetchRhymes(word).then(wordRhymes => {
             this.isRhymerLoading.value = false
-            this.rhymes.value = new ResultList(searchTerm, [
+            this.rhymes.value = new ResultList(word, [
                 this._createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables"),
                 this._createRhymeListItems(wordRhymes.lastThreeSyllableRhymes, "last_three_syllables"),
                 this._createRhymeListItems(wordRhymes.lastTwoSyllablesRhymes, "last_two_syllables"),
@@ -53,11 +51,7 @@ class RhymerViewModel {
                 item.rhymes.map(rhyme => new ListItem(ListItem.ListItemStyles.WORD, rhyme))
             )
         )
-    onShareRhymes() {
-        this._model.copyText(this._getRhymesShareText())
-        this.snackbarText.value = "snackbar_copied_rhymes"
-    }
-    _getRhymesShareText = () =>
+    getRhymesShareText = () =>
         this._i18n.translate("share_rhymes_title", this.rhymes.value.word) +
         this.rhymes.value.listItems.map((listItem) => {
             if (listItem.style == ListItem.ListItemStyles.SUB_HEADER_1) {
@@ -69,14 +63,14 @@ class RhymerViewModel {
         ).join("")
 
     getRhymerSettingsSwitches = () => [
-        new SwitchItem("setting-rhymer-aor-ao", "setting_rhymer_aor_ao_label", "setting_rhymer_aor_ao_description", this._model.getRhymerSettingAorAo()),
-        new SwitchItem("setting-rhymer-ao-aa", "setting_rhymer_ao_aa_label", "setting_rhymer_ao_aa_description", this._model.getRhymerSettingAoAa())
+        new SwitchItem("setting-rhymer-aor-ao", "setting_rhymer_aor_ao_label", "setting_rhymer_aor_ao_description", this._rhymerRepository.getAorAoSetting()),
+        new SwitchItem("setting-rhymer-ao-aa", "setting_rhymer_ao_aa_label", "setting_rhymer_ao_aa_description", this._rhymerRepository.getAoAaSetting())
     ]
     onRhymerSettingToggled(id, value) {
         if (id == "setting-rhymer-aor-ao") {
-            this._model.setRhymerSettingAorAo(value)
+            this._rhymerRepository.setAorAoSetting(value)
         } else if (id == "setting-rhymer-ao-aa") {
-            this._model.setRhymerSettingAoAa(value)
+            this._rhymerRepository.setAoAaSetting(value)
         }
     }
 }
