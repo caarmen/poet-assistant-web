@@ -19,7 +19,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 class DefinitionsViewModel {
     constructor(i18n, db) {
         this._i18n = i18n
-        this._dictionaryRepository = new DictionaryRepository(db)
+        this._dictionaryRepository = new DefinitionsRepository(db)
         this.definitions = new ObservableField()
         this.isDefinitionsLoading = new ObservableField(false)
     }
@@ -28,11 +28,11 @@ class DefinitionsViewModel {
         this.isDefinitionsLoading.value = true
         this._dictionaryRepository.fetchDefinitions(word).then(definitions => {
             this.isDefinitionsLoading.value = false
-            this.definitions.value = new DictionaryResultList(
+            this.definitions.value = new DefinitionResultList(
                 word,
                 definitions.map(dictionaryEntry => {
                     const wordTypeLabel = WordType.name(dictionaryEntry.wordType)
-                    return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
+                    return new DefinitionListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
                 })
             )
         })

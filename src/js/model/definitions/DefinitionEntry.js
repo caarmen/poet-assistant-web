@@ -16,9 +16,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-class DictionaryListItem{
-    constructor(wordTypeLabel, definition) {
-        this.wordTypeLabel = wordTypeLabel
+class DefinitionEntry {
+    constructor(wordType, definition) {
+        this.wordType = wordType
         this.definition = definition
     }
 }

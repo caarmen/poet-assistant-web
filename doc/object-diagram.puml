@@ -19,7 +19,7 @@ object SuggestionsViewModel
 object MainModel
 object RhymerRepository
 object ThesaurusRepository
-object DictionaryRepository
+object DefinitionsRepository
 object PoemRepository
 object SuggestionsRepository
 object SpeechEngine
@@ -47,7 +47,7 @@ MainViewModel ..> SuggestionsViewModel
 
 RhymerViewModel ..> RhymerRepository
 ThesaurusViewModel ..> ThesaurusRepository 
-DefinitionsViewModel ..> DictionaryRepository
+DefinitionsViewModel ..> DefinitionsRepository
 ReaderViewModel ..> PoemRepository
 ReaderViewModel ..> SpeechEngine
 SuggestionsViewModel ..> SuggestionsRepository
@@ -55,12 +55,12 @@ SuggestionsViewModel ..> SuggestionsRepository
 
 RhymerRepository ..> Db
 ThesaurusRepository ..> Db
-DictionaryRepository ..> Db
+DefinitionsRepository ..> Db
 SuggestionsRepository ..> Db
-'RhymerRepository ..> Settings
-'ThesaurusRepository ..> Settings
-'PoemRepository ..> Settings
-'SuggestionsRepository ..> Settings
-'SpeechEngine ..> Settings
+RhymerRepository ..> Settings
+ThesaurusRepository ..> Settings
+PoemRepository ..> Settings
+SuggestionsRepository ..> Settings
+SpeechEngine ..> Settings
 
 @enduml

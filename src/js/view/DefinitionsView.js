@@ -44,7 +44,7 @@ class DefinitionsView {
     setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showDefinitions(definitions) {
-        this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDictionaryListHtml("list-definitions", definitions.word, definitions.listItems)
+        this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDefinitionsListHtml("list-definitions", definitions.word, definitions.listItems)
         this._i18n.translateElement(this._elemPlaceholderDefinitionsList.querySelector(".list-header"))
         this._listVisibility.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
         this._elemPlaceholderDefinitionsList.querySelector(".list-header__text").onclick = (e) => {

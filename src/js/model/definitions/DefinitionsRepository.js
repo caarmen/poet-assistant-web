@@ -16,41 +16,41 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-class DictionaryRepository {
+class DefinitionsRepository {
     constructor(db) {
         this._db = db
     }
     async fetchDefinitions(word) {
         const stmt = `
-            SELECT ${DictionaryRepository.COL_PART_OF_SPEECH}, ${DictionaryRepository.COL_DEFINITION} 
-            FROM ${DictionaryRepository.TABLE_DICTIONARY}
-            WHERE ${DictionaryRepository.COL_WORD}=? 
-            ORDER BY ${DictionaryRepository.COL_PART_OF_SPEECH}`
+            SELECT ${DefinitionsRepository.COL_PART_OF_SPEECH}, ${DefinitionsRepository.COL_DEFINITION} 
+            FROM ${DefinitionsRepository.TABLE_DICTIONARY}
+            WHERE ${DefinitionsRepository.COL_WORD}=? 
+            ORDER BY ${DefinitionsRepository.COL_PART_OF_SPEECH}`
 
         return (await this._db.query(stmt, [word])).map((row) => {
-            const wordTypeStr = row[DictionaryRepository.COL_PART_OF_SPEECH]
+            const wordTypeStr = row[DefinitionsRepository.COL_PART_OF_SPEECH]
             let wordType
             if (wordTypeStr == "a") wordType = WordType.ADJECTIVE
             else if (wordTypeStr == "r") wordType = WordType.ADVERB
             else if (wordTypeStr == "n") wordType = WordType.NOUN
             else if (wordTypeStr == "v") wordType = WordType.VERB
-            return new DictionaryEntry(wordType, row[DictionaryRepository.COL_DEFINITION])
+            return new DefinitionEntry(wordType, row[DefinitionsRepository.COL_DEFINITION])
         })
     }
 
     async getRandomWord() {
         const stmt = `
-            SELECT ${DictionaryRepository.COL_WORD}
-            FROM ${DictionaryRepository.TABLE_STEMS}
-            WHERE ${DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY} > 1500
-                AND ${DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY} < 25000
+            SELECT ${DefinitionsRepository.COL_WORD}
+            FROM ${DefinitionsRepository.TABLE_STEMS}
+            WHERE ${DefinitionsRepository.COL_GOOGLE_NGRAM_FREQUENCY} > 1500
+                AND ${DefinitionsRepository.COL_GOOGLE_NGRAM_FREQUENCY} < 25000
             ORDER BY RANDOM() LIMIT 1`
-        return (await this._db.query(stmt, []))[0][DictionaryRepository.COL_WORD]
+        return (await this._db.query(stmt, []))[0][DefinitionsRepository.COL_WORD]
     }
 }
-DictionaryRepository.TABLE_STEMS = "stems"
-DictionaryRepository.COL_GOOGLE_NGRAM_FREQUENCY = "google_ngram_frequency"
-DictionaryRepository.TABLE_DICTIONARY = "dictionary"
-DictionaryRepository.COL_DEFINITION = "definition"
-DictionaryRepository.COL_PART_OF_SPEECH = "part_of_speech"
-DictionaryRepository.COL_WORD = "word"
+DefinitionsRepository.TABLE_STEMS = "stems"
+DefinitionsRepository.COL_GOOGLE_NGRAM_FREQUENCY = "google_ngram_frequency"
+DefinitionsRepository.TABLE_DICTIONARY = "dictionary"
+DefinitionsRepository.COL_DEFINITION = "definition"
+DefinitionsRepository.COL_PART_OF_SPEECH = "part_of_speech"
+DefinitionsRepository.COL_WORD = "word"

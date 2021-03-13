@@ -99,15 +99,15 @@ class Template {
     createTextareaHtml = (id, label) =>
         this._templates.get("textarea").replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
 
-    createDictionaryListHtml = (id, word, dictionaryListItems) =>
+    createDefinitionsListHtml = (id, word, dictionaryListItems) =>
         this._templates.get("list-header").replace("__TEXT__", word) +
         this._templates.get("list").replace("__ID__", id).replace("__ITEMS__",
             dictionaryListItems.map(item =>
-                this.createDictionaryListItemHtml(item)
+                this.createDefinitionsListItemHtml(item)
             ).join("")
         )
 
-    createDictionaryListItemHtml = (dictionaryListItem) =>
+    createDefinitionsListItemHtml = (dictionaryListItem) =>
         this._templates.get("dictionary-list-item")
             .replace("__WORD_TYPE__", this._i18n.translate(dictionaryListItem.wordTypeLabel))
             .replace("__DEFINITION__", dictionaryListItem.definition)
