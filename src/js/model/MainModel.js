@@ -33,7 +33,7 @@ class MainModel {
         this._rhymerRepository.settingsChangeObserver = () => this.rhymerSettingsChangedObserver()
         this._thesaurusRepository = new ThesaurusRepository(db, this._settings)
         this._thesaurusRepository.settingsChangeObserver = () => this.thesaurusSettingsChangedObserver()
-        this._dictionaryRepository = new DictionaryRepository(db)
+        this._definitionsRepository = new DefinitionsRepository(db)
         this._suggestionsRepository = new SuggestionsRepository(db, this._settings)
     }
 
@@ -44,7 +44,7 @@ class MainModel {
     }
 
     async getRandomWord() {
-        return this._dictionaryRepository.getRandomWord()
+        return this._definitionsRepository.getRandomWord()
     }
 
     async fetchRhymes(word) {
@@ -65,7 +65,7 @@ class MainModel {
 
     async fetchDefinitions(word) {
         this._suggestionsRepository.addSearchedWord(word)
-        return this._dictionaryRepository.fetchDefinitions(word)
+        return this._definitionsRepository.fetchDefinitions(word)
     }
     async fetchSuggestions(word, includeResultsForEmptyWord) {
         return this._suggestionsRepository.fetchSuggestions(word, includeResultsForEmptyWord)

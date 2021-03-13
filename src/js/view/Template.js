@@ -99,18 +99,18 @@ class Template {
     createTextareaHtml = (id, label) =>
         this._templates.get("textarea").replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
 
-    createDictionaryListHtml = (id, word, dictionaryListItems) =>
+    createDefinitionsListHtml = (id, word, definitionsListItems) =>
         this._templates.get("list-header").replace("__TEXT__", word) +
         this._templates.get("list").replace("__ID__", id).replace("__ITEMS__",
-            dictionaryListItems.map(item =>
-                this.createDictionaryListItemHtml(item)
+            definitionsListItems.map(item =>
+                this.createDefinitionsListItemHtml(item)
             ).join("")
         )
 
-    createDictionaryListItemHtml = (dictionaryListItem) =>
-        this._templates.get("dictionary-list-item")
-            .replace("__WORD_TYPE__", this._i18n.translate(dictionaryListItem.wordTypeLabel))
-            .replace("__DEFINITION__", dictionaryListItem.definition)
+    createDefinitionsListItemHtml = (definitionsListItem) =>
+        this._templates.get("definitions-list-item")
+            .replace("__WORD_TYPE__", this._i18n.translate(definitionsListItem.wordTypeLabel))
+            .replace("__DEFINITION__", definitionsListItem.definition)
 
     createListEmptyHtml = (emptyText, word) => this._templates.get("list-empty").replace("__TEXT__", this._i18n.translate(emptyText, word))
 
@@ -178,7 +178,7 @@ Template.TEMPLATE_NAMES = [
     "context-menu-item-material-icon",
     "dialog",
     "dialog-simple-message",
-    "dictionary-list-item",
+    "definitions-list-item",
     "input-text",
     "linear-progress-indicator",
     "list",

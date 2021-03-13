@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-class DictionaryEntry {
+class DefinitionsEntry {
     constructor(wordType, definition) {
         this.wordType = wordType
         this.definition = definition

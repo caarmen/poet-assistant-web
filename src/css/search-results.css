@@ -18,14 +18,14 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 	top: 50%;
 	width: 100%;
 }
-.dictionary-list-item__word-type {
+.definitions-list-item__word-type {
 	font-weight: bold;
 	display: table-cell;
 	width: 3em;
 	padding-inline-end: 1em;
 	text-align: end;
 }
-.dictionary-list-item__definition {
+.definitions-list-item__definition {
 	display: table-cell;
 }
 #placeholder-definitions__list .mdc-list-item {

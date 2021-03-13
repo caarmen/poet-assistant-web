@@ -78,7 +78,7 @@ class MainViewModel {
         this.fetchThesaurus(word)
         this.fetchDefinitions(word)
         if (this.activeTab.value == MainViewModel.TabIndex.READER) {
-            this.activeTab.value = MainViewModel.TabIndex.DICTIONARY
+            this.activeTab.value = MainViewModel.TabIndex.DEFINITIONS
         }
     }
 
@@ -198,11 +198,11 @@ class MainViewModel {
             const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchDefinitions(searchTerm).then(definitions => {
                 this.isDefinitionsLoading.value = false
-                this.definitions.value = new DictionaryResultList(
+                this.definitions.value = new DefinitionsResultList(
                     searchTerm,
-                    definitions.map(dictionaryEntry => {
-                        const wordTypeLabel = this._getWordTypeLabel(dictionaryEntry.wordType)
-                        return new DictionaryListItem(`part_of_speech_${wordTypeLabel}_short`, dictionaryEntry.definition)
+                    definitions.map(definitionsEntry => {
+                        const wordTypeLabel = this._getWordTypeLabel(definitionsEntry.wordType)
+                        return new DefinitionsListItem(`part_of_speech_${wordTypeLabel}_short`, definitionsEntry.definition)
                     })
                 )
             })
@@ -213,9 +213,9 @@ class MainViewModel {
         this.snackbarText.value = "snackbar_copied_definitions"
     }
     _getDefinitionsShareText = () =>
-        this.i18n.translate("share_dictionary_title", this.definitions.value.word) +
-        this.definitions.value.listItems.map((dictionaryListItem) =>
-            this.i18n.translate("share_dictionary_definition", this.i18n.translate(dictionaryListItem.wordTypeLabel), dictionaryListItem.definition)
+        this.i18n.translate("share_definitions_title", this.definitions.value.word) +
+        this.definitions.value.listItems.map((definitionsListItem) =>
+            this.i18n.translate("share_definitions_definition", this.i18n.translate(definitionsListItem.wordTypeLabel), definitionsListItem.definition)
         ).join("")
 
     onSearchTextInput(text) {
@@ -282,7 +282,7 @@ class MainViewModel {
         } else if (selectedMenuId == "menu-random") {
             this._model.getRandomWord().then((word) => {
                 this.fetchAll(word)
-                this.activeTab.value = MainViewModel.TabIndex.DICTIONARY
+                this.activeTab.value = MainViewModel.TabIndex.DEFINITIONS
             })
         }
     }
@@ -299,9 +299,9 @@ class MainViewModel {
         } else if (selectedMenuId == "menu-thesaurus") {
             this.fetchThesaurus(word)
             this.activeTab.value = MainViewModel.TabIndex.THESAURUS
-        } else if (selectedMenuId == "menu-dictionary") {
+        } else if (selectedMenuId == "menu-definitions") {
             this.fetchDefinitions(word)
-            this.activeTab.value = MainViewModel.TabIndex.DICTIONARY
+            this.activeTab.value = MainViewModel.TabIndex.DEFINITIONS
         }
     }
 
@@ -348,7 +348,7 @@ class MainViewModel {
         new MenuItem("menu-speak", "menu_speak_title", new MenuItemIcon("record_voice_over", MenuItemIcon.IconSource.MATERIAL)),
         new MenuItem("menu-rhymer", "tab_rhymer_title", new MenuItemIcon("ic_rhymer", MenuItemIcon.IconSource.CUSTOM)),
         new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
-        new MenuItem("menu-dictionary", "tab_dictionary_title", new MenuItemIcon("ic_dictionary", MenuItemIcon.IconSource.CUSTOM)),
+        new MenuItem("menu-definitions", "tab_definitions_title", new MenuItemIcon("ic_definitions", MenuItemIcon.IconSource.CUSTOM)),
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
 
     setPoemText = (text, writeNow) => this._model.setPoemText(text, writeNow)
@@ -361,4 +361,4 @@ class MainViewModel {
     }
 
 }
-MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DICTIONARY: 2, READER: 3 })
+MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DEFINITIONS: 2, READER: 3 })

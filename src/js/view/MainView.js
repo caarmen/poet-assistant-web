@@ -55,7 +55,7 @@ class MainView {
                     [
                         new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
                         new TabData("tab_thesaurus", "tab_thesaurus_title", "placeholder-thesaurus"),
-                        new TabData("tab_dictionary", "tab_dictionary_title", "placeholder-definitions"),
+                        new TabData("tab_definitions", "tab_definitions_title", "placeholder-definitions"),
                         new TabData("tab_reader", "tab_reader_title", "placeholder-reader")
                     ])
                 this._applyTemplates()
