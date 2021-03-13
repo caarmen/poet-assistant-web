@@ -10,6 +10,11 @@ object VoiceSettingsView
 object MainView
 
 object MainViewModel
+object RhymerViewModel
+object ThesaurusViewModel
+object DefinitionsViewModel
+object ReaderViewModel
+object SuggestionsViewModel
 
 object MainModel
 object RhymerRepository
@@ -32,6 +37,17 @@ SuggestionsView <.. MainView
 MainView ..> MainViewModel
 
 MainViewModel ..> MainModel
+MainViewModel ..> RhymerViewModel
+MainViewModel ..> ThesaurusViewModel
+MainViewModel ..> DefinitionsViewModel
+MainViewModel ..> ReaderViewModel
+MainViewModel ..> SuggestionsViewModel
+
+RhymerViewModel ..> MainModel
+ThesaurusViewModel ..> MainModel
+DefinitionsViewModel ..> MainModel
+ReaderViewModel ..> MainModel
+SuggestionsViewModel ..> MainModel
 
 MainModel ..> SpeechEngine
 MainModel ..> RhymerRepository
