@@ -51,11 +51,14 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 }
 .list-header {
 	padding-inline-end: 8px;
+	display: flex;
+	align-items: center;
 }
 .list-header__text {
 	font-weight: bold;
 	padding-inline-start: 16px;
 	font-size: 1.2em;
+	flex: auto;
 }
 .list-header__settings {
 	float: right;
