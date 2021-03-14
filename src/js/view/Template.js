@@ -72,7 +72,7 @@ class Template {
 
     createContextMenuIconHtml(menuItemIcon) {
         if (menuItemIcon) {
-            if (menuItemIcon.type == MenuItemIcon.IconSource.MATERIAL) {
+            if (menuItemIcon.type == Icon.IconSource.MATERIAL) {
                 return this._templates.get("context-menu-item-material-icon").replace("__ICON__", menuItemIcon.name)
             } else {
                 return this._templates.get("context-menu-item-custom-icon").replace("__ICON__", menuItemIcon.name)
@@ -154,12 +154,22 @@ class Template {
                 tabs.map(tab =>
                     this.createTabHtml(
                         tab.tabElemId,
-                        this._i18n.translate(tab.tabLabel)))
+                        this._i18n.translate(tab.tabLabel),
+                        tab.icon))
                     .join(""))
 
-    createTabHtml = (id, label) =>
+    createTabHtml = (id, label, icon) =>
         this._templates.get("tab").replace("__ID__", id)
             .replace("__LABEL__", label)
+            .replace("__ICON__", this.createTabIconHtml(icon))
+
+    createTabIconHtml(icon) {
+        if (icon.type == Icon.IconSource.MATERIAL) {
+            return this._templates.get("tab-material-icon").replace("__ICON__", icon.name)
+        } else {
+            return this._templates.get("tab-custom-icon").replace("__ICON__", icon.name)
+        }
+    }
 
     createSliderHtml = (sliderData) =>
         this._templates.get("slider").replace("__ID__", sliderData.id)
@@ -207,6 +217,8 @@ Template.TEMPLATE_NAMES = [
     "switch",
     "tab",
     "tab-bar",
+    "tab-custom-icon",
+    "tab-material-icon",
     "textarea",
     "voice-selection"
 ]

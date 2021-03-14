@@ -54,11 +54,11 @@ class MainView {
                 this._viewVoiceSettings = new VoiceSettingsView(this._viewModel.i18n, this._template)
                 this._viewTabs = new TabsView(this._template,
                     [
-                        new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
-                        new TabData("tab_thesaurus", "tab_thesaurus_title", "placeholder-thesaurus"),
-                        new TabData("tab_definitions", "tab_definitions_title", "placeholder-definitions"),
-                        new TabData("tab_favorites", "tab_favorites_title", "placeholder-favorites"),
-                        new TabData("tab_reader", "tab_reader_title", "placeholder-reader")
+                        new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes", new Icon("ic_rhymer.svg", Icon.IconSource.CUSTOM)),
+                        new TabData("tab_thesaurus", "tab_thesaurus_title", "placeholder-thesaurus", new Icon("ic_thesaurus.svg", Icon.IconSource.CUSTOM)),
+                        new TabData("tab_definitions", "tab_definitions_title", "placeholder-definitions", new Icon("ic_definitions.svg", Icon.IconSource.CUSTOM)),
+                        new TabData("tab_favorites", "tab_favorites_title", "placeholder-favorites", new Icon("star", Icon.IconSource.MATERIAL)),
+                        new TabData("tab_reader", "tab_reader_title", "placeholder-reader", new Icon("create", Icon.IconSource.MATERIAL))
                     ])
                 this._applyTemplates()
                 this._initializeViews()
