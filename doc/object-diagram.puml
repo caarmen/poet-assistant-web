@@ -5,6 +5,7 @@ object ContextMenuView
 object RhymerView
 object ThesaurusView
 object DefinitionsView
+object FavoritesView
 object ReaderView
 object VoiceSettingsView
 object MainView
@@ -14,18 +15,22 @@ object MainViewModel
 object MainModel
 object RhymerRepository
 object ThesaurusRepository
-object DictionaryRepository
+object DefinitionsRepository
+object FavoritesRepository
 object SuggestionsRepository
+object PoemRepository
 object SpeechEngine
 
 
 object Db
+object Settings
 
 TabsView <.. MainView
 ContextMenuView <.. MainView
 RhymerView <.. MainView
 ThesaurusView <.. MainView
 DefinitionsView <.. MainView
+FavoritesView <.. MainView
 ReaderView <.. MainView
 VoiceSettingsView <.. MainView
 SuggestionsView <.. MainView
@@ -36,12 +41,21 @@ MainViewModel ..> MainModel
 MainModel ..> SpeechEngine
 MainModel ..> RhymerRepository
 MainModel ..> ThesaurusRepository 
-MainModel ..> DictionaryRepository
+MainModel ..> DefinitionsRepository
+MainModel ..> FavoritesRepository
 MainModel ..> SuggestionsRepository
+MainModel ..> PoemRepository
 
 RhymerRepository ..> Db
 ThesaurusRepository ..> Db
-DictionaryRepository ..> Db
+DefinitionsRepository ..> Db
 SuggestionsRepository ..> Db
+
+RhymerRepository ..> Settings
+ThesaurusRepository ..> Settings
+FavoritesRepository ..> Settings
+SuggestionsRepository ..> Settings
+PoemRepository ..> Settings
+SpeechEngine ..> Settings
 
 @enduml

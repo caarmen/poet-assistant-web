@@ -21,10 +21,13 @@ class MainModel {
         this._settings = new Settings()
         this._speechEngine = new SpeechEngine(this._settings)
         this._poemRepository = new PoemRepository(this._settings)
+        this._favoritesRepository = new FavoritesRepository(this._settings)
         this.isSpeechPlaying = this._speechEngine.isPlaying
         this.poemText = this._poemRepository.poemText
+        this.favoritesObserver = (newFavorites) => { }
         this.rhymerSettingsChangedObserver = () => { }
         this.thesaurusSettingsChangedObserver = () => { }
+        this._favoritesRepository.observer = (newFavorites) => this.favoritesObserver(newFavorites)
     }
     async loadDb(progressCallback) {
         const db = new Db()
@@ -72,7 +75,9 @@ class MainModel {
     }
 
     clearSearchHistory = () => this._suggestionsRepository.clearSearchHisotry()
-
+    setFavorite = (word, isFavorite) => this._favoritesRepository.setFavorite(word, isFavorite)
+    getFavorites = () => Array.from(this._favoritesRepository.getFavorites())
+    clearFavorites = () => this._favoritesRepository.clearFavorites()
     selectVoice = (id) => this._speechEngine.selectVoice(id)
     setVoicePitch = (pitchValue) => this._speechEngine.setVoicePitch(pitchValue)
     setVoiceSpeed = (speedValue) => this._speechEngine.setVoiceSpeed(speedValue)

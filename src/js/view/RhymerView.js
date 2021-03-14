@@ -29,9 +29,10 @@ class RhymerView {
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
 
+        this.favoriteToggledObserver = (word, isFavorite) => { }
         this.wordClickedObserver = (wordElem) => { }
         this.shareClickedObserver = () => { }
-        this.settingsClickedObserver = () => {}
+        this.settingsClickedObserver = () => { }
         this.settingToggledObserver = (id, value) => { }
         this._applyTemplates()
         this._initializeViews()
@@ -49,17 +50,13 @@ class RhymerView {
     setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showRhymes(rhymes) {
-        this._elemPlaceholderRhymesList.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.listItems)
+        this._elemPlaceholderRhymesList.innerHTML = this._template.createListHtml("list-rhymes", rhymes.word, rhymes.isWordFavorite, rhymes.listItems)
         this._i18n.translateElement(this._elemPlaceholderRhymesList.querySelector(".list-header"))
         this._listVisibility.setListVisibility(rhymes.listItems, this._elemPlaceholderRhymesList, this._elemPlaceholderRhymesEmpty, "no_results_rhymes", rhymes.word)
-        this._elemPlaceholderRhymesList.querySelector(".list-header__text").onclick = (e) => {
-            this.wordClickedObserver(e.target)
-        }
+        ListWordClickActions.listenWordClickEvents(this._elemPlaceholderRhymesList, (elem) => this.wordClickedObserver(elem))
+        ListFavoriteActions.listenFavoriteToggleEvents(this._elemPlaceholderRhymesList, rhymes.word, (word, isFavorite) => this.favoriteToggledObserver(word, isFavorite))
         this._elemPlaceholderRhymesList.querySelector(".list-header__copy").onclick = (e) => { this.shareClickedObserver() }
         this._elemPlaceholderRhymesList.querySelector(".list-header__settings").onclick = (e) => { this.settingsClickedObserver() }
-        new RhymerView.MDCList(document.querySelector("#list-rhymes")).listen('click', (e) => {
-            if (e.target.classList.contains("word-list-item")) this.wordClickedObserver(e.target)
-        })
     }
     showSettings(switchItems) {
         const contentHtml = this._template.createSwitchesHtml(switchItems)
@@ -77,6 +74,5 @@ class RhymerView {
     }
 }
 RhymerView.MDCDialog = mdc.dialog.MDCDialog
-RhymerView.MDCList = mdc.list.MDCList
 RhymerView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress
 RhymerView.MDCSwitch = mdc.switchControl.MDCSwitch

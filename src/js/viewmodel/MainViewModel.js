@@ -26,6 +26,7 @@ class MainViewModel {
         this.thesaurusEntries = new ObservableField()
         this.definitions = new ObservableField()
         this.suggestions = new ObservableField()
+        this.favorites = new ObservableField()
         this.voices = new ObservableField([])
         this.selectedVoiceLabel = new ObservableField()
         this.voicePitch = new ObservableField()
@@ -56,6 +57,8 @@ class MainViewModel {
         this._model._speechEngine.speed.observer = (newSpeed) => this.voiceSpeed.value = newSpeed
         this._model._speechEngine.pitch.observer = (newPitch) => this.voicePitch.value = newPitch
         this._model._poemRepository.savedState.observer = (newSavedState) => this.poemSavedStateLabel.value = this._getSavedStateLabel(newSavedState)
+        this._model.favoritesObserver = (newFavorites) => this._onFavoritesChanged(newFavorites)
+        this._onFavoritesChanged(this._model.getFavorites())
     }
 
     loadTranslations = () => this.i18n.load()
@@ -77,7 +80,7 @@ class MainViewModel {
         this.fetchRhymes(word)
         this.fetchThesaurus(word)
         this.fetchDefinitions(word)
-        if (this.activeTab.value == MainViewModel.TabIndex.READER) {
+        if (this.activeTab.value == MainViewModel.TabIndex.READER || this.activeTab.value == MainViewModel.TabIndex.FAVORITES) {
             this.activeTab.value = MainViewModel.TabIndex.DEFINITIONS
         }
     }
@@ -87,12 +90,13 @@ class MainViewModel {
             this.isRhymerLoading.value = true
             const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchRhymes(searchTerm).then(wordRhymes => {
+                const favorites = this._model.getFavorites()
                 this.isRhymerLoading.value = false
-                this.rhymes.value = new ResultList(searchTerm, [
-                    this._createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables"),
-                    this._createRhymeListItems(wordRhymes.lastThreeSyllableRhymes, "last_three_syllables"),
-                    this._createRhymeListItems(wordRhymes.lastTwoSyllablesRhymes, "last_two_syllables"),
-                    this._createRhymeListItems(wordRhymes.lastSyllableRhymes, "last_syllable")
+                this.rhymes.value = new ResultList(searchTerm, favorites.includes(searchTerm), [
+                    this._createRhymeListItems(wordRhymes.stressRhymes, "stress_syllables", favorites),
+                    this._createRhymeListItems(wordRhymes.lastThreeSyllableRhymes, "last_three_syllables", favorites),
+                    this._createRhymeListItems(wordRhymes.lastTwoSyllablesRhymes, "last_two_syllables", favorites),
+                    this._createRhymeListItems(wordRhymes.lastSyllableRhymes, "last_syllable", favorites)
                 ].flat())
             })
         }
@@ -103,12 +107,12 @@ class MainViewModel {
         }
     }
 
-    _createRhymeListItems = (syllableRhymes, syllableTypeLabel) =>
+    _createRhymeListItems = (syllableRhymes, syllableTypeLabel, favorites) =>
         (syllableRhymes || []).flatMap((item) =>
             [
-                new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, syllableTypeLabel, item.syllables)
+                ListItem.header1(syllableTypeLabel, item.syllables)
             ].concat(
-                item.rhymes.map(rhyme => new ListItem(ListItem.ListItemStyles.WORD, rhyme))
+                item.rhymes.map(rhyme => ListItem.word(rhyme, favorites.includes(rhyme)))
             )
         )
     onShareRhymes() {
@@ -143,21 +147,22 @@ class MainViewModel {
             this.isThesaurusLoading.value = true
             const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchThesaurus(searchTerm).then(thesaurusEntries => {
+                const favorites = this._model.getFavorites()
                 this.isThesaurusLoading.value = false
                 let resultListItems = []
                 thesaurusEntries.forEach(thesaurusEntry => {
                     const wordTypeLabel = this._getWordTypeLabel(thesaurusEntry.wordType)
-                    resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, `part_of_speech_${wordTypeLabel}`))
+                    resultListItems.push(ListItem.header1(`part_of_speech_${wordTypeLabel}`))
                     if (thesaurusEntry.synonyms.length > 0) {
-                        resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "synonyms"))
-                        resultListItems = resultListItems.concat(thesaurusEntry.synonyms.map(synonym => new ListItem(ListItem.ListItemStyles.WORD, synonym)))
+                        resultListItems.push(ListItem.header2("synonyms"))
+                        resultListItems = resultListItems.concat(thesaurusEntry.synonyms.map(synonym => ListItem.word(synonym, favorites.includes(synonym))))
                     }
                     if (thesaurusEntry.antonyms.length > 0) {
-                        resultListItems.push(new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, "antonyms"))
-                        resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => new ListItem(ListItem.ListItemStyles.WORD, antonym)))
+                        resultListItems.push(ListItem.header2("antonyms"))
+                        resultListItems = resultListItems.concat(thesaurusEntry.antonyms.map(antonym => ListItem.word(antonym, favorites.includes(antonym))))
                     }
                 })
-                this.thesaurusEntries.value = new ResultList(searchTerm, resultListItems)
+                this.thesaurusEntries.value = new ResultList(searchTerm, favorites.includes(searchTerm), resultListItems)
             })
         }
     }
@@ -197,9 +202,11 @@ class MainViewModel {
             this.isDefinitionsLoading.value = true
             const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchDefinitions(searchTerm).then(definitions => {
+                const favorites = this._model.getFavorites()
                 this.isDefinitionsLoading.value = false
                 this.definitions.value = new DefinitionsResultList(
                     searchTerm,
+                    favorites.includes(searchTerm),
                     definitions.map(definitionsEntry => {
                         const wordTypeLabel = this._getWordTypeLabel(definitionsEntry.wordType)
                         return new DefinitionsListItem(`part_of_speech_${wordTypeLabel}_short`, definitionsEntry.definition)
@@ -262,6 +269,44 @@ class MainViewModel {
             })
         }
     }
+
+    setFavorite = (word, isFavorite) => this._model.setFavorite(word, isFavorite)
+    _onFavoritesChanged(newFavorites) {
+        this.favorites.value = newFavorites
+            .sort()
+            .map((favorite) => ListItem.word(favorite, true))
+        this._updateResultListFavorites(this.rhymes, newFavorites)
+        this._updateResultListFavorites(this.thesaurusEntries, newFavorites)
+        if (this.definitions.value != undefined) {
+            this.definitions.value = new DefinitionsResultList(this.definitions.value.word, newFavorites.includes(this.definitions.value.word), this.definitions.value.listItems)
+        }
+    }
+    _updateResultListFavorites(resultListObservableField, newFavorites) {
+        if (resultListObservableField.value != undefined) {
+            resultListObservableField.value = new ResultList(resultListObservableField.value.word, newFavorites.includes(resultListObservableField.value.word),
+                resultListObservableField.value.listItems.map((item) =>
+                    item.style == ListItem.ListItemStyles.WORD ?
+                        ListItem.word(item.text, newFavorites.includes(item.text)) :
+                        item
+                ))
+        }
+    }
+
+    onClearFavorites() {
+        this.dialogInfo.value = DialogInfo.prompt(
+            "favorites_delete_dialog_title",
+            "favorites_delete_dialog_message",
+            () => { this._model.clearFavorites() }
+        )
+    }
+    onShareFavorites() {
+        this._model.copyText(this._getFavoritesShareText())
+        this.snackbarText.value = "snackbar_copied_favorites"
+    }
+    _getFavoritesShareText = () =>
+        this.i18n.translate("share_favorites_title") +
+        this._model.getFavorites().map((word) => this.i18n.translate("share_favorites_word", word))
+            .join("")
 
     _getWordTypeLabel(wordType) {
         let wordTypeLabel
@@ -359,6 +404,5 @@ class MainViewModel {
         else if (savedState == PoemRepository.SaveState.SAVED) return "poem_saved_state_label_saved"
         else if (savedState == PoemRepository.SaveState.WAITING) return "poem_saved_state_label_waiting"
     }
-
 }
-MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DEFINITIONS: 2, READER: 3 })
+MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DEFINITIONS: 2, FAVORITES: 3, READER: 4 })

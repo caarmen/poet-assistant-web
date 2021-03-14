@@ -28,6 +28,7 @@ class ThesaurusView {
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
 
+        this.favoriteToggledObserver = (word, isFavorite) => { }
         this.wordClickedObserver = (wordElem) => { }
         this.shareClickedObserver = () => { }
         this.settingsClickedObserver = () => {}
@@ -48,17 +49,13 @@ class ThesaurusView {
     setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showThesaurus(thesaurusEntries) {
-        this._elemPlaceholderThesaurusList.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.listItems)
+        this._elemPlaceholderThesaurusList.innerHTML = this._template.createListHtml("list-thesaurus", thesaurusEntries.word, thesaurusEntries.isWordFavorite, thesaurusEntries.listItems)
         this._i18n.translateElement(this._elemPlaceholderThesaurusList.querySelector(".list-header"))
         this._listVisibility.setListVisibility(thesaurusEntries.listItems, this._elemPlaceholderThesaurusList, this._elemPlaceholderThesaurusEmpty, "no_results_thesaurus", thesaurusEntries.word)
-        this._elemPlaceholderThesaurusList.querySelector(".list-header__text").onclick = (e) => {
-            this.wordClickedObserver(e.target)
-        }
+        ListWordClickActions.listenWordClickEvents(this._elemPlaceholderThesaurusList, (elem) => this.wordClickedObserver(elem))
+        ListFavoriteActions.listenFavoriteToggleEvents(this._elemPlaceholderThesaurusList, thesaurusEntries.word, (word, isFavorite) => this.favoriteToggledObserver(word, isFavorite))
         this._elemPlaceholderThesaurusList.querySelector(".list-header__copy").onclick = (e) => { this.shareClickedObserver() }
         this._elemPlaceholderThesaurusList.querySelector(".list-header__settings").onclick = (e) => { this.settingsClickedObserver() }
-        new ThesaurusView.MDCList(document.querySelector("#list-thesaurus")).listen('click', (e) => {
-            if (e.target.classList.contains("word-list-item")) this.wordClickedObserver(e.target)
-        })
     }
     showSettings(switchItems) {
         const contentHtml = this._template.createSwitchesHtml(switchItems)
@@ -76,6 +73,5 @@ class ThesaurusView {
     }
 }
 ThesaurusView.MDCDialog = mdc.dialog.MDCDialog
-ThesaurusView.MDCList = mdc.list.MDCList
 ThesaurusView.MDCCircularProgress = mdc.circularProgress.MDCCircularProgress
 ThesaurusView.MDCSwitch = mdc.switchControl.MDCSwitch
