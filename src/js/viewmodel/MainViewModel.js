@@ -391,9 +391,9 @@ class MainViewModel {
     _createContextMenuItems = (isSpeechEnabled) => [
         new MenuItem("menu-copy", "menu_copy_title", new Icon("content_copy", Icon.IconSource.MATERIAL)),
         new MenuItem("menu-speak", "menu_speak_title", new Icon("record_voice_over", Icon.IconSource.MATERIAL)),
-        new MenuItem("menu-rhymer", "tab_rhymer_title", new Icon("ic_rhymer", Icon.IconSource.CUSTOM)),
-        new MenuItem("menu-thesaurus", "tab_thesaurus_title", new Icon("ic_thesaurus", Icon.IconSource.CUSTOM)),
-        new MenuItem("menu-definitions", "tab_definitions_title", new Icon("ic_definitions", Icon.IconSource.CUSTOM)),
+        new MenuItem("menu-rhymer", "tab_rhymer_title", new Icon("ic_rhymer.svg", Icon.IconSource.CUSTOM)),
+        new MenuItem("menu-thesaurus", "tab_thesaurus_title", new Icon("ic_thesaurus.svg", Icon.IconSource.CUSTOM)),
+        new MenuItem("menu-definitions", "tab_definitions_title", new Icon("ic_definitions.svg", Icon.IconSource.CUSTOM)),
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
 
     setPoemText = (text, writeNow) => this._model.setPoemText(text, writeNow)
