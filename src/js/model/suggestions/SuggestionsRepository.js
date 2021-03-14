@@ -23,6 +23,7 @@ class SuggestionsRepository {
         this._timeoutId
     }
     addSearchedWord(word) {
+        this._cancelFetch()
         this._settings.setSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS,
             JSON.stringify(
                 Array.from(
@@ -34,6 +35,10 @@ class SuggestionsRepository {
         )
     }
 
+    _cancelFetch() {
+        if (this._timeoutId != undefined) clearTimeout(this._timeoutId)
+        this._timeoutId = 0
+    }
     clearSearchHisotry = () => this._settings.removeSetting(SuggestionsRepository.SETTINGS_KEY_SEARCHED_WORDS)
 
     fetchSuggestions(word, includeResultsForEmptyWord) {
@@ -41,10 +46,10 @@ class SuggestionsRepository {
             return Promise.resolve([])
         }
         return new Promise((completionFunc) => {
-            if (this._timeoutId != undefined) clearTimeout(this._timeoutId)
+            this._cancelFetch()
             // In the case where the user clicked on the search input text, search immediately
             // Otherwise if the user is typing, don't search too often to not hang the ui thread
-            let timeout = includeResultsForEmptyWord ? 0: 200
+            let timeout = includeResultsForEmptyWord ? 0 : 200
             this._timeoutId = setTimeout(() => {
                 const promiseHistory = this._fetchSuggestionsFromHistory(word)
                     .then((historyWords) =>
@@ -55,7 +60,9 @@ class SuggestionsRepository {
                         dictionaryWords.map((dictionaryWord) =>
                             new Suggestion(Suggestion.SuggestionType.DICTIONARY, dictionaryWord)))
                 Promise.all([promiseHistory, promiseDictionary]).then((suggestions) => {
-                    completionFunc(suggestions.flat())
+                    if (this._timeoutId != 0) {
+                        completionFunc(suggestions.flat())
+                    }
                 })
             }, timeout)
         })
