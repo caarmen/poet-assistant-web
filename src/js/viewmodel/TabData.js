@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class TabData {
-    constructor(tabElemId, tabLabel, contentElemId) {
+    constructor(tabElemId, tabLabel, contentElemId, icon) {
         this.tabElemId = tabElemId
         this.tabLabel = tabLabel
         this.contentElemId = contentElemId
+        this.icon = icon
     }
 }

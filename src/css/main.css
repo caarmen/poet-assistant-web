@@ -60,3 +60,6 @@ a:link, a.active:link,a:hover, a:visited {
 .mdc-menu .mdc-list-item__graphic {
 	color: var(--mdc-theme-primary);
 }
+.mdc-tab .mdc-tab__icon {
+	color: var(--mdc-theme-primary);
+}

@@ -48,8 +48,8 @@ class MainViewModel {
         this.contextMenuItems = this._createContextMenuItems(false)
         this.snackbarText = new ObservableField()
         this.appBarMenuItems = [
-            new MenuItem("menu-about", "app_bar_menu_about_title", new MenuItemIcon("info", MenuItemIcon.IconSource.MATERIAL)),
-            new MenuItem("menu-random", "app_bar_menu_random_title", new MenuItemIcon("casino", MenuItemIcon.IconSource.MATERIAL)),
+            new MenuItem("menu-about", "app_bar_menu_about_title", new Icon("info", Icon.IconSource.MATERIAL)),
+            new MenuItem("menu-random", "app_bar_menu_random_title", new Icon("casino", Icon.IconSource.MATERIAL)),
         ]
         this.dialogInfo = new ObservableField()
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
@@ -252,16 +252,16 @@ class MainViewModel {
             const searchTerm = this._cleanSearchTerm(word)
             this._model.fetchSuggestions(searchTerm, includeResultsForEmptyWord).then(suggestions => {
                 let suggestionsMenuItems = suggestions.map((suggestion) =>
-                    new MenuItem(suggestion.word, suggestion.word, new MenuItemIcon(
+                    new MenuItem(suggestion.word, suggestion.word, new Icon(
                         suggestion.type == Suggestion.SuggestionType.HISTORY ? "history" : "search",
-                        MenuItemIcon.IconSource.MATERIAL
+                        Icon.IconSource.MATERIAL
                     ))
                 )
                 // If the suggestions contain any search history, also include an option to clear search history
                 if (suggestions.find((suggestion) => suggestion.type == Suggestion.SuggestionType.HISTORY)) {
                     suggestionsMenuItems.push(
                         new MenuItem("clear_search_history", "clear_search_history",
-                            new MenuItemIcon("delete", MenuItemIcon.IconSource.MATERIAL)
+                            new Icon("delete", Icon.IconSource.MATERIAL)
                         )
                     )
                 }
@@ -389,11 +389,11 @@ class MainViewModel {
     _getVoiceLabel = (voice) => `${voice.name} - ${voice.lang}`
 
     _createContextMenuItems = (isSpeechEnabled) => [
-        new MenuItem("menu-copy", "menu_copy_title", new MenuItemIcon("content_copy", MenuItemIcon.IconSource.MATERIAL)),
-        new MenuItem("menu-speak", "menu_speak_title", new MenuItemIcon("record_voice_over", MenuItemIcon.IconSource.MATERIAL)),
-        new MenuItem("menu-rhymer", "tab_rhymer_title", new MenuItemIcon("ic_rhymer", MenuItemIcon.IconSource.CUSTOM)),
-        new MenuItem("menu-thesaurus", "tab_thesaurus_title", new MenuItemIcon("ic_thesaurus", MenuItemIcon.IconSource.CUSTOM)),
-        new MenuItem("menu-definitions", "tab_definitions_title", new MenuItemIcon("ic_definitions", MenuItemIcon.IconSource.CUSTOM)),
+        new MenuItem("menu-copy", "menu_copy_title", new Icon("content_copy", Icon.IconSource.MATERIAL)),
+        new MenuItem("menu-speak", "menu_speak_title", new Icon("record_voice_over", Icon.IconSource.MATERIAL)),
+        new MenuItem("menu-rhymer", "tab_rhymer_title", new Icon("ic_rhymer", Icon.IconSource.CUSTOM)),
+        new MenuItem("menu-thesaurus", "tab_thesaurus_title", new Icon("ic_thesaurus", Icon.IconSource.CUSTOM)),
+        new MenuItem("menu-definitions", "tab_definitions_title", new Icon("ic_definitions", Icon.IconSource.CUSTOM)),
     ].filter((item) => item.id != "menu-speak" || isSpeechEnabled)
 
     setPoemText = (text, writeNow) => this._model.setPoemText(text, writeNow)

@@ -16,10 +16,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-class MenuItemIcon {
+class Icon {
     constructor(name, source) {
         this.name = name
         this.type = source
     }
 }
-MenuItemIcon.IconSource = Object.freeze({ MATERIAL: 0, CUSTOM: 1 })
+Icon.IconSource = Object.freeze({ MATERIAL: 0, CUSTOM: 1 })
