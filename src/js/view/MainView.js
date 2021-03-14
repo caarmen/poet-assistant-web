@@ -49,6 +49,7 @@ class MainView {
                 this._viewRhymer = new RhymerView(this._viewModel.i18n, this._template)
                 this._viewThesaurus = new ThesaurusView(this._viewModel.i18n, this._template)
                 this._viewDefinitions = new DefinitionsView(this._viewModel.i18n, this._template)
+                this._viewFavorites = new FavoritesView(this._viewModel.i18n, this._template)
                 this._viewReader = new ReaderView(this._viewModel.i18n, this._template)
                 this._viewVoiceSettings = new VoiceSettingsView(this._viewModel.i18n, this._template)
                 this._viewTabs = new TabsView(this._template,
@@ -56,6 +57,7 @@ class MainView {
                         new TabData("tab_rhymer", "tab_rhymer_title", "placeholder-rhymes"),
                         new TabData("tab_thesaurus", "tab_thesaurus_title", "placeholder-thesaurus"),
                         new TabData("tab_definitions", "tab_definitions_title", "placeholder-definitions"),
+                        new TabData("tab_favorites", "tab_favorites_title", "placeholder-favorites"),
                         new TabData("tab_reader", "tab_reader_title", "placeholder-reader")
                     ])
                 this._applyTemplates()
@@ -122,6 +124,7 @@ class MainView {
         this._viewModel.isThesaurusLoading.observer = (isLoading) => { this._viewThesaurus.setLoading(isLoading) }
         this._viewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
         this._viewModel.snackbarText.observer = (snackbarText) => { this._showSnackbar(snackbarText) }
+        this._viewModel.favorites.observer = (newFavorites) => { this._viewFavorites.showFavorites(newFavorites) }
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -145,16 +148,23 @@ class MainView {
         this._viewContextMenu.observer = (word, index) => { this._viewModel.onContextMenuItemSelected(word, index) }
         this._viewSuggestions.observer = (word) => { this._onSuggestionSelected(word) }
 
+        this._viewRhymer.favoriteToggledObserver = (word, isFavorite) => { this._viewModel.setFavorite(word, isFavorite) }
         this._viewRhymer.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewRhymer.shareClickedObserver = () => { this._viewModel.onShareRhymes() }
         this._viewRhymer.settingsClickedObserver = () => { this._viewRhymer.showSettings(this._viewModel.getRhymerSettingsSwitches()) }
         this._viewRhymer.settingToggledObserver = (id, value) => { this._viewModel.onRhymerSettingToggled(id, value) }
+        this._viewThesaurus.favoriteToggledObserver = (word, isFavorite) => { this._viewModel.setFavorite(word, isFavorite) }
         this._viewThesaurus.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewThesaurus.settingsClickedObserver = () => { this._viewThesaurus.showSettings(this._viewModel.getThesaurusSettingsSwitches()) }
         this._viewThesaurus.shareClickedObserver = () => { this._viewModel.onShareThesaurus() }
         this._viewThesaurus.settingToggledObserver = (id, value) => { this._viewModel.onThesaurusSettingToggled(id, value) }
+        this._viewDefinitions.favoriteToggledObserver = (word, isFavorite) => { this._viewModel.setFavorite(word, isFavorite) }
         this._viewDefinitions.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
         this._viewDefinitions.shareClickedObserver = () => { this._viewModel.onShareDefinitions() }
+        this._viewFavorites.wordClickedObserver = (wordElem) => { this._onWordElemClicked(wordElem) }
+        this._viewFavorites.shareClickedObserver = () => { this._viewModel.onShareFavorites() }
+        this._viewFavorites.favoriteToggledObserver = (word, isFavorite) => { this._viewModel.setFavorite(word, isFavorite) }
+        this._viewFavorites.deleteClickedObserver = () => { this._viewModel.onClearFavorites() }
         this._viewReader.onPlayClickedObserver = (poemText, selectionStart, selectionEnd) => {
             this._viewModel.playText(poemText, selectionStart, selectionEnd)
         }
@@ -198,9 +208,7 @@ class MainView {
         }
     }
 
-    _onWordElemClicked(wordElem) {
-        this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._viewModel.contextMenuItems)
-    }
+    _onWordElemClicked = (wordElem) => this._viewContextMenu.showContextMenu(wordElem, wordElem.innerText, this._viewModel.contextMenuItems)
 
     _showLoading(isLoading) {
         if (isLoading) {

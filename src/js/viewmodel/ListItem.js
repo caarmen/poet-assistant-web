@@ -17,10 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class ListItem {
-    constructor(style, text, ...args) {
+    constructor(style, isFavorite, text, ...args) {
         this.style = style
+        this.isFavorite = isFavorite
         this.text = text
         this.args = args
     }
 }
-ListItem.ListItemStyles = Object.freeze({SUB_HEADER_1: 0, SUB_HEADER_2: 1, WORD: 2})
+ListItem.header1 = (text, args) => new ListItem(ListItem.ListItemStyles.SUB_HEADER_1, false, text, args)
+ListItem.header2 = (text, args) => new ListItem(ListItem.ListItemStyles.SUB_HEADER_2, false, text, args)
+ListItem.word = (text, isFavorite) => new ListItem(ListItem.ListItemStyles.WORD, isFavorite, text)
+ListItem.ListItemStyles = Object.freeze({ SUB_HEADER_1: 0, SUB_HEADER_2: 1, WORD: 2 })

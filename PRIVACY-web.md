@@ -56,6 +56,7 @@ The settings are:
 * thesaurus settings
 * poem text
 * searched words
+* favorite words
 
 Summary
 -------

@@ -26,6 +26,8 @@ class DefinitionsView {
         this._i18n = i18n
         this._template = template
         this._listVisibility = new ListVisibility(this._template)
+
+        this.favoriteToggledObserver = (word, isFavorite) => { }
         this.wordClickedObserver = (wordElem) => { }
         this.shareClickedObserver = () => { }
         this._applyTemplates()
@@ -44,12 +46,11 @@ class DefinitionsView {
     setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showDefinitions(definitions) {
-        this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDefinitionsListHtml("list-definitions", definitions.word, definitions.listItems)
+        this._elemPlaceholderDefinitionsList.innerHTML = this._template.createDefinitionsListHtml("list-definitions", definitions.word, definitions.isWordFavorite, definitions.listItems)
         this._i18n.translateElement(this._elemPlaceholderDefinitionsList.querySelector(".list-header"))
         this._listVisibility.setListVisibility(definitions.listItems, this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_results_definitions", definitions.word)
-        this._elemPlaceholderDefinitionsList.querySelector(".list-header__text").onclick = (e) => {
-            this.wordClickedObserver(e.target)
-        }
+        ListWordClickActions.listenWordClickEvents(this._elemPlaceholderDefinitionsList, (elem) => this.wordClickedObserver(elem))
+        ListFavoriteActions.listenFavoriteToggleEvents(this._elemPlaceholderDefinitionsList, definitions.word, (word, isFavorite) => this.favoriteToggledObserver(word, isFavorite))
         this._elemPlaceholderDefinitionsList.querySelector(".list-header__copy").onclick = (e) => { this.shareClickedObserver() }
     }
 }

@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class DefinitionsResultList {
-    constructor(word, listItems) {
+    constructor(word, isWordFavorite, listItems) {
         this.word = word
+        this.isWordFavorite = isWordFavorite
         this.listItems = listItems
     }
 }

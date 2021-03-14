@@ -47,6 +47,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
     <script src="src/js/model/db/DbResult.js"></script>
     <script src="src/js/model/definitions/DefinitionsRepository.js"></script>
     <script src="src/js/model/definitions/DefinitionsEntry.js"></script>
+    <script src="src/js/model/favorites/FavoritesRepository.js"></script>
     <script src="src/js/model/file/FileReaderInput.js"></script>
     <script src="src/js/model/file/FileReaderOutput.js"></script>
     <script src="src/js/model/file/FilesReader.js"></script>
@@ -64,7 +65,10 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
     <script src="src/js/view/AppBarMenuView.js"></script>
     <script src="src/js/view/ContextMenuView.js"></script>
     <script src="src/js/view/DefinitionsView.js"></script>
+    <script src="src/js/view/FavoritesView.js"></script>
+    <script src="src/js/view/ListFavoriteActions.js"></script>
     <script src="src/js/view/ListVisibility.js"></script>
+    <script src="src/js/view/ListWordClickActions.js"></script>
     <script src="src/js/view/MainView.js"></script>
     <script src="src/js/view/ReaderView.js"></script>
     <script src="src/js/view/RhymerView.js"></script>
@@ -106,6 +110,10 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
             <div class="list-loading"></div>
             <div id="placeholder-thesaurus__list"></div>
             <div id="placeholder-thesaurus__empty"></div>
+        </div>
+        <div id="placeholder-favorites">
+            <div id="placeholder-favorites__list"></div>
+            <div id="placeholder-favorites__empty"></div>
         </div>
         <div id="placeholder-definitions">
             <div class="list-loading"></div>

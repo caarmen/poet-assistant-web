@@ -99,8 +99,11 @@ class Template {
     createTextareaHtml = (id, label) =>
         this._templates.get("textarea").replace("__ID__", id).replace("__HINT__", this._i18n.translate(label))
 
-    createDefinitionsListHtml = (id, word, definitionsListItems) =>
-        this._templates.get("list-header").replace("__TEXT__", word) +
+    createDefinitionsListHtml = (id, word, isWordFavorite, definitionsListItems) =>
+        this._templates.get("list-header")
+            .replace("__TEXT__", word)
+            .replace("__CLASS_TOGGLE_ON__", isWordFavorite ? Template.CLASS_TOGGLE_ON : "")
+        +
         this._templates.get("list").replace("__ID__", id).replace("__ITEMS__",
             definitionsListItems.map(item =>
                 this.createDefinitionsListItemHtml(item)
@@ -114,24 +117,33 @@ class Template {
 
     createListEmptyHtml = (emptyText, word) => this._templates.get("list-empty").replace("__TEXT__", this._i18n.translate(emptyText, word))
 
-    createListHtml = (id, word, items) =>
-        this._templates.get("list-header").replace("__TEXT__", word) +
-        this._templates.get("list").replace("__ID__", id).replace("__ITEMS__",
-            items.map(item =>
-                this.createListItemHtml(item.style, item.text, item.args)
-            ).join("")
-        )
+    createListHtml = (id, word, isWordFavorite, items) =>
+        this._templates.get("list-header")
+            .replace("__TEXT__", word)
+            .replace("__CLASS_TOGGLE_ON__", isWordFavorite ? Template.CLASS_TOGGLE_ON : "")
+        + this.createListItemsHtml(id, items)
 
+    createListItemsHtml = (id, items) => this._templates.get("list").replace("__ID__", id).replace("__ITEMS__",
+        items.map(item =>
+            this.createListItemHtml(item.style, item.text, item.isFavorite, item.args)
+        ).join("")
+    )
 
-    createListItemHtml(style, text, args) {
+    createListItemHtml(style, text, isFavorite, args) {
         if (style == ListItem.ListItemStyles.SUB_HEADER_1) {
             return this._templates.get("list-item-sub-header-1").replace("__TEXT__", this._i18n.translate(text, args))
         } else if (style == ListItem.ListItemStyles.SUB_HEADER_2) {
             return this._templates.get("list-item-sub-header-2").replace("__TEXT__", this._i18n.translate(text, args))
         } else if (style == ListItem.ListItemStyles.WORD) {
-            return this._templates.get("list-item-word").replace("__WORD__", text)
+            return this._templates.get("list-item-word")
+                .replace("__WORD__", text)
+                .replace("__CLASS_TOGGLE_ON__", isFavorite ? Template.CLASS_TOGGLE_ON : "")
         }
     }
+
+    createFavoritesListHtml = (id, items) =>
+        this._templates.get("favorites-list-header")
+        + this.createListItemsHtml(id, items)
 
     createAppBarHtml = (id, title) =>
         this._templates.get("app-bar").replace("__ID__", id).replace("__TITLE__", this._i18n.translate(title))
@@ -179,6 +191,7 @@ Template.TEMPLATE_NAMES = [
     "dialog",
     "dialog-simple-message",
     "definitions-list-item",
+    "favorites-list-header",
     "input-text",
     "linear-progress-indicator",
     "list",
@@ -197,6 +210,7 @@ Template.TEMPLATE_NAMES = [
     "textarea",
     "voice-selection"
 ]
+Template.CLASS_TOGGLE_ON = "mdc-icon-button--on"
 
 // Workaround for Samsung Internet browser which doesn't have String.replaceAll
 if (!String.prototype.replaceAll) {
