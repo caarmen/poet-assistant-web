@@ -66,3 +66,10 @@ a:link, a.active:link,a:hover, a:visited {
 .mdc-tab--active img{
 	filter: initial;
 }
+
+/* Show tab icons only (no labels) on small screens */
+@media (max-width: 868px) {
+	.mdc-tab__text-label {
+		display: none;
+	}
+}
