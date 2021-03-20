@@ -160,7 +160,7 @@ class Template {
 
     createTabHtml = (id, label, icon) =>
         this._templates.get("tab").replace("__ID__", id)
-            .replace("__LABEL__", label)
+            .replaceAll("__LABEL__", label)
             .replace("__ICON__", this.createTabIconHtml(icon))
 
     createTabIconHtml(icon) {
