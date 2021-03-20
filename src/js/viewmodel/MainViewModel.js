@@ -405,4 +405,4 @@ class MainViewModel {
         else if (savedState == PoemRepository.SaveState.WAITING) return "poem_saved_state_label_waiting"
     }
 }
-MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DEFINITIONS: 2, FAVORITES: 3, READER: 4 })
+MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DEFINITIONS: 2, READER: 3, FAVORITES: 4 })
