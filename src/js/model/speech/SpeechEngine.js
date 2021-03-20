@@ -30,6 +30,8 @@ class SpeechEngine {
             this._synth.onvoiceschanged = () => { this._populateVoiceList(true) }
         }
         this.isPlaying = new ObservableField(false)
+        this._timeoutId = undefined
+        this._utterancesToSpeak = []
     }
     selectVoice(id) {
         this.selectedVoice.value = this.voices.value.find((voice) => voice.voiceURI == id)
@@ -83,20 +85,36 @@ class SpeechEngine {
         }
         if (this._synth.speaking) {
             this._synth.cancel()
+            this._utterancesToSpeak = []
         } else {
-            const utterance = new SpeechSynthesisUtterance(selection)
-            utterance.voice = this.selectedVoice.value
-            utterance.lang = this.selectedVoice.value.lang
-            utterance.pitch = this.pitch.value
-            utterance.rate = this.speed.value
-            utterance.onboundary = (evt) => { this._updateState() }
-            utterance.onend = (evt) => { this._updateState() }
-            utterance.onerror = (evt) => { this._updateState() }
-            utterance.onpause = (evt) => { this._updateState() }
-            utterance.onresume = (evt) => { this._updateState() }
-            utterance.onstart = (evt) => { this._updateState() }
-            this._synth.speak(utterance)
+            this._utterancesToSpeak = UtteranceSplitter.splitText(selection)
+            this._playNextUtterance()
         }
+    }
+
+    _playNextUtterance() {
+        const nextUtterance = this._utterancesToSpeak.shift()
+        if (nextUtterance != undefined) this._playUtterance(nextUtterance)
+    }
+    _playUtterance(utterance) {
+        if (this._timeoutId != undefined) clearTimeout(this._timeoutId)
+        const speechSynthesisUtterance = new SpeechSynthesisUtterance(utterance.text)
+        speechSynthesisUtterance.voice = this.selectedVoice.value
+        speechSynthesisUtterance.lang = this.selectedVoice.value.lang
+        speechSynthesisUtterance.pitch = this.pitch.value
+        speechSynthesisUtterance.rate = this.speed.value
+        speechSynthesisUtterance.onboundary = (evt) => { this._updateState() }
+        speechSynthesisUtterance.onend = (evt) => {
+            this._playNextUtterance()
+            this._updateState()
+        }
+        speechSynthesisUtterance.onerror = (evt) => { this._updateState() }
+        speechSynthesisUtterance.onpause = (evt) => { this._updateState() }
+        speechSynthesisUtterance.onresume = (evt) => { this._updateState() }
+        speechSynthesisUtterance.onstart = (evt) => { this._updateState() }
+        this._timeoutId = setTimeout(() => {
+            this._synth.speak(speechSynthesisUtterance)
+        }, utterance.preDelayS * 1000)
     }
 
     _updateState() {
