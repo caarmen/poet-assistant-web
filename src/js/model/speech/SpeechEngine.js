@@ -89,6 +89,7 @@ class SpeechEngine {
             this._utterancesToSpeak = UtteranceSplitter.splitText(selection)
             this._playNextUtterance()
         }
+        this._updateState()
     }
 
     _playNextUtterance() {
@@ -131,7 +132,6 @@ class SpeechEngine {
         this._utterancesToSpeak = []
         clearTimeout(this._timeoutId)
         this._timeoutId = undefined
-        this._updateState()
     }
 }
 SpeechEngine.SETTING_KEY_HAS_RELOADED = "has_reloaded"
