@@ -77,16 +77,15 @@ class SpeechEngine {
     }
 
     playText(text, start, end) {
-        let selection = text
-        if (start < end) {
-            selection = text.substring(start, end)
-        } else if (start == end && start < text.length) {
-            selection = text.substring(start)
-        }
-        if (this._synth.speaking) {
-            this._synth.cancel()
-            this._utterancesToSpeak = []
+        if (this._isSpeaking()) {
+            this._stopSpeaking()
         } else {
+            let selection = text
+            if (start < end) {
+                selection = text.substring(start, end)
+            } else if (start == end && start < text.length) {
+                selection = text.substring(start)
+            }
             this._utterancesToSpeak = UtteranceSplitter.splitText(selection)
             this._playNextUtterance()
         }
@@ -94,7 +93,11 @@ class SpeechEngine {
 
     _playNextUtterance() {
         const nextUtterance = this._utterancesToSpeak.shift()
-        if (nextUtterance != undefined) this._playUtterance(nextUtterance)
+        if (nextUtterance == undefined) {
+            this._timeoutId = undefined
+        } else {
+            this._playUtterance(nextUtterance)
+        }
     }
     _playUtterance(utterance) {
         if (this._timeoutId != undefined) clearTimeout(this._timeoutId)
@@ -118,7 +121,17 @@ class SpeechEngine {
     }
 
     _updateState() {
-        this.isPlaying.value = this._synth.speaking
+        this.isPlaying.value = this._isSpeaking()
+    }
+
+    _isSpeaking = () => this._synth.speaking || this._timeoutId != undefined
+
+    _stopSpeaking() {
+        this._synth.cancel()
+        this._utterancesToSpeak = []
+        clearTimeout(this._timeoutId)
+        this._timeoutId = undefined
+        this._updateState()
     }
 }
 SpeechEngine.SETTING_KEY_HAS_RELOADED = "has_reloaded"
