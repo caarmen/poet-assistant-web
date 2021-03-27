@@ -15,7 +15,7 @@
     }
   ],
   "categories": ["education", "productivity"],
-  "orientation": "landscape-primary",
+  "orientation": "any",
   "start_url": "/index.html",
   "background_color": "#607D8B",
   "display": "standalone",

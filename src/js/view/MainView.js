@@ -66,6 +66,8 @@ class MainView {
                 this._viewModel.loadDb()
             })
         })
+        window.addEventListener("orientationchange", (event) => { this._configureViewport() })
+        this._configureViewport()
     }
     _applyTemplates() {
         this._elemPlaceholderAppBar.innerHTML = this._template.createAppBarHtml("app-bar", "app_name")
@@ -182,6 +184,15 @@ class MainView {
         this._viewVoiceSettings.speedObserver = (speedValue) => { this._viewModel.setVoiceSpeed(speedValue) }
     }
 
+    _configureViewport() {
+        const mvp = document.getElementById('viewport');
+        let contentWidth = 600
+        if (screen.width > screen.height) contentWidth = 1024
+        const width = Math.max(contentWidth, screen.width)
+        const scale = screen.width / width
+        mvp.setAttribute('content', `width=${width}, user-scalable=yes, initial-scale=${scale}, maximum-scale=10.0, minimum-scale=0.1`)
+
+    }
     _updateReaderTabVisibility(isVisible) {
         if (!isVisible) this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
         else this._viewTabs.showTab(MainViewModel.TabIndex.READER)
