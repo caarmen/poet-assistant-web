@@ -13,7 +13,7 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
 */
 
 const CACHE_NAME = 'offline';
-const OFFLINE_URL = '/dev/index.html';
+const OFFLINE_URL = '/index.html';
 
 self.addEventListener('install', function (event) {
   console.log('[ServiceWorker] Install');
