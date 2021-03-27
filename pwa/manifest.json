@@ -1,0 +1,25 @@
+{
+  "short_name": "Poet Assistant",
+  "name": "Poet Assistant",
+  "icons": [
+    {
+      "src": "icon-transparent.png",
+      "type": "image/png",
+      "sizes": "200x200"
+    },
+    {
+      "src": "icon-maskable.png",
+      "type": "image/png",
+      "purpose": "maskable",
+      "sizes": "1024x1024"
+    }
+  ],
+  "start_url": "/dev/index.html",
+  "background_color": "#607D8B",
+  "display": "standalone",
+  "scope": "/dev/",
+  "theme_color": "#607D8B",
+  "shortcuts": [],
+  "description": "English language poetry tools",
+  "screenshots": []
+}
