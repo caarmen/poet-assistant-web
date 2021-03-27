@@ -21,11 +21,14 @@ class PoemRepository {
     constructor(settings) {
         this._settings = settings
         this.savedState = new ObservableField(PoemRepository.SaveState.WAITING)
-        this.poemText = new ObservableField(this._settings.getSetting(PoemRepository.SETTINGS_KEY_POEM_TEXT, ""))
+        this.poemText = new ObservableField("")
         this._settings.addObserver((key, newValue) => this._onSettingsChanged(key, newValue))
         this._timeoutId
     }
 
+    load() {
+        this.poemText.value = this._settings.getSetting(PoemRepository.SETTINGS_KEY_POEM_TEXT, "")
+    }
     _onSettingsChanged(key, newValue) {
         if (key == PoemRepository.SETTINGS_KEY_POEM_TEXT) {
             this.poemText.value = newValue

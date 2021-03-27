@@ -54,6 +54,7 @@
     "poem_saved_state_label_saving": "Saving",
     "poem_saved_state_label_saved": "Saved",
     "poem_saved_state_label_waiting": " ",
+    "poem_word_count": "{0} words, {1} characters",
     "progressbar_app_label": "Loading app",
     "progressbar_db_label": "Loading dictionaries {0}%",
     "reader_hint": "Compose your poem text here",

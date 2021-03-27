@@ -64,6 +64,7 @@ const contentToCache = [
   "/src/js/model/definitions/DefinitionsRepository.js",
   "/src/js/model/Settings.js",
   "/src/js/model/poem/PoemRepository.js",
+  "/src/js/model/poem/WordCounter.js",
   "/src/js/view/VoiceSettingsView.js",
   "/src/js/view/AppBarMenuView.js",
   "/src/js/view/ListWordClickActions.js",

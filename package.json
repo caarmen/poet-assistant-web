@@ -5,7 +5,7 @@
   "description": "Poet Assistant",
   "main": "main.js",
   "scripts": {
-    "test": "node test/tests.js",
+    "test": "node test/tests_speech.js; node test/tests_word_counter.js",
     "start": "electron ."
   },
   "keywords": [],
