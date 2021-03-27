@@ -57,7 +57,7 @@ class SpeechEngine {
             this.selectedVoice.value = (savedVoice != undefined) ? savedVoice : this.voices.value[0]
             this.speed.value = this._settings.getSetting(SpeechEngine.SETTING_KEY_SPEED, this.speed.value)
             this.pitch.value = this._settings.getSetting(SpeechEngine.SETTING_KEY_PITCH, this.pitch.value)
-        } else if (onVoiceChangeEvent && window.localStorage) {
+        } else if (onVoiceChangeEvent && this._settings.isStorageAvailable()) {
             // Unfortunate hack to work around bug in linux where
             // a reload is required for voices to be present
             // https://github.com/electron/electron/issues/22844

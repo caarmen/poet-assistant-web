@@ -18,7 +18,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
 class Settings {
     constructor() {
-        this._storage = window.localStorage
+        this._storage
         this._isAvailable = this.isStorageAvailable()
         this._observers = []
     }
@@ -33,7 +33,7 @@ class Settings {
             const value = this._storage.getItem(key)
             return (value != undefined) ? value : defaultValue
         }
-        return undefined
+        return defaultValue
     }
 
     setSetting(key, value) {
@@ -58,6 +58,7 @@ class Settings {
     isStorageAvailable() {
         try {
             const x = '__storage_test__'
+            this._storage = window.localStorage
             this._storage.setItem(x, x)
             this._storage.removeItem(x)
             return true
