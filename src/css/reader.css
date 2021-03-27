@@ -52,6 +52,15 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 	margin-right: 0;
 	width: max-content;
 }
+#placeholder-reader__word-count{
+	white-space:pre;
+	font-size: 0.6em;
+	color: var(--mdc-theme-text-secondary-on-light, #727272);
+	text-align: start;
+	margin-inline-start: 8px;
+	height: 16px;
+	float: left;
+}
 #placeholder-reader__saved-state {
 	white-space:pre;
 	font-size: 0.6em;
@@ -59,4 +68,5 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 	text-align: end;
 	margin-inline-end: 8px;
 	height: 16px;
+	float: right;
 }

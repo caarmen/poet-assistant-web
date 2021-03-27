@@ -36,6 +36,7 @@ class MainViewModel {
         this.isRhymerLoading = new ObservableField(false)
         this.isThesaurusLoading = new ObservableField(false)
         this.isDefinitionsLoading = new ObservableField(false)
+        this.poemWordCountLabel = new ObservableField()
         this.poemSavedStateLabel = new ObservableField()
         this.activeTab = new ObservableField(MainViewModel.TabIndex.RHYMER)
         this.loadingProgress = new ObservableField(0)
@@ -58,10 +59,12 @@ class MainViewModel {
         this._model._speechEngine.pitch.observer = (newPitch) => this.voicePitch.value = newPitch
         this._model._poemRepository.savedState.observer = (newSavedState) => this.poemSavedStateLabel.value = this._getSavedStateLabel(newSavedState)
         this._model.favoritesObserver = (newFavorites) => this._onFavoritesChanged(newFavorites)
+        this._model.poemCharacterCount.observer = (characterCount) => { this._updateWordCountLabel(this._model.poemWordCount.value, characterCount) }
         this._onFavoritesChanged(this._model.getFavorites())
     }
 
     loadTranslations = () => this.i18n.load()
+        .then(() => { this._model.loadPoem() })
 
     loadDb() {
         this._model.loadDb((dbOpenProgress) => {
@@ -358,6 +361,13 @@ class MainViewModel {
     copyPoemText(text, start, value) {
         this._model.copyText(text, start, value)
         this.snackbarText.value = "snackbar_copied_poem"
+    }
+    _updateWordCountLabel(wordCount, characterCount) {
+        if (wordCount > 0 && characterCount > 0) {
+            this.poemWordCountLabel.value = this.i18n.translate("poem_word_count", wordCount, characterCount)
+        } else {
+            this.poemWordCountLabel.value = ""
+        }
     }
     onClearClicked() {
         this.dialogInfo.value = DialogInfo.prompt(

@@ -22,6 +22,7 @@ class ReaderView {
         this._elemPlaceholderReaderPlay = document.querySelector("#placeholder-reader__controls__play")
         this._elemPlaceholderReaderActions = document.querySelector("#placeholder-reader__controls__actions")
         this._elemPlaceholderReaderInput = document.querySelector("#placeholder-reader__input")
+        this._elemPlaceholderReaderWordCount = document.querySelector("#placeholder-reader__word-count")
         this._elemPlaceholderReaderSavedState = document.querySelector("#placeholder-reader__saved-state")
 
         this._elemBtnPlay
@@ -105,6 +106,9 @@ class ReaderView {
         } else {
             this._elemBtnPlay.innerText = "play_circle_filled"
         }
+    }
+    updatePoemWordCountLabel(wordCountLabel) {
+        this._elemPlaceholderReaderWordCount.innerText = wordCountLabel
     }
     updatePoemSavedState(newSavedState) {
         this._elemPlaceholderReaderSavedState.innerText = this._i18n.translate(newSavedState)

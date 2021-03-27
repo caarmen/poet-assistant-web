@@ -23,10 +23,13 @@ class MainModel {
         this._poemRepository = new PoemRepository(this._settings)
         this._favoritesRepository = new FavoritesRepository(this._settings)
         this.isSpeechPlaying = this._speechEngine.isPlaying
-        this.poemText = this._poemRepository.poemText
+        this.poemText = new ObservableField("")
+        this.poemWordCount = new ObservableField(0)
+        this.poemCharacterCount = new ObservableField(0)
         this.favoritesObserver = (newFavorites) => { }
         this.rhymerSettingsChangedObserver = () => { }
         this.thesaurusSettingsChangedObserver = () => { }
+        this._poemRepository.poemText.observer = (newPoemText) => this._onPoemTextUpdated(newPoemText)
         this._favoritesRepository.observer = (newFavorites) => this.favoritesObserver(newFavorites)
     }
     async loadDb(progressCallback) {
@@ -109,7 +112,19 @@ class MainModel {
         }
     }
 
-    setPoemText = (text, writeNow) => this._poemRepository.setPoemText(text, writeNow)
+    loadPoem = () => this._poemRepository.load()
+    setPoemText(text, writeNow){
+        this._poemRepository.setPoemText(text, writeNow)
+        this._updateWordCount(text)
+    }
+    _onPoemTextUpdated(text) {
+        this.poemText.value = text
+        this._updateWordCount(text)
+    }
+    _updateWordCount(text) {
+        this.poemWordCount.value = WordCounter.countWords(text)
+        this.poemCharacterCount.value = WordCounter.countCharacters(text)
+    }
     readFile(file) {
         const reader = new FileReader()
         reader.onload = (e) => {
