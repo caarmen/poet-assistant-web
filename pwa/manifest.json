@@ -5,7 +5,7 @@
     {
       "src": "icon-transparent.png",
       "type": "image/png",
-      "sizes": "200x200"
+      "sizes": "512x512"
     },
     {
       "src": "icon-maskable.png",
@@ -14,12 +14,39 @@
       "sizes": "1024x1024"
     }
   ],
+  "categories": ["education", "productivity"],
+  "orientation": "landscape-primary",
   "start_url": "/index.html",
   "background_color": "#607D8B",
   "display": "standalone",
   "scope": "/",
   "theme_color": "#607D8B",
-  "shortcuts": [],
-  "description": "English language poetry tools",
-  "screenshots": []
+  "screenshots": [
+    {
+      "src": "screenshot_rhymer.png",
+      "sizes": "3296x1918",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot_thesaurus.png",
+      "sizes": "3296x1918",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot_dictionary.png",
+      "sizes": "3296x1918",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot_composer.png",
+      "sizes": "3296x1918",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot_favorites.png",
+      "sizes": "3296x1918",
+      "type": "image/png"
+    }
+  ],
+  "description": "English language poetry tools"
 }
