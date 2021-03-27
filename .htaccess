@@ -1,0 +1,14 @@
+AddType application/wasm .wasm
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^poetassistant\.com [NC]
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.poetassistant.com/$1 [R,L]
+<IfModule mod_headers.c>
+  <FilesMatch "\.(db)$">
+    Header set Cache-Control "max-age=31536000, public"
+  </FilesMatch>
+  <FilesMatch "service-worker.js">
+    Header set Service-Worker-Allowed "/"
+  </FilesMatch>
+</IfModule>
+ExpiresByType application/db "access plus 1 year"
