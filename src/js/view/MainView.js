@@ -67,6 +67,7 @@ class MainView {
             })
         })
         window.addEventListener("orientationchange", (event) => { this._configureViewport() })
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => { this._setThemeColorMeta() });
         this._configureViewport()
     }
     _applyTemplates() {
@@ -130,6 +131,7 @@ class MainView {
         this._viewModel.favorites.observer = (newFavorites) => { this._viewFavorites.showFavorites(newFavorites) }
         this._viewModel.onNightModeSettingsClicked = () => { this._showNightModeSettings(this._viewModel.getNightModeRadioItems()) }
         this._setNightMode(this._viewModel.getNightMode())
+
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -266,10 +268,12 @@ class MainView {
     _setNightMode(newNightMode) {
         document.documentElement.classList.remove("night-mode__night", "night-mode__day", "night-mode__auto")
         document.documentElement.classList.add(`night-mode__${newNightMode}`)
+        this._setThemeColorMeta()
+    }
+    _setThemeColorMeta() {
         const style = getComputedStyle(document.documentElement)
         const themeColor = style.getPropertyValue("--mdc-theme-primary").trim()
         document.querySelector('meta[name="theme-color"]').setAttribute("content", themeColor);
-
     }
     _showNightModeSettings(radioItems) {
         const contentHtml = this._template.createRadiosHtml(radioItems)
