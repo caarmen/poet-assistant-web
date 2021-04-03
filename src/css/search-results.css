@@ -70,10 +70,10 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 }
 .list-item--sub-header-1{
 	font-weight: bold;
-	background-color: var(--sub-header-1, #dddddd);
+	background-color: var(--mdc-theme-surface);
 }
 .list-item--sub-header-2{
 	font-style: italic;
 	padding-right: 1em;
-	color: var(--mdc-theme-text-secondary-on-light, #727272);
+	color: var(--mdc-theme-text-secondary-on-background);
 }

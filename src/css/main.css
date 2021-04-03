@@ -17,14 +17,34 @@ html {
 }
 body {
 	margin: 0px;
+	background-color: var(--mdc-theme-background);
+	color: var(--mdc-theme-text-primary-on-background);
+}
+@media (prefers-color-scheme: light) {
+	:root {
+		--mdc-theme-primary: #607D8B;
+		--mdc-theme-surface:#f6f7f9;
+		--mdc-theme-background:#fff;
+		--mdc-theme-on-primary:#fff;
+		--mdc-theme-on-surface: rgba(0, 0, 0, 0.87);
+		--mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
+		--mdc-theme-text-secondary-on-background: rgba(0,0,0,0.5);
+		--mdc-theme-text-disabled-on-background: rgba(0,0,0, .38)
+	}
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--mdc-theme-primary: #879fab;
+		--mdc-theme-surface:#181818;
+		--mdc-theme-background:#000;
+		--mdc-theme-on-primary:#fff;
+		--mdc-theme-on-surface: rgba(255, 255, 255, 0.87);
+		--mdc-theme-text-primary-on-background: rgba(255, 255, 255, 0.87);
+		--mdc-theme-text-secondary-on-background: rgba(255,255,255,0.5);
+		--mdc-theme-text-disabled-on-background: rgba(255,255,255, .38)
+	}
 }
 :root {
-	--mdc-theme-primary: #607D8B;
-	--mdc-theme-secondary: #455A64; 
-	--mdc-theme-surface:#f6f7f9;
-	--mdc-theme-text-primary-on-light: #212121;
-	--mdc-theme-text-secondary-on-light: #727272;
-	--sub-header-1: #eaeef0;
 	--app-bar-row-height: 64px;
 }
 @media (max-width: 599px) {
@@ -37,12 +57,12 @@ a:link, a.active:link,a:hover, a:visited {
 	text-decoration: none;
 	font-weight: bold;
 }
-/* https://github.com/material-components/material-components-web/issues/2718 */
-.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
-	color: var(--mdc-theme-primary);
-}
 #content .mdc-icon-button:not(:disabled) {
 	color: var(--mdc-theme-primary);
+}
+/* https://github.com/material-components/material-components-web/issues/5699 */
+#content .mdc-icon-button:disabled {
+	color: var(--mdc-theme-text-disabled-on-background);
 }
 #content {
 	padding-top: calc(3*var(--app-bar-row-height));
@@ -60,13 +80,57 @@ a:link, a.active:link,a:hover, a:visited {
 .mdc-menu .mdc-list-item__graphic {
 	color: var(--mdc-theme-primary);
 }
+.mdc-menu .mdc-list-item {
+	color: var(--mdc-theme-text-primary-on-background);
+}
 .mdc-tab__icon img {
 	filter: grayscale(100%);
 }
+.mdc-tab .mdc-tab__icon {
+	color: var(--mdc-theme-text-secondary-on-background);
+}
+.mdc-tab .mdc-tab__text-label {
+	color: var(--mdc-theme-text-secondary-on-background);
+}
+.mdc-tab--active .mdc-tab__text-label {
+	color: var(--mdc-theme-primary);
+}
+.mdc-tab--active .mdc-tab__icon {
+	color: var(--mdc-theme-primary);
+}
 .mdc-tab--active img{
-	filter: initial;
+	filter: saturate(200%);
+
+}
+.mdc-dialog .mdc-dialog__title, .mdc-dialog .mdc-dialog__content {
+	color: var(--mdc-theme-text-primary-on-background);
+}
+/* https://github.com/material-components/material-components-web/issues/2718 */
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
+	color: var(--mdc-theme-text-secondary-on-background);
+}
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+	color: var(--mdc-theme-primary);
+}
+::placeholder {
+	color: var(--mdc-theme-text-secondary-on-background) !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+	background-color: var(--mdc-theme-surface);
+	color: var(--mdc-theme-text-primary-on-background);
+}
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+	color: var(--mdc-theme-text-primary-on-background);
 }
 
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__icon--leading,
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__icon--trailing
+ {
+	color: var(--mdc-theme-primary);
+}
+.mdc-text-field--focused .mdc-text-field__input {
+	background-color: var(--mdc-theme-surface);
+}
 /* Show tab icons only (no labels) on small screens */
 @media (max-width: 868px) {
 	.mdc-tab__text-label {
