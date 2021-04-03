@@ -89,6 +89,14 @@ class Template {
             .replaceAll("__DESCRIPTION__", this._i18n.translate(item.description))
             .replace("__VALUE__", item.value)
     }).join("")
+    createRadiosHtml = (radios) => radios.map((item) => {
+        return this._templates.get("radio")
+            .replaceAll("__ID_RADIO_GROUP__", item.groupId)
+            .replaceAll("__ID_RADIO_OPTION__", item.id)
+            .replaceAll("__ICON__", item.icon)
+            .replaceAll("__CHECKED__", item.isSelected ? "checked":"")
+            .replaceAll("__LABEL__", this._i18n.translate(item.label))
+    }).join("")
 
     createDialogHtml = (title, content) =>
         this._templates.get("dialog").replace("__TITLE__", this._i18n.translate(title), this._i18n.translate(content)).replace("__CONTENT__", this._i18n.translate(content))
@@ -210,6 +218,7 @@ Template.TEMPLATE_NAMES = [
     "list-item-sub-header-1",
     "list-item-sub-header-2",
     "list-item-word",
+    "radio",
     "reader-actions",
     "reader-play",
     "slider",

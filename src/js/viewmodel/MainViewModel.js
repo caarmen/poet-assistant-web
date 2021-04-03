@@ -51,6 +51,7 @@ class MainViewModel {
         this.appBarMenuItems = [
             new MenuItem("menu-about", "app_bar_menu_about_title", new Icon("info", Icon.IconSource.MATERIAL)),
             new MenuItem("menu-random", "app_bar_menu_random_title", new Icon("casino", Icon.IconSource.MATERIAL)),
+            new MenuItem("menu-night-mode", "app_bar_menu_night_mode_title", new Icon("brightness_medium", Icon.IconSource.MATERIAL)),
         ]
         this.dialogInfo = new ObservableField()
         this._model._speechEngine.voices.observer = (newVoices) => this.updateVoices(newVoices)
@@ -61,6 +62,7 @@ class MainViewModel {
         this._model.favoritesObserver = (newFavorites) => this._onFavoritesChanged(newFavorites)
         this._model.poemCharacterCount.observer = (characterCount) => { this._updateWordCountLabel(this._model.poemWordCount.value, characterCount) }
         this._onFavoritesChanged(this._model.getFavorites())
+        this.onNightModeSettingsClicked = () => {}
     }
 
     loadTranslations = () => this.i18n.load()
@@ -332,6 +334,8 @@ class MainViewModel {
                 this.fetchAll(word)
                 this.activeTab.value = MainViewModel.TabIndex.DEFINITIONS
             })
+        } else if (selectedMenuId == "menu-night-mode") {
+            this.onNightModeSettingsClicked()
         }
     }
 
@@ -414,5 +418,16 @@ class MainViewModel {
         else if (savedState == PoemRepository.SaveState.SAVED) return "poem_saved_state_label_saved"
         else if (savedState == PoemRepository.SaveState.WAITING) return "poem_saved_state_label_waiting"
     }
+
+    getNightModeRadioItems() {
+        const nightModeValue = this._model.getNightMode()
+        return [
+            new RadioItem("night-mode", MainModel.NightMode.AUTO, "night_mode_title_auto", "brightness_medium", nightModeValue == MainModel.NightMode.AUTO),
+            new RadioItem("night-mode", MainModel.NightMode.NIGHT, "night_mode_title_night", "dark_mode", nightModeValue == MainModel.NightMode.NIGHT),
+            new RadioItem("night-mode", MainModel.NightMode.DAY, "night_mode_title_day", "light_mode", nightModeValue == MainModel.NightMode.DAY),
+        ]
+    }
+    getNightMode = () => this._model.getNightMode()
+    setNightMode = (value) => this._model.setNightMode(value)
 }
 MainViewModel.TabIndex = Object.freeze({ RHYMER: 0, THESAURUS: 1, DEFINITIONS: 2, READER: 3, FAVORITES: 4 })

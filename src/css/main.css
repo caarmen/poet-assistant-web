@@ -20,30 +20,6 @@ body {
 	background-color: var(--mdc-theme-background);
 	color: var(--mdc-theme-text-primary-on-background);
 }
-@media (prefers-color-scheme: light) {
-	:root {
-		--mdc-theme-primary: #607D8B;
-		--mdc-theme-surface:#f6f7f9;
-		--mdc-theme-background:#fff;
-		--mdc-theme-on-primary:#fff;
-		--mdc-theme-on-surface: rgba(0, 0, 0, 0.87);
-		--mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
-		--mdc-theme-text-secondary-on-background: rgba(0,0,0,0.5);
-		--mdc-theme-text-disabled-on-background: rgba(0,0,0, .38)
-	}
-}
-@media (prefers-color-scheme: dark) {
-	:root {
-		--mdc-theme-primary: #879fab;
-		--mdc-theme-surface:#181818;
-		--mdc-theme-background:#000;
-		--mdc-theme-on-primary:#fff;
-		--mdc-theme-on-surface: rgba(255, 255, 255, 0.87);
-		--mdc-theme-text-primary-on-background: rgba(255, 255, 255, 0.87);
-		--mdc-theme-text-secondary-on-background: rgba(255,255,255,0.5);
-		--mdc-theme-text-disabled-on-background: rgba(255,255,255, .38)
-	}
-}
 :root {
 	--app-bar-row-height: 64px;
 }

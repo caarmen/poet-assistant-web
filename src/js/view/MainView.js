@@ -128,6 +128,8 @@ class MainView {
         this._viewModel.isDefinitionsLoading.observer = (isLoading) => { this._viewDefinitions.setLoading(isLoading) }
         this._viewModel.snackbarText.observer = (snackbarText) => { this._showSnackbar(snackbarText) }
         this._viewModel.favorites.observer = (newFavorites) => { this._viewFavorites.showFavorites(newFavorites) }
+        this._viewModel.onNightModeSettingsClicked = () => { this._showNightModeSettings(this._viewModel.getNightModeRadioItems()) }
+        this._setNightMode(this._viewModel.getNightMode())
 
         // view -> viewmodel bindings
         this._viewTabs.observer = (tabIndex) => {
@@ -261,8 +263,35 @@ class MainView {
         const snackbar = new MainView.MDCSnackbar(document.querySelector('.mdc-snackbar'))
         snackbar.open()
     }
+    _setNightMode(newNightMode) {
+        document.documentElement.classList.remove("night-mode__night", "night-mode__day", "night-mode__auto")
+        document.documentElement.classList.add(`night-mode__${newNightMode}`)
+    }
+    _showNightModeSettings(radioItems) {
+        const contentHtml = this._template.createRadiosHtml(radioItems)
+        this._elemPlaceholderDialog.innerHTML =
+            this._template.createDialogHtml("night_mode_title", contentHtml)
+        const dialog = new MainView.MDCDialog(document.querySelector('.mdc-dialog'))
+        dialog.listen('MDCDialog:opened', () => {
+            radioItems.forEach((radioItem) => {
+                const radioControl = new MainView.MDCRadio(this._elemPlaceholderDialog.querySelector(`#${radioItem.id}mdc-radio`))
+                const formField = new MainView.MDCFormField(this._elemPlaceholderDialog.querySelector(`#${radioItem.id}mdc-form-field`))
+                radioControl.checked = radioItem.isSelected
+                formField.input = radioControl
+                radioControl.listen("change", (e) => {
+                    if (radioControl.checked) {
+                        this._setNightMode(radioItem.id)
+                        this._viewModel.setNightMode(radioItem.id)
+                    }
+                })
+            })
+        })
+        dialog.open()
+    }
 }
 MainView.MDCDialog = mdc.dialog.MDCDialog
+MainView.MDCRadio = mdc.radio.MDCRadio
+MainView.MDCFormField = mdc.formField.MDCFormField
 MainView.MDCLinearProgress = mdc.linearProgress.MDCLinearProgress
 MainView.MDCSnackbar = mdc.snackbar.MDCSnackbar
 MainView.MDCTextField = mdc.textField.MDCTextField

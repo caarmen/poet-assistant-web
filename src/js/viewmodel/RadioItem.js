@@ -1,50 +1,27 @@
 /**
 Copyright (c) 2021 - present Carmen Alvarez
+
 This file is part of Poet Assistant.
+
 Poet Assistant is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
+
 Poet Assistant is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
 You should have received a copy of the GNU General Public License
 along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 */
-.setting--switch {
-	display: grid;
-	grid-template-columns: auto max-content;
-	align-items: center;
-}
-.setting--switch__label {
-	font-weight: bold;
-	grid-row: 1;
-	grid-column: 1;
-	margin-top: 16px;
-}
-.setting--switch__description {
-	font-size: 0.8em;
-	grid-row: 2;
-	grid-column: 1;
-	white-space: break-spaces;
-}
-.setting--switch .mdc-switch {
-	margin-top: 16px;
-	grid-row: 1;
-	grid-column: 2;
-	margin-inline-start: 16px;
-}
-
-.mdc-form-field .material-icons {
-	color: var(--mdc-theme-primary)
-}
-.mdc-form-field {
-	display: flex;
-	margin-left: auto;
-	margin-right: auto;
-	width: fit-content;
-}
-.mdc-radio__background .mdc-radio__outer-circle {
-	border-color: var(--mdc-theme-secondary) !important;
+class RadioItem {
+    constructor(groupId, id, label, icon, isSelected) {
+        this.groupId = groupId
+        this.id = id
+        this.label = label
+        this.icon = icon
+        this.isSelected = isSelected
+    }
 }
