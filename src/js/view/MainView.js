@@ -266,6 +266,10 @@ class MainView {
     _setNightMode(newNightMode) {
         document.documentElement.classList.remove("night-mode__night", "night-mode__day", "night-mode__auto")
         document.documentElement.classList.add(`night-mode__${newNightMode}`)
+        const style = getComputedStyle(document.documentElement)
+        const themeColor = style.getPropertyValue("--mdc-theme-primary").trim()
+        document.querySelector('meta[name="theme-color"]').setAttribute("content", themeColor);
+
     }
     _showNightModeSettings(radioItems) {
         const contentHtml = this._template.createRadiosHtml(radioItems)
