@@ -145,7 +145,7 @@ class MainModel {
         URL.revokeObjectURL(blobUrl)
     }
 
-    getNightMode = () => this._settings.getSetting(MainModel._SETTING_KEY_NIGHT_MODE, MainModel._SETTING_VALUE_NIGHT_MODE_AUTO)
+    getNightMode = () => this._settings.getSetting(MainModel._SETTING_KEY_NIGHT_MODE, MainModel.NightMode.AUTO)
     setNightMode = (value) => this._settings.setSetting(MainModel._SETTING_KEY_NIGHT_MODE, value)
 
 }
