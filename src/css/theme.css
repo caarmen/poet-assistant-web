@@ -1,0 +1,82 @@
+/**
+Copyright (c) 2021 - present Carmen Alvarez
+This file is part of Poet Assistant.
+Poet Assistant is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+Poet Assistant is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
+*/
+:root {
+	--day--mdc-theme-primary: #607D8B;
+	--day--mdc-theme-secondary: var(--day--mdc-theme-primary);
+	--day--mdc-theme-surface:#f6f7f9;
+	--day--mdc-theme-background:#fff;
+	--day--mdc-theme-on-primary:#fff;
+	--day--mdc-theme-on-surface: rgba(0, 0, 0, 0.87);
+	--day--mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
+	--day--mdc-theme-text-secondary-on-background: rgba(0,0,0,0.5);
+	--day--mdc-theme-text-disabled-on-background: rgba(0,0,0, .38);
+	--night--mdc-theme-primary: #879fab;
+	--night--mdc-theme-secondary: var(--night--mdc-theme-primary);
+	--night--mdc-theme-surface:#181818;
+	--night--mdc-theme-background:#000;
+	--night--mdc-theme-on-primary:#fff;
+	--night--mdc-theme-on-surface: rgba(255, 255, 255, 0.87);
+	--night--mdc-theme-text-primary-on-background: rgba(255, 255, 255, 0.87);
+	--night--mdc-theme-text-secondary-on-background: rgba(255,255,255,0.5);
+	--night--mdc-theme-text-disabled-on-background: rgba(255,255,255, .38);
+}
+.night-mode__day{
+	--mdc-theme-primary: var(--day--mdc-theme-primary);
+	--mdc-theme-secondary: var(--day--mdc-theme-secondary);
+	--mdc-theme-surface: var(--day--mdc-theme-surface);
+	--mdc-theme-background: var(--day--mdc-theme-background);
+	--mdc-theme-on-primary: var(--day--mdc-theme-on-primary);
+	--mdc-theme-on-surface: var(--day--mdc-theme-on-surface);
+	--mdc-theme-text-primary-on-background: var(--day--mdc-theme-text-primary-on-background);
+	--mdc-theme-text-secondary-on-background: var(--day--mdc-theme-text-secondary-on-background);
+	--mdc-theme-text-disabled-on-background: var(--day--mdc-theme-text-disabled-on-background);
+}
+.night-mode__night {
+	--mdc-theme-primary: var(--night--mdc-theme-primary);
+	--mdc-theme-secondary: var(--night--mdc-theme-secondary);
+	--mdc-theme-surface: var(--night--mdc-theme-surface);
+	--mdc-theme-background: var(--night--mdc-theme-background);
+	--mdc-theme-on-primary: var(--night--mdc-theme-on-primary);
+	--mdc-theme-on-surface: var(--night--mdc-theme-on-surface);
+	--mdc-theme-text-primary-on-background: var(--night--mdc-theme-text-primary-on-background);
+	--mdc-theme-text-secondary-on-background: var(--night--mdc-theme-text-secondary-on-background);
+	--mdc-theme-text-disabled-on-background: var(--night--mdc-theme-text-disabled-on-background);
+}
+@media (prefers-color-scheme: light) {
+	.night-mode__auto {
+		--mdc-theme-primary: var(--day--mdc-theme-primary);
+		--mdc-theme-secondary: var(--day--mdc-theme-secondary);
+		--mdc-theme-surface: var(--day--mdc-theme-surface);
+		--mdc-theme-background: var(--day--mdc-theme-background);
+		--mdc-theme-on-primary: var(--day--mdc-theme-on-primary);
+		--mdc-theme-on-surface: var(--day--mdc-theme-on-surface);
+		--mdc-theme-text-primary-on-background: var(--day--mdc-theme-text-primary-on-background);
+		--mdc-theme-text-secondary-on-background: var(--day--mdc-theme-text-secondary-on-background);
+		--mdc-theme-text-disabled-on-background: var(--day--mdc-theme-text-disabled-on-background);
+	}
+}
+@media (prefers-color-scheme: dark) {
+	.night-mode__auto {
+		--mdc-theme-primary: var(--night--mdc-theme-primary);
+		--mdc-theme-secondary: var(--night--mdc-theme-secondary);
+		--mdc-theme-surface: var(--night--mdc-theme-surface);
+		--mdc-theme-background: var(--night--mdc-theme-background);
+		--mdc-theme-on-primary: var(--night--mdc-theme-on-primary);
+		--mdc-theme-on-surface: var(--night--mdc-theme-on-surface);
+		--mdc-theme-text-primary-on-background: var(--night--mdc-theme-text-primary-on-background);
+		--mdc-theme-text-secondary-on-background: var(--night--mdc-theme-text-secondary-on-background);
+		--mdc-theme-text-disabled-on-background: var(--night--mdc-theme-text-disabled-on-background);
+	}
+}
