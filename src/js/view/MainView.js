@@ -38,6 +38,7 @@ class MainView {
         this._elemBtnPlayIcon
 
         this._viewModel = new MainViewModel()
+        this._setNightMode(this._viewModel.getNightMode())
 
         this._viewAppBarMenu
 
@@ -130,7 +131,6 @@ class MainView {
         this._viewModel.snackbarText.observer = (snackbarText) => { this._showSnackbar(snackbarText) }
         this._viewModel.favorites.observer = (newFavorites) => { this._viewFavorites.showFavorites(newFavorites) }
         this._viewModel.onNightModeSettingsClicked = () => { this._showNightModeSettings(this._viewModel.getNightModeRadioItems()) }
-        this._setNightMode(this._viewModel.getNightMode())
 
 
         // view -> viewmodel bindings

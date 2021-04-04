@@ -91,11 +91,10 @@ a:link, a.active:link,a:hover, a:visited {
 ::placeholder {
 	color: var(--mdc-theme-text-secondary-on-background) !important;
 }
-.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+.mdc-text-field--filled:not(.mdc-text-field--disabled), .mdc-text-field--disabled.mdc-text-field--filled {
 	background-color: var(--mdc-theme-surface);
-	color: var(--mdc-theme-text-primary-on-background);
 }
-.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input, .mdc-text-field--disabled .mdc-text-field__input {
 	color: var(--mdc-theme-text-primary-on-background);
 }
 
