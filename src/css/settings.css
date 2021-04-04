@@ -45,6 +45,6 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 	margin-right: auto;
 	width: fit-content;
 }
-.mdc-radio__background .mdc-radio__outer-circle {
-	border-color: var(--mdc-theme-secondary) !important;
+.mdc-radio .mdc-radio__native-control:enabled:not(:checked)+.mdc-radio__background .mdc-radio__outer-circle {
+	border-color: var(--mdc-theme-secondary);
 }
