@@ -12,7 +12,7 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
  limitations under the License.
 */
 
-const OFFLINE_VERSION = 119;
+const OFFLINE_VERSION = 10000;
 
 const CACHE_NAME = 'offline';
 
