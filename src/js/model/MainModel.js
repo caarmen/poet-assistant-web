@@ -41,6 +41,12 @@ class MainModel {
         this._thesaurusRepository.settingsChangeObserver = () => this.thesaurusSettingsChangedObserver()
         this._definitionsRepository = new DefinitionsRepository(db)
         this._suggestionsRepository = new SuggestionsRepository(db, this._settings)
+        this._registerPwa()
+    }
+    _registerPwa() {
+        if ('serviceWorker' in navigator && !globalThis.desktop) {
+            navigator.serviceWorker.register('/pwa/service-worker.js', { scope: "/" });
+        }
     }
 
     isDesktop = () => globalThis.desktop && globalThis.desktop.desktop
