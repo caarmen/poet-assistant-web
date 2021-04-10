@@ -48,6 +48,7 @@ class SpeechEngine {
     }
 
     _populateVoiceList(onVoiceChangeEvent) {
+        if (!this._synth) return
         this.voices.value = this._synth.getVoices()
         if (this.voices.value.length > 0) {
 
