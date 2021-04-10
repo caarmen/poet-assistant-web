@@ -46,6 +46,9 @@ class ThesaurusView {
         this._mdcCircularProgress.determinate = false
     }
 
+    onAppLoaded = () =>
+        this._listVisibility.setNoQuery(this._elemPlaceholderThesaurusList, this._elemPlaceholderThesaurusEmpty, "no_query_thesaurus")
+
     setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showThesaurus(thesaurusEntries) {

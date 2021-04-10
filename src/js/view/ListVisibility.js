@@ -31,6 +31,11 @@ class ListVisibility {
             mdcCircularProgress.root.parentNode.style.display = "none"
         }
     }
+    setNoQuery(elemList, elemEmpty, emptyText) {
+        elemEmpty.innerHTML = this._template.createListEmptyHtml(emptyText)
+        elemList.style.display = "none"
+        elemEmpty.style.display = "block"
+    }
     setListVisibility(listData, elemList, elemEmpty, emptyText, word) {
         if (listData && listData.length > 0) {
             elemList.style.display = "block"

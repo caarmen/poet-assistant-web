@@ -106,7 +106,12 @@ class MainView {
     _bindViewModel() {
         // viewmodel -> view bindings
         this._viewModel.isLoading.observer = (isLoading) => { this._showLoading(isLoading && !this._template.isLoaded) }
-        this._viewModel.searchTextDisabled.observer = (isDisabled) => this._mdcInputTextSearch.disabled = isDisabled
+        this._viewModel.searchTextDisabled.observer = (isDisabled) => {
+            this._mdcInputTextSearch.disabled = isDisabled
+            if (!isDisabled) {
+                this._mdcInputTextSearch.focus()
+            }
+        }
         this._viewModel.searchButtonDisabled.observer = (isDisabled) => this._elemBtnSearch.disabled = isDisabled
         this._viewModel.clearSearchTextButtonVisible.observer = (isVisible) => this._updateClearSearchTextButtonVisibility(isVisible)
         this._viewModel.rhymes.observer = (newRhymes) => { this._viewRhymer.showRhymes(newRhymes) }
@@ -233,6 +238,9 @@ class MainView {
         } else {
             this._mdcLinearProgress.close()
             this._elemPlaceholderAppProgressIndicator.style.display = "none"
+            this._viewRhymer.onAppLoaded()
+            this._viewThesaurus.onAppLoaded()
+            this._viewDefinitions.onAppLoaded()
         }
     }
     _updateLoadingProgress(loadingProgress) {

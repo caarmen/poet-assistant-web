@@ -43,6 +43,9 @@ class DefinitionsView {
         this._mdcCircularProgress.determinate = false
     }
 
+    onAppLoaded = () =>
+        this._listVisibility.setNoQuery(this._elemPlaceholderDefinitionsList, this._elemPlaceholderDefinitionsEmpty, "no_query_definitions")
+
     setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showDefinitions(definitions) {

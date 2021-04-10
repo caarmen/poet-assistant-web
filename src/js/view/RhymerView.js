@@ -47,6 +47,9 @@ class RhymerView {
         this._mdcCircularProgress.determinate = false
     }
 
+    onAppLoaded = () =>
+        this._listVisibility.setNoQuery(this._elemPlaceholderRhymesList, this._elemPlaceholderRhymesEmpty, "no_query_rhymes")
+
     setLoading = (isLoading) => this._listVisibility.setLoading(isLoading, this._mdcCircularProgress)
 
     showRhymes(rhymes) {
