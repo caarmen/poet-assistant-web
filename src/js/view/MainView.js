@@ -197,7 +197,10 @@ class MainView {
     _configureViewport() {
         const mvp = document.getElementById('viewport');
         let contentWidth = 600
-        if (screen.width > screen.height) contentWidth = 1024
+        // Assume our content takes more space if we're in landscape, or if an iPhone has requested the desktop version.
+        // It appears that on Android, requesting a desktop version makes the browser report a larger screen.width,
+        // but on iPhone, requesting a desktop version changes the navigator.platform
+        if (screen.width > screen.height || navigator.platform == "MacIntel") contentWidth = 1024
         const width = Math.max(contentWidth, screen.width)
         const scale = screen.width / width
         mvp.setAttribute('content', `width=${width}, user-scalable=yes, initial-scale=${scale}, maximum-scale=10.0, minimum-scale=0.1`)
