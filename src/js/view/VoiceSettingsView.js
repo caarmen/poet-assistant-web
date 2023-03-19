@@ -45,12 +45,17 @@ class VoiceSettingsView {
     }
 
     _initializeViews() {
+        this._elemRoot = document.querySelector(".voice-settings")
         this._elemReaderVoices = document.querySelector("#placeholder-reader__controls__voices #voice-settings__voice__voices-menu")
         this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader__controls__voices #voice-settings__voice__name")
         this._mdcSliderPitch = new VoiceSettingsView.MDCSlider(document.querySelector("#voice-pitch"))
         this._mdcSliderSpeed = new VoiceSettingsView.MDCSlider(document.querySelector("#voice-speed"))
         this._mdcSliderPitch.listen('MDCSlider:change', (e) => this.pitchObserver(e.detail.value))
         this._mdcSliderSpeed.listen('MDCSlider:change', (e) => this.speedObserver(e.detail.value))
+    }
+
+    updateVisibility(isVisible) {
+        this._elemRoot.style.display = isVisible ? "block" : "none"
     }
 
     layout() {
