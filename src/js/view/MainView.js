@@ -207,9 +207,10 @@ class MainView {
 
     }
     _updateReaderTabVisibility(isVisible) {
-        if (!isVisible) this._viewTabs.hideTab(MainViewModel.TabIndex.READER)
-        else this._viewTabs.showTab(MainViewModel.TabIndex.READER)
+        this._viewReader.updateTtsVisibility(isVisible)
+        this._viewVoiceSettings.updateVisibility(isVisible)
     }
+
     _updateClearSearchTextButtonVisibility(isVisible) {
         if (isVisible) this._elemBtnClearSearchText.style.display = "inline-block"
         else this._elemBtnClearSearchText.style.display = "none"
