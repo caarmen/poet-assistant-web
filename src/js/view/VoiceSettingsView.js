@@ -35,6 +35,7 @@ class VoiceSettingsView {
         this._template = template
         this._applyTemplates()
         this._initializeViews()
+        this._voices = new Map()
     }
     _applyTemplates() {
         this._elemPlaceholderReaderVoices.innerHTML = this._template.createVoiceSelectionHtml(
@@ -46,6 +47,8 @@ class VoiceSettingsView {
 
     _initializeViews() {
         this._elemRoot = document.querySelector(".voice-settings")
+        this._elemReaderLocales = document.querySelector("#placeholder-reader__controls__voices #voice-settings__locale__locales-menu")
+        this._elemReaderSelectedLocale = document.querySelector("#placeholder-reader__controls__voices #voice-settings__locale__name")
         this._elemReaderVoices = document.querySelector("#placeholder-reader__controls__voices #voice-settings__voice__voices-menu")
         this._elemReaderSelectedVoice = document.querySelector("#placeholder-reader__controls__voices #voice-settings__voice__name")
         this._mdcSliderPitch = new VoiceSettingsView.MDCSlider(document.querySelector("#voice-pitch"))
@@ -66,6 +69,20 @@ class VoiceSettingsView {
     }
     updateSelectedVoiceLabel(selectedVoiceLabel) {
         this._elemReaderSelectedVoice.innerText = selectedVoiceLabel
+    }
+    updateLocalesList(voices) {
+        this.voices = voices
+        const locales = Array.from(voices.keys())
+        this._elemReaderLocales.innerHTML = this._template.createContextMenuHtml(locales)
+        this._mdcMenuLocales = new VoiceSettingsView.MDCMenu(this._elemReaderLocales.querySelector(".mdc-menu"))
+        this._mdcMenuLocales.setAnchorCorner(VoiceSettingsView.MDCMenuCorner.BOTTOM_LEFT)
+        this._mdcMenuLocales.setAnchorElement(this._elemReaderSelectedLocale)
+        this._mdcMenuLocales.setFixedPosition(true)
+        this._mdcMenuLocales.listen('MDCMenu:selected', (e) => {
+            const locale = locales[e.detail.index]
+            this.updateVoicesList(voices.get(locale))
+            this._elemReaderSelectedLocale.innerText = locale
+        })
     }
     updateVoicesList(voices) {
         this._elemReaderVoices.innerHTML = this._template.createContextMenuHtml(voices)

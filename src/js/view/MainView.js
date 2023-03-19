@@ -124,7 +124,7 @@ class MainView {
         this._viewModel.poemWordCountLabel.observer = (wordCountLabel) => { this._viewReader.updatePoemWordCountLabel(wordCountLabel) }
         this._viewModel.poemSavedStateLabel.observer = (savedStateLabel) => { this._viewReader.updatePoemSavedState(savedStateLabel) }
         this._viewModel.poemText.observer = (newPoemText) => { this._viewReader.setPoemText(newPoemText) }
-        this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateVoicesList(newVoices)
+        this._viewModel.voices.observer = (newVoices) => this._viewVoiceSettings.updateLocalesList(newVoices)
         this._viewModel.selectedVoiceLabel.observer = (newSelectedVoiceLabel) => this._viewVoiceSettings.updateSelectedVoiceLabel(newSelectedVoiceLabel)
         this._viewModel.voicePitch.observer = (newVoicePitch) => this._viewVoiceSettings.updatePitch(newVoicePitch)
         this._viewModel.voiceSpeed.observer = (newVoiceSpeed) => this._viewVoiceSettings.updateSpeed(newVoiceSpeed)

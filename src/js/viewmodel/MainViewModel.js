@@ -27,7 +27,7 @@ class MainViewModel {
         this.definitions = new ObservableField()
         this.suggestions = new ObservableField()
         this.favorites = new ObservableField()
-        this.voices = new ObservableField([])
+        this.voices = new ObservableField(new Map())
         this.selectedVoiceLabel = new ObservableField()
         this.voicePitch = new ObservableField()
         this.voiceSpeed = new ObservableField()
@@ -382,6 +382,8 @@ class MainViewModel {
     }
 
     updateVoices(newVoices) {
+        // TODO sigh
+        /*
         this.voices.value = newVoices.sort((a, b) => {
             const languageA = a.lang.substring(0, 2)
             const languageB = b.lang.substring(0, 2)
@@ -395,10 +397,11 @@ class MainViewModel {
                 return languageA.localeCompare(languageB)
             }
         }).map((voice) => new MenuItem(voice.voiceURI, this._getVoiceLabel(voice)))
+        */
 
-        this.isReaderTabVisible.value = this.voices.value.length > 0
+        this.isReaderTabVisible.value = this.voices.value.size > 0
 
-        this.contextMenuItems = this._createContextMenuItems(newVoices.length > 0)
+        this.contextMenuItems = this._createContextMenuItems(newVoices.size > 0)
     }
     _getVoiceLabel = (voice) => `${voice.name} - ${voice.lang}`
 

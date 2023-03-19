@@ -49,13 +49,22 @@ class SpeechEngine {
 
     _populateVoiceList(onVoiceChangeEvent) {
         if (!this._synth) return
-        this.voices.value = this._synth.getVoices()
-        if (this.voices.value.length > 0) {
-
+        const voices = this._synth.getVoices()
+        const voicesByLang = voices.reduce(
+                (acc, item) => {
+                  const key = item.lang.replace(/-.*$/, "");
+                  const voicesForLang = acc.get(key) || [];
+                  voicesForLang.push(item);
+                  
+                  acc.set(key, voicesForLang);
+                  return acc;
+                }, new Map());
+        this.voices.value = voicesByLang
+        if (this.voices.value.size > 0) {
             this._settings.removeSetting(SpeechEngine.SETTING_KEY_HAS_RELOADED)
-            const savedVoiceUri = this._settings.getSetting(SpeechEngine.SETTING_KEY_VOICE, this.voices.value[0].voiceURI)
-            const savedVoice = this.voices.value.find((voice) => voice.voiceURI == savedVoiceUri)
-            this.selectedVoice.value = (savedVoice != undefined) ? savedVoice : this.voices.value[0]
+            const savedVoiceUri = this._settings.getSetting(SpeechEngine.SETTING_KEY_VOICE, voices[0].voiceURI)
+            const savedVoice = voices.find((voice) => voice.voiceURI == savedVoiceUri)
+            this.selectedVoice.value = (savedVoice != undefined) ? savedVoice : voices.value[0]
             this.speed.value = this._settings.getSetting(SpeechEngine.SETTING_KEY_SPEED, this.speed.value)
             this.pitch.value = this._settings.getSetting(SpeechEngine.SETTING_KEY_PITCH, this.pitch.value)
         } else if (onVoiceChangeEvent && this._settings.isStorageAvailable()) {
