@@ -25,6 +25,9 @@ class SuggestionsView {
     }
 
     showSuggestions(anchorElement, suggestions) {
+        if (!this._elemPlaceholderSuggestions) {
+            this._elemPlaceholderSuggestions = document.querySelector("#placeholder-suggestions")
+        }
         if (suggestions.length > 0) {
             this._elemPlaceholderSuggestions.innerHTML = this._template.createContextMenuHtml(suggestions)
             this._elemPlaceholderSuggestions.style.display = "block"

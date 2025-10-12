@@ -23,3 +23,7 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 #placeholder-input-text-search #input-text-search {
 	width: 100%;
 }
+
+.mdc-top-app-bar__row:has(#placeholder-suggestions) {
+	z-index: 2;
+}
