@@ -90,6 +90,10 @@ class ReaderView {
         this._elemBtnDownload.onclick = () => this.onFileDownloadObserver(this._mdcInputTextReader.value)
     }
 
+    updateTtsVisibility(visible) {
+        this._elemPlaceholderReaderPlay.style.display = visible ? "block" : "none"
+    }
+
     _updateButtonStates() {
         this._elemBtnPlay.disabled = this._mdcInputTextReader.value.length == 0
         this._elemBtnCopy.disabled = this._mdcInputTextReader.value.length == 0
