@@ -28,10 +28,10 @@ along with Poet Assistant.  If not, see <http://www.gnu.org/licenses/>.
 .definitions-list-item__definition {
 	display: table-cell;
 }
-#placeholder-definitions__list .mdc-list-item {
+#placeholder-definitions__list .mdc-deprecated-list-item {
 	height: auto;
 }
-.mdc-list-item__text{
+.mdc-deprecated-list-item__text{
 	white-space: normal;
 }
 #placeholder-definitions__list .list-header__settings {

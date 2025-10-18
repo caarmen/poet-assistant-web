@@ -53,10 +53,10 @@ a:link, a.active:link,a:hover, a:visited {
 #placeholder-context-menu {
 	position: absolute;
 }
-.mdc-menu .mdc-list-item__graphic {
+.mdc-menu .mdc-deprecated-list-item__graphic {
 	color: var(--mdc-theme-primary);
 }
-.mdc-menu .mdc-list-item {
+.mdc-menu .mdc-deprecated-list-item {
 	color: var(--mdc-theme-text-primary-on-background);
 }
 .mdc-tab__icon img {

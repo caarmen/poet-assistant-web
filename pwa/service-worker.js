@@ -18,9 +18,9 @@ const CACHE_NAME = 'offline';
 
 const contentToCache = [
   "/index.html",
-  "/libs/material-components-web-10.0.0.min.css",
-  "/libs/material-components-web-10.0.0.min.css.map",
-  "/libs/material-components-web-10.0.0.min.js",
+  "/libs/material-components-web-14.0.0.min.css",
+  "/libs/material-components-web-14.0.0.min.css.map",
+  "/libs/material-components-web-14.0.0.min.js",
   "/libs/material-icons.css",
   "/libs/material-icons.ttf",
   "/libs/sql-wasm-1.4.0.js",
